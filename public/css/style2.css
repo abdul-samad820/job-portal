@@ -1,0 +1,213 @@
+
+        .category-wrapper {
+            border: 1px solid #bfd8ff;
+            /* lighter blue border */
+            border-radius: 14px; 
+            padding: 18px 10px;
+            transition: .25s;
+        }
+
+        .category-card {
+            border: 1px solid #bfd8ff; 
+            border-radius: 40px;
+            padding: 35px 10px;
+            transition: .25s;
+            background: #fff;
+        }
+
+        .category-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        /* Hover Blue */
+        .category-wrapper:hover {
+            border-color: #2f80ed;
+        }
+
+        .category-wrapper:hover .category-card {
+            border-color: #2f80ed;
+            background: #eaf2ff;
+            /* soft blue */
+        }
+
+
+        /* JOB LIST BLUE */
+        .job-list-box {
+            border: 1px solid #d9e5ff;
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .job-row {
+            padding: 18px 20px;
+            border-bottom: 1px solid #d9e5ff;
+        }
+
+        .job-row:last-child {
+            border-bottom: none;
+        }
+
+        .job-logo img {
+            width: 42px;
+            height: 42px;
+        }
+
+        .job-type {
+            color: #2f80ed;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+
+        /* ===== APPLY BUTTON BLUE ===== */
+        .apply-btn {
+            background: #2f80ed;
+            color: #fff;
+            padding: 7px 26px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid #2f80ed;
+            transition: 0.2s ease-in-out;
+            box-shadow: 0px 3px 10px rgba(47, 128, 237, 0.25);
+        }
+
+        .apply-btn:hover {
+            background: #1c69d6;
+            border-color: #1c69d6;
+            box-shadow: 0px 5px 14px rgba(47, 128, 237, 0.35);
+            transform: translateY(-2px);
+        }
+
+
+        /* FOOTER BLUE */
+        .footer-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1d1d1d;
+        }
+
+        .footer-btn {
+            padding: 6px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .btn-outline-success {
+            border-color: #2f80ed;
+            color: #2f80ed;
+        }
+
+        .btn-outline-success:hover {
+            background: #2f80ed;
+            color: #fff;
+        }
+
+        .btn-success {
+            background: #2f80ed;
+            border-color: #2f80ed;
+        }
+
+        footer {
+            border-top: 1px solid #d9e5ff;
+            padding-top: 40px;
+        }
+
+        .footer-logo {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2f80ed;
+        }
+
+        footer a {
+            color: #444;
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        footer a:hover {
+            color: #2f80ed;
+        }
+
+        .footer-copy {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .nav-link {
+            font-weight: 600;
+            color: #1d1d1d !important;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus {
+            color: #2f80ed !important;
+        }
+
+        .nav-link.active {
+            color: #2f80ed !important;
+        }
+
+        .navbar a {
+            transition: 0.2s;
+        }
+
+        .navbar a:hover {
+            color: #2f80ed !important;
+        }
+
+        /* Right side Register/Login hover */
+        .text-dark:hover {
+            color: #2f80ed !important;
+        }
+
+        /* Hire Top Company button */
+        .btn-hire {
+            background: #6ea9f5 !important;
+            border-color: #2f80ed !important;
+            color: #fff !important;
+            font-weight: 600;
+            padding: 6px 18px;
+            border-radius: 30px;
+            transition: .2s;
+        }
+
+        .btn-hire {
+            background: linear-gradient(135deg, #2f80ed, #6ea9f5) !important;
+            border: none !important;
+            color: #fff !important;
+            font-weight: 600;
+            padding: 8px 24px;
+            border-radius: 30px;
+            transition: 0.25s ease-in-out;
+            box-shadow: 0 4px 12px rgba(47, 128, 237, 0.35);
+        }
+
+        /* Smooth hover */
+        .btn-hire:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(47, 128, 237, 0.45);
+            color: #fff !important;
+        }
+
+        /* Active / clicked state */
+        .btn-hire:active,
+        .btn-hire.active {
+            transform: scale(0.96);
+            box-shadow: 0 3px 8px rgba(47, 128, 237, 0.25);
+        }
+   /* Default — Transparent navbar */
+#jobiNav {
+       background: transparent;
+    box-shadow: 0 13px 35px -12px rgba(35, 35, 35, 0);
+}
+
+/* After scroll — solid white navbar */
+.nav-scrolled {
+    background: #ffffff !important;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.08);
+}

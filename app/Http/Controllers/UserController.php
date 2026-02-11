@@ -1,0 +1,223 @@
+<?php
+namespace App\Http\Controllers;
+use App\Models\User; 
+use App\Models\Admin; 
+use App\Models\JobRole; 
+use App\Models\JobCategory; 
+use App\Models\Job;
+use App\Models\JobApplication;
+use App\Models\User_profile;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class UserController extends Controller
+{
+    public function userregister(Request $request){
+        $credentials = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:admins,email',
+            'password' => 'required|min:6',
+           'phone' => 'required|digits:10',
+            'address' => 'nullable|string|max:255',
+            // 'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+        $user = User::create($credentials);
+        if ($user) {
+            return redirect()->route('user.login')->with('success', 'User Registration successful!');
+        }else {
+     return back()->withErrors(['email' => 'Invalid email or password.'])->withInput();
+}
+    }
+
+     public function userlogin(Request $request){
+      $data = $request->validate([
+      'email'=>'required',
+      'password' => 'required',
+ ]);
+   if (Auth::guard('user')->attempt($data)) {
+   $request->session()->regenerate();
+   return redirect()->route('user.home'); 
+}else {
+    return back()->withErrors(['email' => 'Invalid email or password.'])->withInput();
+}
+  }
+  public function userlogout(Request $request){
+     Auth::guard('user')->logout();  
+     $request->session()->invalidate();  
+    $request->session()->regenerateToken();  
+    return redirect()->route('user.login');
+  }
+
+public function user_dashboard() 
+{
+    $userId = auth('user')->id();
+
+    $totalJobs = Job::count();
+
+  
+    $appliedJobsCount = JobApplication::where('user_id', $userId)->count();
+
+   
+    $newJobsCount = Job::where('created_at', '>=', now()->subDay())
+        ->whereNotIn('id', JobApplication::where('user_id', $userId)->pluck('job_id'))
+        ->count();
+
+   
+    $recentAppliedJobs = JobApplication::with('job')   
+        ->where('user_id', $userId)
+        ->orderBy('id', 'desc')
+        ->take(5)   
+        ->get();
+
+    return view('User.user_dashboard', compact(
+        'totalJobs', 
+        'appliedJobsCount', 
+        'newJobsCount',
+        'recentAppliedJobs'
+    ));
+}
+
+public function user_jobs(Request $request)
+{
+    $query = Job::with(['category', 'role']);
+
+    if ($request->filled('search')) {
+        $query->where(function ($q) use ($request) {
+            $q->where('title', 'LIKE', '%' . $request->search . '%')
+              ->orWhere('description', 'LIKE', '%' . $request->search . '%');
+        });
+    }
+
+    if ($request->filled('category')) {
+        $query->where('category_id', $request->category);
+    }
+    
+    if ($request->filled('role')) {
+        $query->where('role_id', $request->role);
+    }
+
+    if ($request->filled('location')) {
+        $query->where('location', 'LIKE', '%' . $request->location . '%');
+    }
+
+    if ($request->filled('min_salary')) {
+        $query->where('salary', '>=', $request->min_salary);
+    }
+    if ($request->filled('max_salary')) {
+        $query->where('salary', '<=', $request->max_salary);
+    }
+     $totalUsers = User::count(); 
+    $jobs = $query->orderBy('id', 'desc')->paginate(10);
+   
+    $categories = JobCategory::all();
+    $roles = JobRole::all();
+    return view('User.user_job_show', compact('jobs', 'categories', 'roles','totalUsers'));
+}
+
+ 
+public function user_job_single($id){
+    $userId = Auth::guard('user')->id(); 
+   $singlejob = Job::with(['category', 'role'])->findOrFail($id);
+
+    $jobs = Job::where('category_id', $singlejob->category_id)
+                ->where('id', '!=', $singlejob->id)
+                ->take(6)
+                ->get();
+
+    return view('User.user_job_single', compact('singlejob', 'jobs'));
+}
+ 
+
+public function job_applied(){
+    $userId = Auth::guard('user')->id();
+    $applications = JobApplication::where('user_id', $userId)->with('job')->get();
+    return view('user.user_applied_jobs', compact('applications'));
+}
+
+public function User_profile()
+{
+    $user = Auth::guard('user')->user();
+    $profile = User_profile::where('user_id', $user->id)->first();
+    return view('User.profile', compact('user', 'profile'));
+}
+ 
+
+public function add_user_profile()
+{
+    $userId = Auth::guard('user')->id();
+    $profile = User_profile::firstOrCreate(['user_id' => $userId]);
+    $educationData = $profile->education ? json_decode($profile->education, true) : [];
+
+    return view('User.profile_add', compact('profile', 'educationData'));
+}
+
+public function update_user_profile(Request $request)
+{
+    $userId = Auth::guard('user')->id();
+    $profile = User_profile::firstOrCreate(['user_id' => $userId]);
+
+    $data = $request->validate([
+        'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'professional_summary' => 'nullable|string|max:2000',
+        'core_skills' => 'nullable|string|max:500',
+        'education' => 'nullable|array',
+        'education.*.degree' => 'nullable|string|max:255',
+        'education.*.institute' => 'nullable|string|max:255',
+        'education.*.year' => 'nullable|string|max:20',
+        'experience' => 'nullable|string|max:1255',
+    ]);
+
+    if ($request->hasFile('profile_image')) {
+
+        if ($profile->profile_image && file_exists(public_path('uploads/user_profile/' . $profile->profile_image))) {
+            unlink(public_path('uploads/user_profile/' . $profile->profile_image));
+        }
+
+        $file = $request->file('profile_image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/user_profile/'), $filename);
+
+        $data['profile_image'] = $filename;
+    }
+
+    if ($request->has('education') && is_array($request->education)) {
+        $data['education'] = json_encode($request->education);
+    }
+
+    $profile->update($data);
+
+    return redirect()->route('user.profile')->with('success', 'Profile updated successfully!');
+}
+
+public function account_setting()
+{
+    $userId = Auth::guard('user')->id();
+    $user_data = User::findOrFail($userId);
+
+    return view('User.user_account_setting', compact('user_data'));
+}
+
+
+public function account_setting_update(Request $request, $id)
+{
+    $user_data = User::findOrFail($id);
+
+    $data = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $id,
+        'password' => 'nullable|min:6',
+        'phone' => 'required|digits:10',
+        'address' => 'nullable|string|max:255',
+    ]);
+
+    if (!empty($data['password'])) {
+        $data['password'] = bcrypt($data['password']);
+    } else {
+        unset($data['password']);
+    }
+
+    $user_data->update($data);
+    return back()->with('success', 'Account details updated successfully!');
+}
+
+}
