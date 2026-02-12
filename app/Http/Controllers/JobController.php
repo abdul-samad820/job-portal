@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\JobRole;
 use App\Models\JobCategory;
 use App\Models\Job;
+use App\Models\SavedJob;
+use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -84,6 +86,8 @@ public function job(Request $request)
 
 public function user_job_filter(Request $request)
 {
+        $userId = Auth::guard('user')->id(); 
+
     $search      = $request->input('search');
     $jobTypes    = $request->input('job_type', []);
     $experiences = $request->input('experience', []);
@@ -93,7 +97,7 @@ public function user_job_filter(Request $request)
     $maxSalary   = $request->input('max_salary');
     $sort        = $request->input('sort');
 
-    $query = Job::with(['category', 'role']);
+    $query = Job::with(['category', 'role','admin']);
 
     if ($search) {
         $query->where(function($q) use ($search) {
@@ -172,11 +176,20 @@ public function user_job_filter(Request $request)
     }
 
     $jobs = $query->paginate(10)->appends($request->query());
+ $savedJobIds = SavedJob::where('user_id', $userId)
+                    ->pluck('job_id')
+                    ->toArray();
+
+    $appliedJobIds = JobApplication::where('user_id', $userId)
+                    ->pluck('job_id')
+                    ->toArray();
 
     return view('User.user_job_show', [
         'jobs' => $jobs,
         'categories' => JobCategory::all(),
         'roles' => JobRole::all(),
+        'savedJobIds' => $savedJobIds, 
+        'appliedJobIds' => $appliedJobIds 
     ]);
 }
    public function job_add(){

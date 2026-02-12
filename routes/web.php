@@ -110,6 +110,10 @@ Route::middleware(['user'])->controller(UserController::class)->prefix('user')->
      Route::get('/user_account_settings','account_setting')->name('account_setting');
   Route::post('/user_account_settings/{id}', 'account_setting_update')
     ->name('account_setting_update');
+    
+    Route::get('/save-job/{id}', 'save_job')->name('save.job');
+     Route::get('/unsave-job/{id}', 'unsave_job')->name('unsave.job');
+    Route::get('/saved-jobs', 'saved_jobs')->name('saved.jobs');
 
 
     });

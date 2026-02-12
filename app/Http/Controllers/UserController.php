@@ -5,6 +5,7 @@ use App\Models\Admin;
 use App\Models\JobRole; 
 use App\Models\JobCategory; 
 use App\Models\Job;
+use App\Models\SavedJob;
 use App\Models\JobApplication;
 use App\Models\User_profile;
 use Illuminate\Http\Request;
@@ -51,36 +52,154 @@ class UserController extends Controller
 public function user_dashboard() 
 {
     $userId = auth('user')->id();
+    $user = Auth::guard('user')->user();
 
     $totalJobs = Job::count();
 
-  
     $appliedJobsCount = JobApplication::where('user_id', $userId)->count();
 
-   
     $newJobsCount = Job::where('created_at', '>=', now()->subDay())
         ->whereNotIn('id', JobApplication::where('user_id', $userId)->pluck('job_id'))
         ->count();
 
-   
     $recentAppliedJobs = JobApplication::with('job')   
         ->where('user_id', $userId)
         ->orderBy('id', 'desc')
-        ->take(5)   
+        ->take(5)
         ->get();
 
-    return view('User.user_dashboard', compact(
-        'totalJobs', 
-        'appliedJobsCount', 
-        'newJobsCount',
-        'recentAppliedJobs'
-    ));
+    // ==========================
+    //  RECOMMENDED JOBS LOGIC
+    // ==========================
+
+    $profile = User_profile::where('user_id', $userId)->first();
+
+    $recommendedJobsCount = 0;
+
+    if ($profile && !empty($profile->core_skills)) {
+
+        $userSkills = array_map('trim', explode(',', $profile->core_skills));
+
+        $recommendedJobsCount = Job::whereDate('last_date', '>=', now())
+            ->where(function ($query) use ($userSkills) {
+                foreach ($userSkills as $skill) {
+                    $query->orWhere('required_skills', 'LIKE', '%' . $skill . '%');
+                }
+            })
+            ->whereNotIn('id', JobApplication::where('user_id', $userId)->pluck('job_id'))
+            ->count();
+    }
+// ==========================
+    //  USER PROFILE COMPLETION
+    // ==========================
+$profileCompletion = 0;
+
+$profile = User_profile::where('user_id', $userId)->first();
+
+if ($profile) {
+
+    // Profile Image
+    if (!empty($profile->profile_image)) {
+        $profileCompletion += 15;
+    }
+
+    // Professional Summary
+    if (!empty($profile->professional_summary)) {
+        $profileCompletion += 20;
+    }
+
+    // Core Skills
+    if (!empty($profile->core_skills)) {
+        $profileCompletion += 20;
+    }
+
+    // Education
+    if (!empty($profile->education)) {
+        $profileCompletion += 20;
+    }
+
+    // Experience
+    if (!empty($profile->experience)) {
+        $profileCompletion += 15;
+    }
 }
+
+// Phone & Address from users table
+if (!empty($user->phone) && !empty($user->address)) {
+    $profileCompletion += 10;
+}
+$savedJobsCount = SavedJob::where('user_id', $userId)->count();
+   $savedJobs = SavedJob::with('job')
+        ->where('user_id', $userId)
+        ->latest()
+        ->take(3)
+        ->get();
+
+   return view('User.user_dashboard', compact(
+    'totalJobs', 
+    'appliedJobsCount', 
+    'newJobsCount',
+    'recentAppliedJobs',
+    'recommendedJobsCount',
+    'profileCompletion',
+    'savedJobsCount',
+          'savedJobs'
+));
+
+}
+
+public function save_job($jobId)
+{
+    $userId = Auth::guard('user')->id();
+
+    SavedJob::firstOrCreate([
+        'user_id' => $userId,
+        'job_id' => $jobId
+    ]);
+
+    return back()->with('success', 'Job Saved Successfully!');
+}
+
+public function unsave_job($jobId)
+{
+    $userId = Auth::guard('user')->id();
+
+    SavedJob::where('user_id', $userId)
+        ->where('job_id', $jobId)
+        ->delete();
+
+    return back()->with('success', 'Job Removed from Saved!');
+}
+
+public function saved_jobs()
+{
+    $userId = Auth::guard('user')->id();
+
+    $savedJobs = SavedJob::with('job')
+        ->where('user_id', $userId)
+        ->get();
+
+    return view('User.saved_jobs', compact('savedJobs'));
+}
+
+
 
 public function user_jobs(Request $request)
 {
-    $query = Job::with(['category', 'role']);
+    $userId = Auth::guard('user')->id();
 
+    $query = Job::with(['category', 'role', 'admin']);
+
+    // ✅ Saved + Applied IDs
+    $savedJobIds = SavedJob::where('user_id', $userId)
+                        ->pluck('job_id')
+                        ->toArray();
+
+    $appliedJobIds = JobApplication::where('user_id', $userId)
+                        ->pluck('job_id')
+                        ->toArray();
+
+    //  Filters
     if ($request->filled('search')) {
         $query->where(function ($q) use ($request) {
             $q->where('title', 'LIKE', '%' . $request->search . '%')
@@ -91,7 +210,7 @@ public function user_jobs(Request $request)
     if ($request->filled('category')) {
         $query->where('category_id', $request->category);
     }
-    
+
     if ($request->filled('role')) {
         $query->where('role_id', $request->role);
     }
@@ -103,16 +222,27 @@ public function user_jobs(Request $request)
     if ($request->filled('min_salary')) {
         $query->where('salary', '>=', $request->min_salary);
     }
+
     if ($request->filled('max_salary')) {
         $query->where('salary', '<=', $request->max_salary);
     }
-     $totalUsers = User::count(); 
+
     $jobs = $query->orderBy('id', 'desc')->paginate(10);
-   
+
     $categories = JobCategory::all();
     $roles = JobRole::all();
-    return view('User.user_job_show', compact('jobs', 'categories', 'roles','totalUsers'));
+    $totalUsers = User::count();
+
+    return view('User.user_job_show', compact(
+        'jobs',
+        'categories',
+        'roles',
+        'totalUsers',
+        'savedJobIds',   
+        'appliedJobIds' 
+    ));
 }
+
 
  
 public function user_job_single($id){
