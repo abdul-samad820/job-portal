@@ -159,140 +159,138 @@
             </div>
 
 
-           <!-- JOBS LIST -->
-<div class="col-md-9">
+            <!-- JOBS LIST -->
+            <div class="col-md-9">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h5 class="fw-bold text-dark">
-            {{ $jobs->total() }} Jobs Found
-        </h5>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold text-dark">
+                        {{ $jobs->total() }} Jobs Found
+                    </h5>
 
-        <form id="sortForm" method="GET" action="{{ route('user.jobs.filter') }}" class="m-0 p-0">
-            <input type="hidden" name="search" value="{{ request('search') }}">
-            <input type="hidden" name="category" value="{{ request('category') }}">
-            <input type="hidden" name="role" value="{{ request('role') }}">
-            <input type="hidden" name="min_salary" value="{{ request('min_salary') }}">
-            <input type="hidden" name="max_salary" value="{{ request('max_salary') }}">
+                    <form id="sortForm" method="GET" action="{{ route('user.jobs.filter') }}" class="m-0 p-0">
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                        <input type="hidden" name="category" value="{{ request('category') }}">
+                        <input type="hidden" name="role" value="{{ request('role') }}">
+                        <input type="hidden" name="min_salary" value="{{ request('min_salary') }}">
+                        <input type="hidden" name="max_salary" value="{{ request('max_salary') }}">
 
-            <select name="sort" class="form-control" style="max-width:220px;"
-                onchange="document.getElementById('sortForm').submit();">
-                <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest</option>
-                <option value="salary_low_high" {{ request('sort') == 'salary_low_high' ? 'selected' : '' }}>
-                    Salary (Low → High)</option>
-                <option value="salary_high_low" {{ request('sort') == 'salary_high_low' ? 'selected' : '' }}>
-                    Salary (High → Low)</option>
-            </select>
-        </form>
-    </div>
-
-    @forelse ($jobs as $job)
-
-        <div class="card shadow-sm border-0 rounded-4 mb-4 position-relative">
-            <div class="card-body p-4">
-
-                <!-- Header -->
-                <div class="d-flex justify-content-between align-items-start">
-
-    <!-- Left Side -->
-    <div>
-        <h5 class="text-dark mb-1">{{ $job->title }}</h5>
-
-        @if(isset($appliedJobIds) && in_array($job->id, $appliedJobIds))
-            <span class="badge bg-success">Applied</span>
-        @endif
-    </div>
-
-    <!-- Right Side (Vertical Stack) -->
-    <div class="d-flex flex-column align-items-end">
-
-        <!-- Bookmark Icon -->
-        @if(isset($savedJobIds) && in_array($job->id, $savedJobIds))
-            <a href="{{ route('user.unsave.job', $job->id) }}" 
-               class="mb-2" title="Remove from Saved">
-                <i class="fas fa-bookmark text-success" style="font-size:18px;"></i>
-            </a>
-        @else
-            <a href="{{ route('user.save.job', $job->id) }}" 
-               class="mb-2" title="Save Job">
-                <i class="far fa-bookmark text-muted" style="font-size:18px;"></i>
-            </a>
-        @endif
-
-        <!-- View Details Button -->
-        <a href="{{ route('user.job_single', $job->id) }}"
-           class="btn btn-light border px-3 rounded-pill shadow-sm">
-            View Details
-        </a>
-
-    </div>
-</div>
-
-
-                <!-- Company -->
-                <p class="text-muted small mt-2">
-                    {{ $job->admin->company_name ?? 'Company' }}
-                </p>
-
-                <!-- Job Meta -->
-                <div class="d-flex flex-wrap text-muted small mt-2">
-
-                    <span class="me-3">
-                        <i class="fas fa-map-marker-alt text-danger me-1"></i>
-                        {{ ucfirst($job->location) }}
-                    </span>
-
-                    <span class="me-3">
-                        <i class="fas fa-rupee-sign text-success me-1"></i>
-                        {{ $job->salary ?? 'Not Disclosed' }} LPA
-                    </span>
-
-                    <span class="me-3">
-                        <i class="fas fa-user-clock text-info me-1"></i>
-                        {{ $job->experience ?? 'N/A' }}
-                    </span>
-
-                    <span>
-                        <i class="fas fa-briefcase text-primary me-1"></i>
-                        {{ $job->type ?? 'N/A' }}
-                    </span>
-
+                        <select name="sort" class="form-control" style="max-width:220px;"
+                            onchange="document.getElementById('sortForm').submit();">
+                            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest</option>
+                            <option value="salary_low_high" {{ request('sort') == 'salary_low_high' ? 'selected' : '' }}>
+                                Salary (Low → High)</option>
+                            <option value="salary_high_low" {{ request('sort') == 'salary_high_low' ? 'selected' : '' }}>
+                                Salary (High → Low)</option>
+                        </select>
+                    </form>
                 </div>
 
-                <!-- Description -->
-                <p class="text-secondary small mt-3" style="min-height:60px;">
-                    {{ Str::limit($job->description, 120) }}
-                </p>
+                @forelse ($jobs as $job)
+                    <div class="card shadow-sm border-0 rounded-4 mb-4 position-relative">
+                        <div class="card-body p-4">
+
+                            <!-- Header -->
+                            <div class="d-flex justify-content-between align-items-start">
+
+                                <!-- Left Side -->
+                                <div>
+                                    <h5 class="text-dark mb-1">{{ $job->title }}</h5>
+
+                                    @if (isset($appliedJobIds) && in_array($job->id, $appliedJobIds))
+                                        <span class="badge bg-success">Applied</span>
+                                    @endif
+                                </div>
+
+                                <!-- Right Side (Vertical Stack) -->
+                                <div class="d-flex flex-column align-items-end">
+
+                                    <!-- Bookmark Icon -->
+                                    @if (isset($savedJobIds) && in_array($job->id, $savedJobIds))
+                                        <a href="{{ route('user.unsave.job', $job->id) }}" class="mb-2"
+                                            title="Remove from Saved">
+                                            <i class="fas fa-bookmark text-success" style="font-size:18px;"></i>
+                                        </a>
+                                    @else
+                                        <a href="{{ route('user.save.job', $job->id) }}" class="mb-2"
+                                            title="Save Job">
+                                            <i class="far fa-bookmark text-muted" style="font-size:18px;"></i>
+                                        </a>
+                                    @endif
+
+                                    <!-- View Details Button -->
+                                    <a href="{{ route('user.job_single', $job->id) }}"
+                                        class="btn btn-light border px-3 rounded-pill shadow-sm">
+                                        View Details
+                                    </a>
+
+                                </div>
+                            </div>
+
+
+                            <!-- Company -->
+                            <p class="text-muted small mt-2">
+                                {{ $job->admin->company_name ?? 'Company' }}
+                            </p>
+
+                            <!-- Job Meta -->
+                            <div class="d-flex flex-wrap text-muted small mt-2">
+
+                                <span class="me-3">
+                                    <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                                    {{ ucfirst($job->location) }}
+                                </span>
+
+                                <span class="me-3">
+                                    <i class="fas fa-rupee-sign text-success me-1"></i>
+                                    {{ $job->salary ?? 'Not Disclosed' }} LPA
+                                </span>
+
+                                <span class="me-3">
+                                    <i class="fas fa-user-clock text-info me-1"></i>
+                                    {{ $job->experience ?? 'N/A' }}
+                                </span>
+
+                                <span>
+                                    <i class="fas fa-briefcase text-primary me-1"></i>
+                                    {{ $job->type ?? 'N/A' }}
+                                </span>
+
+                            </div>
+
+                            <!-- Description -->
+                            <p class="text-secondary small mt-3" style="min-height:60px;">
+                                {{ Str::limit($job->description, 120) }}
+                            </p>
+
+                        </div>
+
+                        <!-- Gradient Bottom Line -->
+                        <div class="position-absolute bottom-0 start-0 end-0"
+                            style="height:4px; background: linear-gradient(90deg, #007bff, #00d4ff); border-radius:0 0 16px 16px;">
+                        </div>
+                    </div>
+
+                @empty
+
+                    <div class="alert alert-info text-center shadow-sm rounded-4 py-4">
+                        <i class="fas fa-info-circle"></i> No matching jobs found.
+                    </div>
+                @endforelse
+
+                <!-- Pagination -->
+                <div class="d-flex justify-content-center mt-4">
+                    <div class="shadow-sm p-2 rounded-pill bg-white">
+                        {{ $jobs->links('pagination::bootstrap-4') }}
+                    </div>
+                </div>
 
             </div>
-
-            <!-- Gradient Bottom Line -->
-            <div class="position-absolute bottom-0 start-0 end-0"
-                style="height:4px; background: linear-gradient(90deg, #007bff, #00d4ff); border-radius:0 0 16px 16px;">
-            </div>
-        </div>
-
-    @empty
-
-        <div class="alert alert-info text-center shadow-sm rounded-4 py-4">
-            <i class="fas fa-info-circle"></i> No matching jobs found.
-        </div>
-
-    @endforelse
-
-    <!-- Pagination -->
-    <div class="d-flex justify-content-center mt-4">
-        <div class="shadow-sm p-2 rounded-pill bg-white">
-            {{ $jobs->links('pagination::bootstrap-4') }}
-        </div>
-    </div>
-
-</div>
 
         </div>
     </div>
 
 @endsection
- 
+
 @push('scripts')
     <!-- jQuery (Bootstrap 4 dependency) -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

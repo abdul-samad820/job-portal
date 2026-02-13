@@ -2,7 +2,7 @@
 @section('title', 'Application Form ')
 @section('content')
 
-  <div class="container py-5" style="margin-top:90px;">
+    <div class="container py-5" style="margin-top:90px;">
 
         <div class="row justify-content-center">
             <div class="col-lg-8 col-md-10">

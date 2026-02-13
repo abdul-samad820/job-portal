@@ -70,7 +70,6 @@
 
         }
 
-
         .form-control {
             height: 48px;
             background: #f8f9fb;

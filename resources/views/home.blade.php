@@ -8,13 +8,11 @@
             width: 100%;
             position: relative;
             padding: 60px 0;
-            /* ADDED SPACING TOP & BOTTOM */
         }
 
         .coverflow-track {
             display: flex;
             justify-content: center;
-            /* NEW: Center items */
             transition: transform .4s ease;
             transform-style: preserve-3d;
         }
@@ -63,26 +61,30 @@
             right: -10px;
         }
 
-        .testimonial-box {
-            background: #d9ecff;
-            border-radius: 20px;
-            padding: 30px;
-            height: 100%;
-        }
+        .testimonial-card {
+    background: #d9ecff;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    height: 100%;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    transition: 0.3s;
+}
 
-        .testimonial-box img {
-            height: 30px;
-            margin-bottom: 20px;
-        }
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+}
 
-        .star {
-            color: gold;
-        }
+.testimonial-card img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
 
-        .carousel-control-prev,
-        .carousel-control-next {
-            filter: invert(1);
-        }
+
     </style>
 
     <!-- HERO SECTION -->
@@ -200,95 +202,116 @@
 
     </div>
 
-    <div class="container my-5">
+   <div class="container my-5">
+    <h2 class="text-center font-weight-bold mb-5">
+        Trusted by leading startups
+    </h2>
 
-        <h2 class="text-center mb-5" style="font-size:40px; font-weight:700;">
-            Trusted by leading startups.
-        </h2>
+    <div id="testimonialCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
 
-        <div id="testimonialCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+        <div class="carousel-inner">
 
-            <div class="carousel-inner">
+            <!-- ITEM -->
+            <div class="carousel-item active">
+                <div class="row">
 
-                <!-- Slide 1 -->
-                <div class="carousel-item active">
-                    <div class="row">
-
-                        <div class="col-md-4">
-                            <div class="testimonial-box">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Monday_logo.png">
-                                <p style="font-size:20px;">“Seattle opera simplifies performance planning with deski
-                                    eSignature.”</p>
-                                <p><b>Rashed Kabir</b>, <span class="text-muted">Lead Designer</span></p>
-                                <hr>
-                                <p>4.8 Awesome ★★★★★</p>
-                            </div>
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="testimonial-card">
+                            <img src="{{ asset('admins/dist/img/girl-image.jpg') }}">
+                            <h6>Gabbie</h6>
+                            <small>Designer</small>
+                            <p>Great platform for hiring.</p>
                         </div>
-
-                        <div class="col-md-4">
-                            <div class="testimonial-box">
-                                <img src="https://logos-world.net/wp-content/uploads/2023/03/ShipBob-Logo.png">
-                                <p style="font-size:20px;">“Seattle opera simplifies performance planning with deski
-                                    eSignature.”</p>
-                                <p><b>Karina</b>, <span class="text-muted">Lead Designer</span></p>
-                                <hr>
-                                <p>4.8 Awesome ★★★★★</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="testimonial-box">
-                                <img src="https://1000logos.net/wp-content/uploads/2021/05/Slack-logo.png">
-                                <p style="font-size:20px;">“Our workflow improved massively using this tool.”</p>
-                                <p><b>James</b>, <span class="text-muted">Product Manager</span></p>
-                                <hr>
-                                <p>4.8 Awesome ★★★★★</p>
-                            </div>
-                        </div>
-
                     </div>
-                </div>
 
-                <!-- Slide 2 -->
-                <div class="carousel-item">
-                    <div class="row">
-
-                        <div class="col-md-4">
-                            <div class="testimonial-box">
-                                <img src="https://seeklogo.com/images/U/uber-logo-23FA8A5505-seeklogo.com.png">
-                                <p style="font-size:20px;">“Amazing tool for managing distributed teams effortlessly.”</p>
-                                <p><b>Sarah</b>, <span class="text-muted">Team Lead</span></p>
-                                <hr>
-                                <p>4.9 Awesome ★★★★★</p>
-                            </div>
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="testimonial-card">
+                            <img src="{{ asset('admins/dist/img/user4-128x128.jpg') }}">
+                            <h6>Sarah</h6>
+                            <small>Team Lead</small>
+                            <p>Improved our workflow.</p>
                         </div>
-
-                        <div class="col-md-4">
-                            <div class="testimonial-box">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Monday_logo.png">
-                                <p style="font-size:20px;">“We rely on this tool daily.”</p>
-                                <p><b>Arun</b>, <span class="text-muted">Manager</span></p>
-                                <hr>
-                                <p>4.8 Awesome ★★★★★</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="testimonial-box">
-                                <img src="https://logos-world.net/wp-content/uploads/2023/03/ShipBob-Logo.png">
-                                <p style="font-size:20px;">“Helped us speed up workflows a lot.”</p>
-                                <p><b>Nina</b>, <span class="text-muted">Designer</span></p>
-                                <hr>
-                                <p>4.7 Awesome ★★★★★</p>
-                            </div>
-                        </div>
-
                     </div>
-                </div>
 
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="testimonial-card">
+                            <img src="{{ asset('admins/dist/img/user2-160x160.jpg') }}">
+                            <h6>James</h6>
+                            <small>Manager</small>
+                            <p>Highly recommended tool.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="testimonial-card">
+                            <img src="{{ asset('admins/dist/img/user1-128x128.jpg') }}">
+                            <h6>Alex</h6>
+                            <small>HR</small>
+                            <p>We use it daily.</p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+
+            <!-- SECOND ITEM -->
+            <div class="carousel-item">
+                <div class="row">
+
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="testimonial-card">
+                            <img src="{{ asset('admins/dist/img/team1.jpg') }}">
+                            <h6>Elsa</h6>
+                            <small>CEO</small>
+                            <p>Boosted productivity.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="testimonial-card">
+                            <img src="{{ asset('admins/dist/img/user7-128x128.jpg') }}">
+                            <h6>Lisa</h6>
+                            <small>Manager</small>
+                            <p>Very smooth experience.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="testimonial-card">
+                            <img src="{{ asset('admins/dist/img/team2.jpg') }}">
+                            <h6>Ned</h6>
+                            <small>Lead</small>
+                            <p>Hiring made simple.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-12">
+                        <div class="testimonial-card">
+                            <img src="{{ asset('admins/dist/img/team3.jpg') }}">
+                            <h6>Mike</h6>
+                            <small>Designer</small>
+                            <p>Great UI and support.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
+
+        {{-- <!-- Controls -->
+        <a class="carousel-control-prev" href="#testimonialCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span>
+        </a>
+
+        <a class="carousel-control-next" href="#testimonialCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span>
+        </a> --}}
+
     </div>
+</div>
+
+
 
     <!-- ========== Fade-Up Animation (JS inline) ========== -->
 @endsection

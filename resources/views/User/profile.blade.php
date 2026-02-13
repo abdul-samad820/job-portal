@@ -105,50 +105,51 @@
 
                 </div>
 
-               <div class="card rounded-3 shadow-lg mb-4 p-4">
+                <div class="card rounded-3 shadow-lg mb-4 p-4">
 
-    <h5 class="card-title text-dark border-bottom pb-2 mb-3 fw-bold">
-        <i class="bi bi-briefcase-fill text-primary me-2"></i> Experience
-    </h5>
+                    <h5 class="card-title text-dark border-bottom pb-2 mb-3 fw-bold">
+                        <i class="bi bi-briefcase-fill text-primary me-2"></i> Experience
+                    </h5>
 
-    @php
-        $experience = trim($profile->experience ?? '');
-        $lines = $experience ? explode("\n", $experience) : [];
-    @endphp
+                    @php
+                        $experience = trim($profile->experience ?? '');
+                        $lines = $experience ? explode("\n", $experience) : [];
+                    @endphp
 
-    @if (!empty($lines))
-        <div class="p-3 bg-light rounded border shadow-sm">
+                    @if (!empty($lines))
+                        <div class="p-3 bg-light rounded border shadow-sm">
 
-            {{-- MAIN EXPERIENCE (Line 1) --}}
-            <div class="mb-3">
-                <span class="badge bg-primary text-white px-3 py-2" style="font-size:14px;">
-                    <i class="bi bi-clock-history me-1"></i>
-                    {{ $lines[0] }}
-                </span>
-            </div>
+                            {{-- MAIN EXPERIENCE (Line 1) --}}
+                            <div class="mb-3">
+                                <span class="badge bg-primary text-white px-3 py-2" style="font-size:14px;">
+                                    <i class="bi bi-clock-history me-1"></i>
+                                    {{ $lines[0] }}
+                                </span>
+                            </div>
 
-            {{-- JOB DETAILS (From Line 2+) --}}
-            <div class="mt-2">
+                            {{-- JOB DETAILS (From Line 2+) --}}
+                            <div class="mt-2">
 
-                @foreach ($lines as $i => $line)
-                    @if ($i > 0) 
-                        <div class="d-flex mb-2">
-                            <i class="bi bi-dot text-primary" style="font-size: 1.8rem; line-height: 1;"></i>
-                            <p class="mb-0 text-secondary" style="font-size: 15px; font-weight: 500;">
-                                {{ trim($line) }}
-                            </p>
+                                @foreach ($lines as $i => $line)
+                                    @if ($i > 0)
+                                        <div class="d-flex mb-2">
+                                            <i class="bi bi-dot text-primary"
+                                                style="font-size: 1.8rem; line-height: 1;"></i>
+                                            <p class="mb-0 text-secondary" style="font-size: 15px; font-weight: 500;">
+                                                {{ trim($line) }}
+                                            </p>
+                                        </div>
+                                    @endif
+                                @endforeach
+
+                            </div>
+
                         </div>
+                    @else
+                        <p class="text-muted">No experience added.</p>
                     @endif
-                @endforeach
 
-            </div>
-
-        </div>
-    @else
-        <p class="text-muted">No experience added.</p>
-    @endif
-
-</div>
+                </div>
 
 
 

@@ -108,12 +108,12 @@ Route::middleware(['user'])->controller(UserController::class)->prefix('user')->
      Route::get('/user_profile_add','add_user_profile')->name('add_profile');
      Route::post('/user_profile_update','update_user_profile')->name('update_profile');
      Route::get('/user_account_settings','account_setting')->name('account_setting');
-  Route::post('/user_account_settings/{id}', 'account_setting_update')
+     Route::post('/user_account_settings/{id}', 'account_setting_update')
     ->name('account_setting_update');
     
-    Route::get('/save-job/{id}', 'save_job')->name('save.job');
+     Route::get('/save-job/{id}', 'save_job')->name('save.job');
      Route::get('/unsave-job/{id}', 'unsave_job')->name('unsave.job');
-    Route::get('/saved-jobs', 'saved_jobs')->name('saved.jobs');
+     Route::get('/saved-jobs', 'saved_jobs')->name('saved.jobs');
 
 
     });
@@ -132,12 +132,12 @@ Route::middleware(['user'])->controller(UserController::class)->prefix('user')->
 
 Route::controller(UserController::class)->prefix('user')->name('user.')->group(function () {
 
-    Route::view('/register', 'User.register')->name('register.view');
-    Route::post('/register', 'Userregister')->name('register');
-    Route::view('/login', 'User.login')->name('login');   // 
-    Route::post('/login', 'userlogin')->name('login');   // 
-    Route::get('/job', 'user_jobs')->name('jobs');
-    Route::get('/single-job/{id}', 'user_job_single')->name('job_single');
+        Route::view('/register', 'User.register')->name('register.view');
+        Route::post('/register', 'Userregister')->name('register');
+        Route::view('/login', 'User.login')->name('login');  
+        Route::post('/login', 'userlogin')->name('login.submit');
+        Route::get('/job', 'user_jobs')->name('jobs');
+        Route::get('/single-job/{id}', 'user_job_single')->name('job_single');
 });
 
 

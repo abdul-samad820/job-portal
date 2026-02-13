@@ -6,24 +6,185 @@
         .white-box {
             background: #ffffff;
             border-radius: 16px;
-            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
         }
 
-        /* Hover effect for applied job */
+        .job-box {
+            transition: 0.2s ease;
+        }
 
         .job-box:hover {
             background: #eef5ff;
-            border-left-color: #3b82f6 !important;
+            border-left: 4px solid #3b82f6;
             transform: translateX(3px);
+        }
+
+        /* Quick Action */
+        .action-box {
+            background: #f8f9fb;
+            transition: 0.3s ease;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .action-box:hover {
+            background: #eef5ff;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .icon-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+        }
+
+        .stat-box {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-radius: 12px;
+            background: #f8f9fb;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        .stat-warning .stat-icon {
+            background: #ffc107;
+        }
+
+        .stat-primary .stat-icon {
+            background: #007bff;
+        }
+
+        .stat-success .stat-icon {
+            background: #28a745;
+        }
+
+        .stat-danger .stat-icon {
+            background: #dc3545;
+        }
+
+        .counter {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .toast-wrapper {
+            top: 25px;
+            right: 25px;
+            z-index: 1055;
+            animation: slideIn 0.5s ease;
+        }
+
+        .custom-toast {
+            min-width: 340px;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .toast-header-custom {
+            background: linear-gradient(45deg, #007bff, #00c6ff);
+            color: #fff;
+            padding: 12px 15px;
+            font-size: 14px;
+        }
+
+        .toast-body-custom {
+            padding: 15px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .toast-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #007bff, #00c6ff);
+            width: 100%;
+            animation: progressLine 5s linear forwards;
+        }
+
+        /* Slide animation */
+        @keyframes slideIn {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Progress animation */
+        @keyframes progressLine {
+            from {
+                width: 100%;
+            }
+
+            to {
+                width: 0%;
+            }
         }
     </style>
 
+    @if (session('login_success'))
+        <div class="position-fixed toast-wrapper">
+
+            <div id="welcomeToast" class="custom-toast shadow-lg">
+
+                <!-- Header -->
+                <div class="toast-header-custom d-flex align-items-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <strong class="mr-auto">Login Successful</strong>
+                    <button type="button" class="close text-white" onclick="closeToast()">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <!-- Body -->
+                <div class="toast-body-custom">
+                    {{ session('login_success') }}
+                </div>
+
+                <!-- Animated Line -->
+                <div class="toast-progress"></div>
+
+            </div>
+
+        </div>
+    @endif
 
     <div class="row">
 
         {{-- New Jobs --}}
         <div class="col-12 col-sm-6 col-md-3 mb-3">
-            <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm" style="border-radius:20px;">
+            <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm"
+                style="border-radius:20px;">
 
                 <div>
                     <h4 class="mb-1" style="font-weight:600; font-size:24px;">{{ $newJobsCount }}</h4>
@@ -88,9 +249,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 
     {{-- Profile Strength Single Line --}}
     <div class="row mt-4">
@@ -142,55 +301,182 @@
                         </div>
                     </div>
                 </div>
+                   <!-- Arrow Button -->
+                <a href="{{ route('user.add_profile') }}"
+                   class="btn btn-light btn-sm rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                   style="width:35px; height:35px;">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-lg mt-4">
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="font-weight-bold mb-0">
+                        <i class="fas fa-bolt text-warning mr-2"></i>
+                        Quick Actions
+                    </h6>
+                </div>
+
+                <div class="row text-center">
+
+                    <!-- Browse Jobs -->
+                    <div class="col-md-4 mb-3">
+                        <a href="{{ route('user.jobs') }}" class="action-box d-block p-3 rounded">
+                            <div class="icon-circle bg-primary-light mb-2">
+                                <i class="fas fa-search text-primary"></i>
+                            </div>
+                            <h6 class="font-weight-bold mb-1">Browse Jobs</h6>
+                            <small class="text-muted">Find new opportunities</small>
+                        </a>
+                    </div>
+
+                    <!-- Update Profile -->
+                    <div class="col-md-4 mb-3">
+                        <a href="{{ route('user.profile') }}" class="action-box d-block p-3 rounded">
+                            <div class="icon-circle bg-secondary-light mb-2">
+                                <i class="fas fa-user-edit text-secondary"></i>
+                            </div>
+                            <h6 class="font-weight-bold mb-1">Update Profile</h6>
+                            <small class="text-muted">Improve job visibility</small>
+                        </a>
+                    </div>
+
+                    <!-- Saved Jobs -->
+                    <div class="col-md-4 mb-3">
+                        <a href="{{ route('user.saved.jobs') }}" class="action-box d-block p-3 rounded">
+                            <div class="icon-circle bg-success-light mb-2">
+                                <i class="fas fa-bookmark text-success"></i>
+                            </div>
+                            <h6 class="font-weight-bold mb-1">Saved Jobs</h6>
+                            <small class="text-muted">View your saved jobs</small>
+                        </a>
+                    </div>
+
+                </div>
 
             </div>
         </div>
     </div>
 
-    {{-- SAVED + RECENT JOBS SECTION --}}
-    <div class="row mt-4">
+    <div class="card shadow-lg border-0 rounded-lg mt-4">
+        <div class="card-body p-4">
 
-        {{-- Saved Jobs --}}
-        <div class="col-md-8">
-            <div class="white-box p-4">
-                <h5 class="mb-3">Saved Jobs</h5>
-                <hr>
+            <!-- Header -->
+            <div class="mb-4">
+                <h5 class="font-weight-bold mb-1">
+                    <i class="fas fa-chart-pie text-primary mr-2"></i>
+                    Application Analytics
+                </h5>
+                <small class="text-muted">
+                    Track your application performance
+                </small>
+            </div>
 
-                @forelse($savedJobs as $saved)
-                    <div class="card mb-3 p-3 shadow-sm border-0">
-                        <div class="d-flex justify-content-between align-items-center">
+            <div class="row">
 
-                            <div>
-                                <h6 class="mb-1">{{ $saved->job->title }}</h6>
-                                <small class="text-muted">
-                                    {{ $saved->job->location }}
-                                </small>
+                <!-- LEFT SIDE -->
+                <div class="col-md-7">
+
+                    <div class="row">
+
+                        @php
+                            $pending = (int) $pendingCount;
+                            $shortlisted = (int) $shortlistedCount;
+                            $hired = (int) $hiredCount;
+                            $rejected = (int) $rejectedCount;
+
+                            $total = $pending + $shortlisted + $hired + $rejected;
+                            $successRate = $total > 0 ? round(($hired / $total) * 100) : 0;
+                        @endphp
+
+                        <!-- Pending -->
+                        <div class="col-md-6 mb-3">
+                            <div class="stat-box stat-warning">
+                                <div class="stat-icon bg-warning">
+                                    <i class="fas fa-hourglass-half text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="counter mb-0" data-count="{{ $pending }}">0</h4>
+                                    <small class="text-muted">Pending</small>
+                                </div>
                             </div>
+                        </div>
 
-                            <a href="{{ route('user.unsave.job', $saved->job->id) }}" class="text-danger">
-                                <i class="fas fa-trash-alt"></i>
-                            </a>
+                        <!-- Shortlisted -->
+                        <div class="col-md-6 mb-3">
+                            <div class="stat-box stat-primary">
+                                <div class="stat-icon bg-primary">
+                                    <i class="fas fa-user-check text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="counter mb-0" data-count="{{ $shortlisted }}">0</h4>
+                                    <small class="text-muted">Shortlisted</small>
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- Hired -->
+                        <div class="col-md-6 mb-3">
+                            <div class="stat-box stat-success">
+                                <div class="stat-icon bg-success">
+                                    <i class="fas fa-check-circle text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="counter mb-0" data-count="{{ $hired }}">0</h4>
+                                    <small class="text-muted">Hired</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Rejected -->
+                        <div class="col-md-6 mb-3">
+                            <div class="stat-box stat-danger">
+                                <div class="stat-icon bg-danger">
+                                    <i class="fas fa-times-circle text-white"></i>
+                                </div>
+                                <div>
+                                    <h4 class="counter mb-0" data-count="{{ $rejected }}">0</h4>
+                                    <small class="text-muted">Rejected</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Success Rate -->
+                    <div class="mt-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <small class="font-weight-bold">Hiring Success Rate</small>
+                            <small class="font-weight-bold text-success">
+                                {{ $successRate }}%
+                            </small>
+                        </div>
+
+                        <div class="progress" style="height:8px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ $successRate }}%">
+                            </div>
                         </div>
                     </div>
 
-                @empty
+                </div>
 
-                    <div class="text-center py-5">
-                        <i class="far fa-bookmark" style="font-size:40px; color:#718096;"></i>
-
-                        <h5 class="mt-3">No Saved Jobs</h5>
-
-                        <a href="{{ route('user.jobs') }}" class="btn btn-success btn-sm mt-2">
-                            Browse Jobs
-                        </a>
+                <!-- RIGHT SIDE CHART -->
+                <div class="col-md-5">
+                    <div style="height:250px;">
+                        <canvas id="statusChart"></canvas>
                     </div>
-                @endforelse
+                </div>
 
             </div>
+
         </div>
+    </div>
 
-
+    {{-- SAVED + RECENT JOBS SECTION --}}
+    <div class="row mt-4">
         {{-- Recent Applied Jobs --}}
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm border-0 rounded-lg">
@@ -236,7 +522,7 @@
 
                             {{-- Arrow --}}
                             <div class="text-muted ml-3">
-                                <i class="fas fa-chevron-right"></i>
+                                <a href="{{ route('user.job_applied') }}"><i class="fas fa-chevron-right"></i></a>
                             </div>
 
                         </div>
@@ -259,26 +545,128 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
 
-            let percentage = {{ $profileCompletion }};
-            let counter = document.getElementById("counter");
-            let progressBar = document.getElementById("progressBar");
+            /* =====================================
+               PROFILE STRENGTH ANIMATION
+            ===================================== */
+            const percentage = {{ $profileCompletion ?? 0 }};
+            const progressBar = document.getElementById("progressBar");
+            const profileCounter = document.getElementById("counter");
 
-            // Animate Progress Bar
-            setTimeout(() => {
-                progressBar.style.width = percentage + "%";
-            }, 200);
+            if (progressBar) {
+                setTimeout(() => {
+                    progressBar.style.width = percentage + "%";
+                }, 200);
+            }
 
-            // Animate Counter
-            let count = 0;
-            let interval = setInterval(() => {
-                if (count >= percentage) {
-                    clearInterval(interval);
-                } else {
+            if (profileCounter) {
+                let count = 0;
+
+                const interval = setInterval(() => {
                     count++;
-                    counter.innerText = count + "%";
-                }
-            }, 15);
+                    profileCounter.innerText = count + "%";
 
+                    if (count >= percentage) {
+                        clearInterval(interval);
+                    }
+                }, 15);
+            }
+
+
+            /* =====================================
+               APPLICATION STATUS COUNTERS
+            ===================================== */
+            document.querySelectorAll('.counter').forEach(counter => {
+
+                const target = parseInt(counter.dataset.count) || 0;
+                let count = 0;
+
+                // Fast animation for large numbers
+                const increment = target > 50 ? 5 : 1;
+
+                const update = setInterval(() => {
+                    count += increment;
+
+                    if (count >= target) {
+                        counter.innerText = target;
+                        clearInterval(update);
+                    } else {
+                        counter.innerText = count;
+                    }
+
+                }, 20);
+
+            });
+
+
+            /* =====================================
+               DOUGHNUT CHART
+            ===================================== */
+            const ctx = document.getElementById('statusChart');
+
+            if (ctx && typeof Chart !== "undefined") {
+
+                new Chart(ctx.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Pending', 'Shortlisted', 'Hired', 'Rejected'],
+                        datasets: [{
+                            data: [
+                                Number({{ $pending ?? 0 }}),
+                                Number({{ $shortlisted ?? 0 }}),
+                                Number({{ $hired ?? 0 }}),
+                                Number({{ $rejected ?? 0 }})
+                            ],
+                            backgroundColor: [
+                                '#ffc107',
+                                '#007bff',
+                                '#28a745',
+                                '#dc3545'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutoutPercentage: 70,
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 14
+                            }
+                        },
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    const dataset = data.datasets[0];
+                                    const total = dataset.data.reduce((a, b) => a + b, 0);
+                                    const currentValue = dataset.data[tooltipItem.index];
+                                    const percentage = total > 0 ? ((currentValue / total) * 100)
+                                        .toFixed(1) : 0;
+                                    return data.labels[tooltipItem.index] + ": " + currentValue + " (" +
+                                        percentage + "%)";
+                                }
+                            }
+                        }
+                    }
+                });
+
+            }
+        });
+
+        function closeToast() {
+            const toast = document.getElementById('welcomeToast');
+            if (toast) {
+                toast.style.opacity = "0";
+                toast.style.transform = "translateX(120%)";
+                setTimeout(() => {
+                    toast.parentElement.style.display = "none";
+                }, 400);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(closeToast, 5000);
         });
     </script>
 @endpush

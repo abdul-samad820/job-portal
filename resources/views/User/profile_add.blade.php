@@ -123,90 +123,89 @@ Managed Admin Dashboard">{{ old('experience', $profile->experience) }}</textarea
 
 
                     <div class="card mb-3 rounded shadow-sm">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h6 class="mb-0 font-weight-bold">Education</h6>
-        <button type="button" id="add-education-btn" class="btn btn-sm btn-primary">
-            + Add Education
-        </button>
-    </div>
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 font-weight-bold">Education</h6>
+                            <button type="button" id="add-education-btn" class="btn btn-sm btn-primary">
+                                + Add Education
+                            </button>
+                        </div>
 
-    <div class="card-body" id="education-list">
+                        <div class="card-body" id="education-list">
 
-        @php
-            $educationData = $profile->education ? json_decode($profile->education, true) : [];
-        @endphp
+                            @php
+                                $educationData = $profile->education ? json_decode($profile->education, true) : [];
+                            @endphp
 
-        @forelse ($educationData as $index => $edu)
-            <div class="education-row border rounded p-3 mb-3 bg-light" data-index="{{ $index }}">
-                <div class="row">
+                            @forelse ($educationData as $index => $edu)
+                                <div class="education-row border rounded p-3 mb-3 bg-light"
+                                    data-index="{{ $index }}">
+                                    <div class="row">
 
-                    <div class="col-md-5 mb-2">
-                        <label class="small font-weight-bold">Degree / Course</label>
-                        <input type="text" class="form-control"
-                               name="education[{{ $index }}][degree]"
-                               value="{{ $edu['degree'] ?? '' }}"
-                               placeholder="e.g. B.Sc / B.Tech / MBA">
+                                        <div class="col-md-5 mb-2">
+                                            <label class="small font-weight-bold">Degree / Course</label>
+                                            <input type="text" class="form-control"
+                                                name="education[{{ $index }}][degree]"
+                                                value="{{ $edu['degree'] ?? '' }}" placeholder="e.g. B.Sc / B.Tech / MBA">
+                                        </div>
+
+                                        <div class="col-md-4 mb-2">
+                                            <label class="small font-weight-bold">Institute</label>
+                                            <input type="text" class="form-control"
+                                                name="education[{{ $index }}][institute]"
+                                                value="{{ $edu['institute'] ?? '' }}" placeholder="Institute name">
+                                        </div>
+
+                                        <div class="col-md-3 mb-2">
+                                            <label class="small font-weight-bold">Year</label>
+                                            <input type="text" class="form-control"
+                                                name="education[{{ $index }}][year]"
+                                                value="{{ $edu['year'] ?? '' }}" placeholder="e.g., 2020">
+                                        </div>
+
+                                    </div>
+
+                                    <div class="text-right mt-2">
+                                        <button type="button" class="btn btn-sm btn-outline-danger remove-education-btn">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            @empty
+                                {{-- First empty row --}}
+                                <div class="education-row border rounded p-3 mb-3 bg-light" data-index="0">
+                                    <div class="row">
+
+                                        <div class="col-md-5 mb-2">
+                                            <label class="small font-weight-bold">Degree / Course</label>
+                                            <input type="text" name="education[0][degree]" class="form-control"
+                                                placeholder="e.g. B.Sc / B.Tech / MBA">
+                                        </div>
+
+                                        <div class="col-md-4 mb-2">
+                                            <label class="small font-weight-bold">Institute</label>
+                                            <input type="text" name="education[0][institute]" class="form-control"
+                                                placeholder="Institute name">
+                                        </div>
+
+                                        <div class="col-md-3 mb-2">
+                                            <label class="small font-weight-bold">Year</label>
+                                            <input type="text" name="education[0][year]" class="form-control"
+                                                placeholder="e.g., 2020">
+                                        </div>
+
+                                    </div>
+
+                                    <div class="text-right mt-2">
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-danger remove-education-btn d-none">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            @endforelse
+
+                        </div>
                     </div>
-
-                    <div class="col-md-4 mb-2">
-                        <label class="small font-weight-bold">Institute</label>
-                        <input type="text" class="form-control"
-                               name="education[{{ $index }}][institute]"
-                               value="{{ $edu['institute'] ?? '' }}"
-                               placeholder="Institute name">
-                    </div>
-
-                    <div class="col-md-3 mb-2">
-                        <label class="small font-weight-bold">Year</label>
-                        <input type="text" class="form-control"
-                               name="education[{{ $index }}][year]"
-                               value="{{ $edu['year'] ?? '' }}"
-                               placeholder="e.g., 2020">
-                    </div>
-
-                </div>
-
-                <div class="text-right mt-2">
-                    <button type="button" class="btn btn-sm btn-outline-danger remove-education-btn">
-                        Remove
-                    </button>
-                </div>
-            </div>
-        @empty
-            {{-- First empty row --}}
-            <div class="education-row border rounded p-3 mb-3 bg-light" data-index="0">
-                <div class="row">
-
-                    <div class="col-md-5 mb-2">
-                        <label class="small font-weight-bold">Degree / Course</label>
-                        <input type="text" name="education[0][degree]" class="form-control"
-                               placeholder="e.g. B.Sc / B.Tech / MBA">
-                    </div>
-
-                    <div class="col-md-4 mb-2">
-                        <label class="small font-weight-bold">Institute</label>
-                        <input type="text" name="education[0][institute]" class="form-control"
-                               placeholder="Institute name">
-                    </div>
-
-                    <div class="col-md-3 mb-2">
-                        <label class="small font-weight-bold">Year</label>
-                        <input type="text" name="education[0][year]" class="form-control"
-                               placeholder="e.g., 2020">
-                    </div>
-
-                </div>
-
-                <div class="text-right mt-2">
-                    <button type="button" class="btn btn-sm btn-outline-danger remove-education-btn d-none">
-                        Remove
-                    </button>
-                </div>
-            </div>
-        @endforelse
-
-    </div>
-</div>
 
 
                     {{-- Submit --}}
@@ -220,22 +219,22 @@ Managed Admin Dashboard">{{ old('experience', $profile->experience) }}</textarea
         </div>
     </div>
 
-   @push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
 
-    let eduIndex = {{ !empty($educationData) ? count($educationData) : 1 }};
+                let eduIndex = {{ !empty($educationData) ? count($educationData) : 1 }};
 
-    const addBtn = document.getElementById('add-education-btn');
-    const list = document.getElementById('education-list');
+                const addBtn = document.getElementById('add-education-btn');
+                const list = document.getElementById('education-list');
 
-    addBtn.addEventListener('click', function() {
+                addBtn.addEventListener('click', function() {
 
-        const row = document.createElement('div');
-        row.className = 'education-row border rounded p-3 mb-3 bg-light';
-        row.dataset.index = eduIndex;
+                    const row = document.createElement('div');
+                    row.className = 'education-row border rounded p-3 mb-3 bg-light';
+                    row.dataset.index = eduIndex;
 
-        row.innerHTML = `
+                    row.innerHTML = `
             <div class="row">
                 <div class="col-md-5 mb-2">
                     <label class="small font-weight-bold">Degree / Course</label>
@@ -266,35 +265,35 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
-        list.appendChild(row);
-        eduIndex++;
-        updateRemoveButtons();
-    });
+                    list.appendChild(row);
+                    eduIndex++;
+                    updateRemoveButtons();
+                });
 
-    function updateRemoveButtons() {
-        let removeButtons = document.querySelectorAll('.remove-education-btn');
-        removeButtons.forEach(btn => {
-            btn.classList.remove('d-none');
-            btn.onclick = function() {
-                this.closest('.education-row').remove();
-                checkOnlyOneRow();
-            };
-        });
+                function updateRemoveButtons() {
+                    let removeButtons = document.querySelectorAll('.remove-education-btn');
+                    removeButtons.forEach(btn => {
+                        btn.classList.remove('d-none');
+                        btn.onclick = function() {
+                            this.closest('.education-row').remove();
+                            checkOnlyOneRow();
+                        };
+                    });
 
-        checkOnlyOneRow();
-    }
+                    checkOnlyOneRow();
+                }
 
-    function checkOnlyOneRow() {
-        let rows = document.querySelectorAll('.education-row');
-        if (rows.length === 1) {
-            rows[0].querySelector('.remove-education-btn').classList.add('d-none');
-        }
-    }
+                function checkOnlyOneRow() {
+                    let rows = document.querySelectorAll('.education-row');
+                    if (rows.length === 1) {
+                        rows[0].querySelector('.remove-education-btn').classList.add('d-none');
+                    }
+                }
 
-    updateRemoveButtons();
-});
-</script>
-@endpush
+                updateRemoveButtons();
+            });
+        </script>
+    @endpush
 
 
 @endsection

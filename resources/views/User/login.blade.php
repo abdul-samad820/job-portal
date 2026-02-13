@@ -32,25 +32,23 @@
             background: #fff;
             border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             display: flex;
         }
 
-        /* LEFT IMAGE SIDE (FULL IMAGE) */
         .left-side {
             width: 50%;
-            padding: 0;              /* 🔥 padding removed */
-            background: none;        /* 🔥 blue background removed */
+            padding: 0;
+            background: none;
         }
 
         .left-side img {
             width: 100%;
             height: 100%;
-            object-fit: cover;       /* 🔥 full cover */
+            object-fit: cover;
             display: block;
         }
 
-        /* RIGHT FORM SIDE */
         .right-side {
             width: 50%;
             padding: 45px 40px;
@@ -117,7 +115,8 @@
             }
 
             .left-side {
-                height: 260px;   /* mobile image height */
+                height: 260px;
+                /* mobile image height */
             }
         }
     </style>
@@ -125,66 +124,67 @@
 
 <body>
 
-<div class="login-container">
+    <div class="login-container">
 
-    <!-- LEFT IMAGE -->
-    <div class="left-side">
-        <img src="{{ asset('admins/dist/img/ai-generated.jpg') }}" alt="Login Image">
-    </div>
+        <!-- LEFT IMAGE -->
+        <div class="left-side">
+            <img src="{{ asset('admins/dist/img/ai-generated.jpg') }}" alt="Login Image">
+        </div>
 
-    <!-- RIGHT FORM -->
-    <div class="right-side">
+        <!-- RIGHT FORM -->
+        <div class="right-side">
 
-        <h3>Sign In</h3>
+            <h3>Sign In</h3>
 
-        <form action="{{ route('user.login') }}" method="POST">
-            @csrf
+            <form action="{{ route('user.login.submit') }}" method="POST">
+                @csrf
 
-            @if ($errors->any())
-                <div class="alert alert-danger small">{{ $errors->first() }}</div>
-            @endif
+                @if ($errors->any())
+                    <div class="alert alert-danger small">{{ $errors->first() }}</div>
+                @endif
 
-            <label>Email Address</label>
-            <div class="input-group mb-3">
-                <span class="input-group-text"><i class="fa fa-envelope"></i></span>
-                <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
-            </div>
-
-            <label>Password</label>
-            <div class="input-group mb-3">
-                <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                <input type="password" name="password" class="form-control" placeholder="Enter password" required>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <input type="checkbox" id="remember">
-                    <label for="remember" class="ms-1">Remember me</label>
+                <label>Email Address</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                    <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
                 </div>
-                <a href="#" class="small text-decoration-none">Forgot Password?</a>
-            </div>
 
-            <button type="submit" class="btn btn-custom">Sign In</button>
-        </form>
+                <label>Password</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                    <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                </div>
 
-        <div class="divider">— OR —</div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <input type="checkbox" id="remember">
+                        <label for="remember" class="ms-1">Remember me</label>
+                    </div>
+                    <a href="#" class="small text-decoration-none">Forgot Password?</a>
+                </div>
 
-        <button class="btn btn-outline-primary social-btn mb-2">
-            <i class="fab fa-facebook me-2"></i> Sign in with Facebook
-        </button>
+                <button type="submit" class="btn btn-custom">Sign In</button>
+            </form>
 
-        <button class="btn btn-outline-danger social-btn">
-            <i class="fab fa-google me-2"></i> Sign in with Google
-        </button>
+            <div class="divider">— OR —</div>
 
-        <p class="text-center mt-3 small">
-            Don't have an account?
-            <a href="{{ route('user.register.view') }}">Register Now</a>
-        </p>
+            <button class="btn btn-outline-primary social-btn mb-2">
+                <i class="fab fa-facebook me-2"></i> Sign in with Facebook
+            </button>
+
+            <button class="btn btn-outline-danger social-btn">
+                <i class="fab fa-google me-2"></i> Sign in with Google
+            </button>
+
+            <p class="text-center mt-3 small">
+                Don't have an account?
+                <a href="{{ route('user.register.view') }}">Register Now</a>
+            </p>
+
+        </div>
 
     </div>
-
-</div>
 
 </body>
+
 </html>

@@ -207,7 +207,7 @@
 
                         <!-- Saved Jobs -->
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{route('user.saved.jobs')}}" class="nav-link">
                                 <i class="nav-icon fas fa-bookmark"></i>
                                 <p>Saved Jobs</p>
                             </a>

@@ -13,35 +13,45 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function userregister(Request $request){
-        $credentials = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:admins,email',
-            'password' => 'required|min:6',
-           'phone' => 'required|digits:10',
-            'address' => 'nullable|string|max:255',
-            // 'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
-        $user = User::create($credentials);
-        if ($user) {
-            return redirect()->route('user.login')->with('success', 'User Registration successful!');
-        }else {
-     return back()->withErrors(['email' => 'Invalid email or password.'])->withInput();
+    public function userregister(Request $request)
+{
+    $credentials = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:6|confirmed',
+        'phone' => 'required|digits:10',
+        'address' => 'nullable|string|max:255',
+    ]);
+
+    // Hash password
+    $credentials['password'] = bcrypt($credentials['password']);
+    User::create($credentials);
+
+    return redirect()->route('user.login')
+        ->with('success', 'User Registration successful!');
 }
+
+   public function userlogin(Request $request)
+{
+    $data = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    if (Auth::guard('user')->attempt($data)) {
+
+        $request->session()->regenerate();
+
+        return redirect()
+                ->route('user.dashboard')
+                ->with('login_success', 'Welcome back, ' . auth('user')->user()->name . ' 👋');
     }
 
-     public function userlogin(Request $request){
-      $data = $request->validate([
-      'email'=>'required',
-      'password' => 'required',
- ]);
-   if (Auth::guard('user')->attempt($data)) {
-   $request->session()->regenerate();
-   return redirect()->route('user.home'); 
-}else {
-    return back()->withErrors(['email' => 'Invalid email or password.'])->withInput();
+    return back()->withErrors([
+        'email' => 'Invalid email or password.'
+    ])->withInput();
 }
-  }
+
   public function userlogout(Request $request){
      Auth::guard('user')->logout();  
      $request->session()->invalidate();  
@@ -135,6 +145,22 @@ $savedJobsCount = SavedJob::where('user_id', $userId)->count();
         ->take(3)
         ->get();
 
+        $pendingCount = JobApplication::where('user_id', $userId)
+    ->where('status', 'pending')
+    ->count();
+
+$shortlistedCount = JobApplication::where('user_id', $userId)
+    ->where('status', 'shortlisted')
+    ->count();
+
+$hiredCount = JobApplication::where('user_id', $userId)
+    ->where('status', 'hired')
+    ->count();
+
+$rejectedCount = JobApplication::where('user_id', $userId)
+    ->where('status', 'rejected')
+    ->count();
+
    return view('User.user_dashboard', compact(
     'totalJobs', 
     'appliedJobsCount', 
@@ -143,7 +169,11 @@ $savedJobsCount = SavedJob::where('user_id', $userId)->count();
     'recommendedJobsCount',
     'profileCompletion',
     'savedJobsCount',
-          'savedJobs'
+    'savedJobs',
+    'pendingCount',
+    'shortlistedCount',
+    'hiredCount',
+    'rejectedCount'
 ));
 
 }
@@ -179,7 +209,7 @@ public function saved_jobs()
         ->where('user_id', $userId)
         ->get();
 
-    return view('User.saved_jobs', compact('savedJobs'));
+    return view('User.user_saved_jobs', compact('savedJobs'));
 }
 
 
