@@ -6,16 +6,20 @@
     <div class="container py-4">
 
         <!-- Header -->
-        <div class="bg-white shadow-sm rounded-4 p-4 mb-4 border-start border-5 border-primary">
+        <div class="bg-white shadow-sm rounded p-4 mb-4" style="border-left:5px solid #007bff;">
+
             <div class="d-flex justify-content-between align-items-center flex-wrap">
-                <h3 class="fw-bold text-dark d-flex align-items-center mb-0">
+
+                <h3 class="font-weight-bold text-dark mb-0 d-flex align-items-center">
                     Applied Jobs
                 </h3>
 
-                <span class="badge bg-primary fs-6 px-4 py-2">
+                <span class="badge badge-primary px-4 py-2" style="font-size:14px; border-radius:30px;">
                     Total Applications: {{ $applications->count() }}
                 </span>
+
             </div>
+
         </div>
 
         <!-- Applications Card -->

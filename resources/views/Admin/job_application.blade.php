@@ -13,47 +13,57 @@
         <div class="col-12">
 
             <!-- HEADER CARD -->
-            <div class="card border-left-primary shadow-sm mb-4" style="background:#f7f9ff; border-left:5px solid #007bff;">
-                <div class="card-body">
+            <!-- Soft Header Section -->
+<div class="p-4 rounded shadow-sm mb-4" 
+     style="background:#f7f9ff; border-left:5px solid #007bff;">
 
-                    <div class="d-flex justify-content-between flex-wrap align-items-center">
+    <div class="d-flex justify-content-between flex-wrap align-items-center mb-2">
 
-                        <div>
-                            <h4 class="text-dark mb-1">
-                                <i class="fa fa-file-alt text-primary"></i> Job Applications
-                            </h4>
-                            <p class="text-muted mb-0">View, manage and update all job applications.</p>
-                        </div>
+        <div>
+            <h1 class="h4 font-weight-bold text-dark mb-1 d-flex align-items-center">
+                <i class="fa fa-file-alt text-primary mr-2"></i>
+                Job Applications
+            </h1>
+            <p class="text-muted small mb-0">
+                View, manage and update all job applications.
+            </p>
+        </div>
 
-                        <!-- Breadcrumb -->
-                        <nav aria-label="breadcrumb" class="mt-3 mt-md-0">
-                            <ol class="breadcrumb bg-white shadow-sm px-3 py-2 rounded">
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                                </li>
-                                <li class="breadcrumb-item active">Job Applications</li>
-                            </ol>
-                        </nav>
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mt-3 mt-md-0">
+            <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
+                <li class="breadcrumb-item">
+                    <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="breadcrumb-item active font-weight-bold">
+                    Applications
+                </li>
+            </ol>
+        </nav>
 
-                    </div>
+    </div>
 
-                    <!-- Search -->
-                    <form action="{{ route('job_application') }}" method="GET" class="form-inline mt-3">
-                        <input class="form-control mr-2"
-                               type="search"
-                               name="search"
-                               placeholder="Search by user or job..."
-                               value="{{ request('search') }}"
-                               style="min-width: 250px;">
+    <!-- Search -->
+    <form action="{{ route('job_application') }}" 
+          method="GET"
+          class="d-flex align-items-center mt-3 w-100"
+          style="max-width:370px;">
 
-                        <button class="btn btn-primary">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </form>
+        <input type="search"
+               name="search"
+               class="form-control flex-grow-1 mr-2"
+               placeholder="Search by user or job..."
+               value="{{ request('search') }}">
 
-                </div>
-            </div>
+        <button class="btn btn-primary px-3" type="submit">
+            <i class="fa fa-search"></i>
+        </button>
 
+    </form>
+
+</div>
 
             <!-- MAIN TABLE CARD -->
             <div class="card shadow-sm">
@@ -97,24 +107,52 @@
                                     <td>{{ $app->job->title ?? 'Deleted Job' }}</td>
 
                                     <!-- STATUS DROPDOWN -->
-                                    <td>
-                                        <form action="{{ route('admin.application.updateStatus', $app->id) }}"
-                                              method="POST" class="form-inline">
-                                            @csrf
+                                   <td>
+    <form action="{{ route('admin.application.updateStatus', $app->id) }}"
+          method="POST" class="form-inline">
+        @csrf
+        @method('POST')
 
-                                            <div class="dropdown mr-2">
-                                                <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">
-                                                    {{ ucfirst($app->status) }}
-                                                </button>
+        <!-- Hidden input -->
+        <input type="hidden" name="status" id="statusInput{{ $app->id }}" value="{{ $app->status }}">
 
-                                                <div class="dropdown-menu p-2 shadow">
-                                                 <button class="dropdown-item" name="status" value="pending"> <i class="fa fa-hourglass-half text-secondary"></i> Pending </button> <button class="dropdown-item" name="status" value="shortlisted"> <i class="fa fa-user text-info"></i> Shortlisted </button> <button class="dropdown-item" name="status" value="hired"> <i class="fa fa-check-circle text-success"></i> Hired </button> <button class="dropdown-item" name="status" value="rejected"> <i class="fa fa-times-circle text-danger"></i> Rejected </button>
-                                                </div>
-                                            </div>
+        <div class="dropdown mr-2">
+            <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown">
+                <span id="statusText{{ $app->id }}">{{ ucfirst($app->status) }}</span>
+            </button>
 
-                                            <button class="btn btn-primary btn-sm">Update</button>
-                                        </form>
-                                    </td>
+            <div class="dropdown-menu p-2 shadow">
+                <a class="dropdown-item"
+                   href="#"
+                   onclick="setStatus('{{ $app->id }}','pending')">
+                   <i class="fa fa-hourglass-half text-secondary"></i> Pending
+                </a>
+
+                <a class="dropdown-item"
+                   href="#"
+                   onclick="setStatus('{{ $app->id }}','shortlisted')">
+                   <i class="fa fa-user text-info"></i> Shortlisted
+                </a>
+
+                <a class="dropdown-item"
+                   href="#"
+                   onclick="setStatus('{{ $app->id }}','hired')">
+                   <i class="fa fa-check-circle text-success"></i> Hired
+                </a>
+
+                <a class="dropdown-item"
+                   href="#"
+                   onclick="setStatus('{{ $app->id }}','rejected')">
+                   <i class="fa fa-times-circle text-danger"></i> Rejected
+                </a>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-sm">
+            Update
+        </button>
+    </form>
+</td>
 
                                     <!-- RESUME -->
                                     <td>
@@ -231,3 +269,12 @@
 </div>
 
 @endsection
+@push('scripts')
+    <script>
+function setStatus(id, value) {
+    document.getElementById('statusInput' + id).value = value;
+    document.getElementById('statusText' + id).innerText =
+        value.charAt(0).toUpperCase() + value.slice(1);
+}
+</script>
+@endpush

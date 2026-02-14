@@ -77,11 +77,12 @@ public function createAdmin(Request $request)
         'location' => $data['location'],
         'description' => $data['description'],
         'email' => $data['email'],
-        'password' => bcrypt($data['password']),
+        'password' => bcrypt($data['password']), 
         'role' => 'admin'
     ]);
-
-    return back()->with('success', 'New Admin Created Successfully!');
+ 
+   return redirect()
+        ->route('superadmin.dashboard')
+        ->with('success', 'New Admin Created Successfully!');
 }
 }
-

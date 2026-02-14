@@ -8,42 +8,56 @@
             <div class="col-12">
 
                 <!-- Header Box -->
-                <div class="p-4 rounded shadow-sm mb-4" style="background:#f7f9ff; border-left:5px solid #007bff;">
+                <!-- Soft Header Section -->
+                <div class="p-4 rounded shadow-sm mb-4" style="background: #f7f9ff; border-left: 5px solid #007bff;">
+
                     <div class="d-flex justify-content-between flex-wrap align-items-center mb-2">
                         <div>
-                            <h4 class="font-weight-bold text-dark mb-1 d-flex align-items-center">
-                                <i class="fa fa-briefcase text-primary mr-2"></i> Job Management
-                            </h4>
-                            <p class="text-muted small mb-0">View, manage and edit all job postings.</p>
+                            <h1 class="h4 font-weight-bold text-dark mb-1 d-flex align-items-center">
+                                <i class="fa fa-briefcase text-primary mr-2"></i>
+                                Job Management
+                            </h1>
+                            <p class="text-muted small mb-0">
+                                View, manage and edit all job postings.
+                            </p>
                         </div>
 
                         <nav aria-label="breadcrumb" class="mt-3 mt-md-0">
-                            <ol class="breadcrumb bg-white shadow-sm px-3 py-2 rounded mb-0">
+                            <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
                                 <li class="breadcrumb-item">
-                                    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                                    <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">
+                                        Dashboard
+                                    </a>
                                 </li>
-                                <li class="breadcrumb-item active">Jobs</li>
+                                <li class="breadcrumb-item active font-weight-bold">Jobs</li>
                             </ol>
                         </nav>
                     </div>
 
-                    <!-- Search + Add -->
+                    <!-- Search + Add Button -->
                     <div class="d-flex justify-content-between flex-wrap align-items-center mt-3">
-                        <form action="{{ route('admin.job') }}" method="GET" class="form-inline w-100"
-                            style="max-width:400px;">
-                            <input type="search" class="form-control mr-2 w-75" placeholder="Search jobs..." name="search"
-                                value="{{ request('search') }}">
-                            <button class="btn btn-primary">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </form>
+
+                     <form method="GET" action="{{ route('admin.job') }}" 
+      class="d-flex w-100" style="max-width:370px;">
+
+    <input type="search"
+           name="search"
+           class="form-control mr-2"
+           placeholder="Search jobs..."
+           value="{{ request('search') }}">
+
+    <button class="btn btn-primary px-3" type="submit">
+        <i class="fa fa-search"></i>
+    </button>
+
+</form>
 
                         <a href="{{ route('admin.job_add') }}"
                             class="btn btn-primary rounded-pill d-flex align-items-center mt-3 mt-md-0">
                             <i class="fa fa-plus mr-2"></i> Add New Job
                         </a>
-                    </div>
 
+                    </div>
                 </div>
 
                 <!-- Jobs Table -->

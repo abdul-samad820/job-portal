@@ -184,95 +184,94 @@
                         </select>
                     </form>
                 </div>
-
                 @forelse ($jobs as $job)
-                    <div class="card shadow-sm border-0 rounded-4 mb-4 position-relative">
+                    <div class="card shadow-sm border-0 rounded-lg mb-4 position-relative">
                         <div class="card-body p-4">
 
-                            <!-- Header -->
+                            <!-- HEADER -->
                             <div class="d-flex justify-content-between align-items-start">
 
-                                <!-- Left Side -->
+                                <!-- LEFT SIDE -->
                                 <div>
                                     <h5 class="text-dark mb-1">{{ $job->title }}</h5>
 
                                     @if (isset($appliedJobIds) && in_array($job->id, $appliedJobIds))
-                                        <span class="badge bg-success">Applied</span>
+                                        <span class="badge badge-success">Applied</span>
                                     @endif
                                 </div>
 
-                                <!-- Right Side (Vertical Stack) -->
-                                <div class="d-flex flex-column align-items-end">
-
-                                    <!-- Bookmark Icon -->
+                                <!-- BOOKMARK (TOP RIGHT) -->
+                                <div>
                                     @if (isset($savedJobIds) && in_array($job->id, $savedJobIds))
-                                        <a href="{{ route('user.unsave.job', $job->id) }}" class="mb-2"
-                                            title="Remove from Saved">
+                                        <a href="{{ route('user.unsave.job', $job->id) }}" title="Remove from Saved">
                                             <i class="fas fa-bookmark text-success" style="font-size:18px;"></i>
                                         </a>
                                     @else
-                                        <a href="{{ route('user.save.job', $job->id) }}" class="mb-2"
-                                            title="Save Job">
+                                        <a href="{{ route('user.save.job', $job->id) }}" title="Save Job">
                                             <i class="far fa-bookmark text-muted" style="font-size:18px;"></i>
                                         </a>
                                     @endif
-
-                                    <!-- View Details Button -->
-                                    <a href="{{ route('user.job_single', $job->id) }}"
-                                        class="btn btn-light border px-3 rounded-pill shadow-sm">
-                                        View Details
-                                    </a>
-
                                 </div>
+
                             </div>
 
-
-                            <!-- Company -->
-                            <p class="text-muted small mt-2">
+                            <!-- COMPANY -->
+                            <p class="text-muted small mt-2 mb-2">
                                 {{ $job->admin->company_name ?? 'Company' }}
                             </p>
 
-                            <!-- Job Meta -->
-                            <div class="d-flex flex-wrap text-muted small mt-2">
+                            <!-- JOB META -->
+                            <div class="d-flex flex-wrap text-muted small mb-2">
 
-                                <span class="me-3">
-                                    <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                                <span class="mr-3">
+                                    <i class="fas fa-map-marker-alt text-danger mr-1"></i>
                                     {{ ucfirst($job->location) }}
                                 </span>
 
-                                <span class="me-3">
-                                    <i class="fas fa-rupee-sign text-success me-1"></i>
+                                <span class="mr-3">
+                                    <i class="fas fa-rupee-sign text-success mr-1"></i>
                                     {{ $job->salary ?? 'Not Disclosed' }} LPA
                                 </span>
 
-                                <span class="me-3">
-                                    <i class="fas fa-user-clock text-info me-1"></i>
+                                <span class="mr-3">
+                                    <i class="fas fa-user-clock text-info mr-1"></i>
                                     {{ $job->experience ?? 'N/A' }}
                                 </span>
 
                                 <span>
-                                    <i class="fas fa-briefcase text-primary me-1"></i>
+                                    <i class="fas fa-briefcase text-primary mr-1"></i>
                                     {{ $job->type ?? 'N/A' }}
                                 </span>
 
                             </div>
 
-                            <!-- Description -->
-                            <p class="text-secondary small mt-3" style="min-height:60px;">
+                            <!-- DESCRIPTION -->
+                            <p class="text-secondary small mt-3 mb-3" style="min-height:60px;">
                                 {{ Str::limit($job->description, 120) }}
                             </p>
 
+                            <!-- VIEW DETAILS (BOTTOM RIGHT) -->
+                            <div class="text-right">
+                                <a href="{{ route('user.job_single', $job->id) }}"
+                                    class="btn btn-primary btn-sm px-4 rounded-pill shadow-sm">
+                                    View Details
+                                </a>
+                            </div>
+
                         </div>
 
-                        <!-- Gradient Bottom Line -->
-                        <div class="position-absolute bottom-0 start-0 end-0"
-                            style="height:4px; background: linear-gradient(90deg, #007bff, #00d4ff); border-radius:0 0 16px 16px;">
+                        <!-- GRADIENT BOTTOM LINE -->
+                        <div class="position-absolute"
+                            style="bottom:0; left:0; right:0; height:4px; 
+                background: linear-gradient(90deg, #007bff, #00d4ff); 
+                border-radius:0 0 8px 8px;">
                         </div>
+
                     </div>
 
                 @empty
 
-                    <div class="alert alert-info text-center shadow-sm rounded-4 py-4">
+                    <div class="alert alert-info text-center shadow-sm rounded-lg py-4">
                         <i class="fas fa-info-circle"></i> No matching jobs found.
                     </div>
                 @endforelse

@@ -148,3 +148,21 @@ Route::controller(JobApplicationController::class)->group(function () {
     Route::get('/admin/application/approve/{id}', 'approve_application')->name('admin.approve.application');
 
 });
+
+
+Route::get('/test-mail', function () {
+
+    \Mail::raw('Test Email from Job Hub using Brevo SMTP', function ($message) {
+        $message->to('samadkhwaja393@gmail.com') // apna email daalna
+                ->subject('Brevo SMTP Working');
+    });
+
+    return "Mail Sent Successfully!";
+});
+
+Route::post('/notifications/read', function () {
+    Auth::guard('user')->user()
+        ->unreadNotifications
+        ->markAsRead();
+    return back();
+})->name('notifications.read');

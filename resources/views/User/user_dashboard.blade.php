@@ -173,14 +173,11 @@
 
                 <!-- Animated Line -->
                 <div class="toast-progress"></div>
-
             </div>
-
         </div>
     @endif
 
     <div class="row">
-
         {{-- New Jobs --}}
         <div class="col-12 col-sm-6 col-md-3 mb-3">
             <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm"
@@ -253,6 +250,7 @@
 
     {{-- Profile Strength Single Line --}}
     <div class="row mt-4">
+
         <div class="col-12">
             <div class="bg-white p-3 shadow-sm d-flex align-items-center justify-content-between"
                 style="border-radius:15px;">
@@ -272,21 +270,19 @@
 
                 {{-- Left Side --}}
                 <div class="d-flex align-items-center">
+                    <i class="fas fa-user-check mr-2" style="color: {{ $color }};"></i>
 
-                    <i class="fas fa-user-check me-2" style="color: {{ $color }};"></i>
-
-                    <span class="fw-semibold me-2">
+                    <span class="font-weight-semibold mr-2">
                         Profile Strength:
                     </span>
 
-                    <span id="counter" class="fw-bold me-2" style="color: {{ $color }};">
+                    <span id="counter" class="font-weight-bold mr-2" style="color: {{ $color }};">
                         0%
                     </span>
 
-                    <span class="fw-medium" style="color: {{ $color }};">
+                    <span style="color: {{ $color }};">
                         ({{ $strength }})
                     </span>
-
                 </div>
 
                 {{-- Right Progress Bar --}}
@@ -294,73 +290,76 @@
                     <div style="height:6px; background:#e5e7eb; border-radius:10px;">
                         <div id="progressBar"
                             style="height:6px;
-                                width:0%;
-                                background: {{ $color }};
-                                border-radius:10px;
-                                transition: width 1.5s ease;">
+                               width:0%;
+                               background: {{ $color }};
+                               border-radius:10px;
+                               transition: width 1.5s ease;">
                         </div>
                     </div>
                 </div>
-                   <!-- Arrow Button -->
+
+                <!-- Arrow Button -->
                 <a href="{{ route('user.add_profile') }}"
-                   class="btn btn-light btn-sm rounded-circle shadow-sm d-flex align-items-center justify-content-center"
-                   style="width:35px; height:35px;">
+                    class="btn btn-light btn-sm rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                    style="width:35px; height:35px;">
                     <i class="fas fa-chevron-right"></i>
                 </a>
-            </div>
-        </div>
-
-        <div class="card border-0 shadow-sm rounded-lg mt-4">
-            <div class="card-body">
-
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h6 class="font-weight-bold mb-0">
-                        <i class="fas fa-bolt text-warning mr-2"></i>
-                        Quick Actions
-                    </h6>
-                </div>
-
-                <div class="row text-center">
-
-                    <!-- Browse Jobs -->
-                    <div class="col-md-4 mb-3">
-                        <a href="{{ route('user.jobs') }}" class="action-box d-block p-3 rounded">
-                            <div class="icon-circle bg-primary-light mb-2">
-                                <i class="fas fa-search text-primary"></i>
-                            </div>
-                            <h6 class="font-weight-bold mb-1">Browse Jobs</h6>
-                            <small class="text-muted">Find new opportunities</small>
-                        </a>
-                    </div>
-
-                    <!-- Update Profile -->
-                    <div class="col-md-4 mb-3">
-                        <a href="{{ route('user.profile') }}" class="action-box d-block p-3 rounded">
-                            <div class="icon-circle bg-secondary-light mb-2">
-                                <i class="fas fa-user-edit text-secondary"></i>
-                            </div>
-                            <h6 class="font-weight-bold mb-1">Update Profile</h6>
-                            <small class="text-muted">Improve job visibility</small>
-                        </a>
-                    </div>
-
-                    <!-- Saved Jobs -->
-                    <div class="col-md-4 mb-3">
-                        <a href="{{ route('user.saved.jobs') }}" class="action-box d-block p-3 rounded">
-                            <div class="icon-circle bg-success-light mb-2">
-                                <i class="fas fa-bookmark text-success"></i>
-                            </div>
-                            <h6 class="font-weight-bold mb-1">Saved Jobs</h6>
-                            <small class="text-muted">View your saved jobs</small>
-                        </a>
-                    </div>
-
-                </div>
 
             </div>
         </div>
     </div>
 
+    {{-- ================= QUICK ACTIONS ================= --}}
+    <div class="row mt-4">
+
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-lg">
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="font-weight-bold mb-0">
+                            <i class="fas fa-bolt text-warning mr-2"></i>
+                            Quick Actions
+                        </h6>
+                    </div>
+
+                    <div class="row text-center">
+
+                        <div class="col-md-4 mb-3">
+                            <a href="{{ route('user.jobs') }}" class="action-box d-block p-3 rounded">
+                                <div class="icon-circle bg-primary-light mb-2">
+                                    <i class="fas fa-search text-primary"></i>
+                                </div>
+                                <h6 class="font-weight-bold mb-1">Browse Jobs</h6>
+                                <small class="text-muted">Find new opportunities</small>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <a href="{{ route('user.profile') }}" class="action-box d-block p-3 rounded">
+                                <div class="icon-circle bg-secondary-light mb-2">
+                                    <i class="fas fa-user-edit text-secondary"></i>
+                                </div>
+                                <h6 class="font-weight-bold mb-1">Update Profile</h6>
+                                <small class="text-muted">Improve job visibility</small>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <a href="{{ route('user.saved.jobs') }}" class="action-box d-block p-3 rounded">
+                                <div class="icon-circle bg-success-light mb-2">
+                                    <i class="fas fa-bookmark text-success"></i>
+                                </div>
+                                <h6 class="font-weight-bold mb-1">Saved Jobs</h6>
+                                <small class="text-muted">View your saved jobs</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
     <div class="card shadow-lg border-0 rounded-lg mt-4">
         <div class="card-body p-4">
 
@@ -443,7 +442,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                     <!-- Success Rate -->
@@ -460,18 +458,43 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- RIGHT SIDE CHART -->
                 <div class="col-md-5">
-                    <div style="height:250px;">
-                        <canvas id="statusChart"></canvas>
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+
+                            <h6 class="font-weight-bold mb-0">
+                                Application Status
+                            </h6>
+                            <small class="text-muted">
+                                Distribution Overview
+                            </small>
+
+                            <div class="position-relative mt-3" style="height:230px;">
+
+                                <canvas id="statusChart"></canvas>
+
+                                <!-- Center Text -->
+                                <div id="chartCenterText"
+                                    style="position:absolute;
+                            top:50%;
+                            left:50%;
+                            transform:translate(-50%,-50%);
+                            text-align:center;">
+                                    <h4 class="font-weight-bold mb-0 text-primary" id="successText">
+                                        0%
+                                    </h4>
+                                    <small class="text-muted">Success</small>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 
@@ -517,37 +540,26 @@
                                 <div class="text-primary" style="font-size: 12px;">
                                     Status: {{ ucfirst($recentjob->status) }}
                                 </div>
-
                             </div>
-
-                            {{-- Arrow --}}
                             <div class="text-muted ml-3">
                                 <a href="{{ route('user.job_applied') }}"><i class="fas fa-chevron-right"></i></a>
                             </div>
-
                         </div>
-
                     @empty
                         <p class="text-muted">No recent job applications found.</p>
                     @endforelse
 
                 </div>
-
             </div>
         </div>
-
-
     </div>
-
 @endsection
-
 @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
 
-            /* =====================================
-               PROFILE STRENGTH ANIMATION
-            ===================================== */
+            /* ================= PROFILE STRENGTH ================= */
+
             const percentage = {{ $profileCompletion ?? 0 }};
             const progressBar = document.getElementById("progressBar");
             const profileCounter = document.getElementById("counter");
@@ -560,47 +572,44 @@
 
             if (profileCounter) {
                 let count = 0;
-
                 const interval = setInterval(() => {
                     count++;
                     profileCounter.innerText = count + "%";
-
-                    if (count >= percentage) {
-                        clearInterval(interval);
-                    }
+                    if (count >= percentage) clearInterval(interval);
                 }, 15);
             }
 
 
-            /* =====================================
-               APPLICATION STATUS COUNTERS
-            ===================================== */
+            /* ================= COUNTERS ================= */
+
             document.querySelectorAll('.counter').forEach(counter => {
 
                 const target = parseInt(counter.dataset.count) || 0;
                 let count = 0;
-
-                // Fast animation for large numbers
                 const increment = target > 50 ? 5 : 1;
 
                 const update = setInterval(() => {
                     count += increment;
-
                     if (count >= target) {
                         counter.innerText = target;
                         clearInterval(update);
                     } else {
                         counter.innerText = count;
                     }
-
                 }, 20);
-
             });
 
 
-            /* =====================================
-               DOUGHNUT CHART
-            ===================================== */
+            /* ================= DOUGHNUT CHART ================= */
+
+            const pending = {{ $pending ?? 0 }};
+            const shortlisted = {{ $shortlisted ?? 0 }};
+            const hired = {{ $hired ?? 0 }};
+            const rejected = {{ $rejected ?? 0 }};
+
+            const total = pending + shortlisted + hired + rejected;
+            const successRate = total > 0 ? Math.round((hired / total) * 100) : 0;
+
             const ctx = document.getElementById('statusChart');
 
             if (ctx && typeof Chart !== "undefined") {
@@ -610,12 +619,7 @@
                     data: {
                         labels: ['Pending', 'Shortlisted', 'Hired', 'Rejected'],
                         datasets: [{
-                            data: [
-                                Number({{ $pending ?? 0 }}),
-                                Number({{ $shortlisted ?? 0 }}),
-                                Number({{ $hired ?? 0 }}),
-                                Number({{ $rejected ?? 0 }})
-                            ],
+                            data: [pending, shortlisted, hired, rejected],
                             backgroundColor: [
                                 '#ffc107',
                                 '#007bff',
@@ -630,29 +634,31 @@
                         maintainAspectRatio: false,
                         cutoutPercentage: 70,
                         legend: {
-                            position: 'bottom',
-                            labels: {
-                                boxWidth: 14
-                            }
+                            display: false
                         },
-                        tooltips: {
-                            callbacks: {
-                                label: function(tooltipItem, data) {
-                                    const dataset = data.datasets[0];
-                                    const total = dataset.data.reduce((a, b) => a + b, 0);
-                                    const currentValue = dataset.data[tooltipItem.index];
-                                    const percentage = total > 0 ? ((currentValue / total) * 100)
-                                        .toFixed(1) : 0;
-                                    return data.labels[tooltipItem.index] + ": " + currentValue + " (" +
-                                        percentage + "%)";
-                                }
-                            }
+                        animation: {
+                            animateRotate: true,
+                            duration: 1500
                         }
                     }
                 });
 
+                // Center % animation
+                const successText = document.getElementById("successText");
+                if (successText) {
+                    let count = 0;
+                    const interval = setInterval(function() {
+                        count++;
+                        successText.innerText = count + "%";
+                        if (count >= successRate) clearInterval(interval);
+                    }, 20);
+                }
             }
+
         });
+
+
+        /* ================= TOAST ================= */
 
         function closeToast() {
             const toast = document.getElementById('welcomeToast');

@@ -85,7 +85,23 @@ public function dashboard()
 
     $jobIds = Job::where('admin_id', $adminId)->pluck('id');
 
+    // -------------------------------
+    // JOB COUNTS
+    // -------------------------------
+
     $totalJobs = Job::where('admin_id', $adminId)->count();
+
+    $activeJobs = Job::where('admin_id', $adminId)
+        ->where('last_date', '>=', now())
+        ->count();
+
+    $expiredJobs = Job::where('admin_id', $adminId)
+        ->where('last_date', '<', now())
+        ->count();
+
+    // -------------------------------
+    // APPLICATION COUNTS
+    // -------------------------------
 
     $totalApplications = JobApplication::whereIn('job_id', $jobIds)->count();
 
@@ -97,72 +113,55 @@ public function dashboard()
         ->where('status', 'shortlisted')
         ->count();
 
-$dayLabels = [];
-$dayValues = [];
-for ($i = 6; $i >= 0; $i--) {
-    $date = now()->subDays($i);
-    $dayLabels[] = $date->format('D');
-    $dayValues[] = JobApplication::whereIn('job_id', $jobIds)
-        ->whereDate('created_at', $date)
-        ->count();
-}
+    // -------------------------------
+// APPLICATION STATUS COUNTS
+// -------------------------------
 
+$pendingCount = JobApplication::whereIn('job_id', $jobIds)
+    ->where('status', 'pending')
+    ->count();
 
-$weekLabels = [];
-$weekValues = [];
-for ($i = 3; $i >= 0; $i--) {
-    $start = now()->subWeeks($i)->startOfWeek();
-    $end   = now()->subWeeks($i)->endOfWeek();
-    $weekLabels[] = "Week " . $start->format('d');
-    $weekValues[] = JobApplication::whereIn('job_id', $jobIds)
-        ->whereBetween('created_at', [$start, $end])
-        ->count();
-}
+$shortlistedCount = JobApplication::whereIn('job_id', $jobIds)
+    ->where('status', 'shortlisted')
+    ->count();
 
+$hiredCount = JobApplication::whereIn('job_id', $jobIds)
+    ->where('status', 'hired')
+    ->count();
 
-$monthLabels = [];
-$monthValues = [];
-for ($i = 5; $i >= 0; $i--) {
-    $month = now()->subMonths($i);
-    $monthLabels[] = $month->format('M');
-    $monthValues[] = JobApplication::whereIn('job_id', $jobIds)
-        ->whereMonth('created_at', $month->month)
-        ->count();
-}
+$rejectedCount = JobApplication::whereIn('job_id', $jobIds)
+    ->where('status', 'rejected')
+    ->count();
 
-$chartLabels = [];
-$appValues = [];
-$hiredValues = [];
+$topJob = Job::withCount('applications')
+    ->where('admin_id', $adminId)
+    ->orderBy('applications_count','desc')
+    ->first();
 
-for ($i = 6; $i >= 0; $i--) {
+    $expiringJobs = Job::where('admin_id',$adminId)
+    ->whereBetween('last_date',[now(),now()->addDays(3)])
+    ->count();
 
-    $date = now()->subDays($i)->format('Y-m-d');
-    $chartLabels[] = now()->subDays($i)->format('D');  // Sun, Mon, Tue...
-
-    $appValues[] = JobApplication::whereIn('job_id', $jobIds)
-        ->whereDate('created_at', $date)
-        ->count();
-
-    $hiredValues[] = JobApplication::whereIn('job_id', $jobIds)
-        ->where('status', 'hired')
-        ->whereDate('created_at', $date)
-        ->count();
-}
+$pendingApplications = JobApplication::whereIn('job_id',$jobIds)
+    ->where('status','pending')
+    ->count();
 
     return view('Admin.admin_dashboard', compact(
         'totalJobs',
+        'activeJobs',
+        'expiredJobs',
         'totalApplications',
         'totalSelected',
         'totalshortlisted',
-        'chartLabels',
-        'appValues',
-        'hiredValues',
-        'dayLabels','dayValues',
-        'weekLabels','weekValues',
-        'monthLabels','monthValues'
+        'pendingCount',
+'shortlistedCount',
+'hiredCount',
+'rejectedCount',
+'topJob',
+'expiringJobs',
+'pendingApplications'
     ));
 }
-
 public function selectedList()
 {
     $adminId = Auth::guard('admin')->id();

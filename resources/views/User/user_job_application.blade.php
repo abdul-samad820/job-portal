@@ -31,105 +31,126 @@
                 <!-- Application Card -->
                 <div class="card border-0 shadow-lg rounded-4">
                     <div class="card-body p-5">
-                        <h4 class="fw-semibold text-dark mb-4 border-bottom pb-2">
-                            <i class="fas fa-user-edit me-2 text-primary"></i> Application Form
-                        </h4>
+                        <div class="card border-0 shadow-lg rounded-4">
+                            <div class="card-body p-5">
 
-                        <!-- Job Summary Card -->
-                        <div class="card border-0 shadow-sm rounded-4 mt-4 bg-light">
-                            <div class="card-body p-4">
-                                <h5 class="fw-semibold mb-3 text-dark"><i class="fas fa-briefcase me-2 text-primary"></i>
-                                    Job Details</h5>
-                                <ul class="list-unstyled mb-0 text-muted">
-                                    <li><strong>Company:</strong> {{ $job->admin->company_name ?? 'Not specified' }}</li>
-                                    <li><strong>Location:</strong> {{ $job->location ?? 'Remote / Flexible' }}</li>
-                                    <li><strong>Salary:</strong>
-                                        {{ $job->salary ? $job->salary . ' LPA' : 'Not disclosed' }}</li>
+                                @if ($alreadyApplied)
+                                    <div class="alert alert-info shadow-sm d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-info mr-2"></i>
+                                        <strong>You have already applied for this job.</strong>
+                                    </div>
+                                @endif
 
-                                    <li><strong>Type:</strong> {{ ucfirst($job->type ?? 'Full-time') }}</li>
-                                    <li><strong>Last Date:</strong>
-                                        {{ \Carbon\Carbon::parse($job->last_date)->format('d M Y') }}</li>
-                                </ul>
+                                <h4 class="fw-semibold text-dark mb-4 border-bottom pb-2">
+                                    <i class="fas fa-user-edit me-2 text-primary"></i> Application Form
+                                </h4>
+
+                                <!-- Job Summary Card -->
+                                <div class="card border-0 shadow-sm rounded-4 mt-4 bg-light">
+                                    <div class="card-body p-4">
+                                        <h5 class="fw-semibold mb-3 text-dark"><i
+                                                class="fas fa-briefcase me-2 text-primary"></i>
+                                            Job Details</h5>
+                                        <ul class="list-unstyled mb-0 text-muted">
+                                            <li><strong>Company:</strong> {{ $job->admin->company_name ?? 'Not specified' }}
+                                            </li>
+                                            <li><strong>Location:</strong> {{ $job->location ?? 'Remote / Flexible' }}</li>
+                                            <li><strong>Salary:</strong>
+                                                {{ $job->salary ? $job->salary . ' LPA' : 'Not disclosed' }}</li>
+
+                                            <li><strong>Type:</strong> {{ ucfirst($job->type ?? 'Full-time') }}</li>
+                                            <li><strong>Last Date:</strong>
+                                                {{ \Carbon\Carbon::parse($job->last_date)->format('d M Y') }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <form action="{{ route('apply_job-application', $job->id) }}" method="POST"
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    <!-- Position -->
+                                    <div class="mb-4 mt-2">
+                                        <label class="font-weight-semibold">Position</label>
+                                        <input type="text" class="form-control bg-light" value="{{ $job->title }}"
+                                            readonly>
+                                    </div>
+
+                                    <!-- Cover Letter -->
+                                    <div class="mb-4">
+                                        <label class="font-weight-semibold">
+                                            Cover Letter <span class="text-danger">*</span>
+                                        </label>
+
+                                        <textarea name="cover_letter" id="cover_letter" class="form-control" rows="5" maxlength="500"
+                                            placeholder="Write a short professional cover letter..." required></textarea>
+
+                                        <small class="text-muted">
+                                            <span id="letterCount">0</span>/500 characters
+                                        </small>
+                                    </div>
+
+                                    <!-- Resume Upload -->
+                                    <div class="mb-4">
+                                        <label class="font-weight-semibold">
+                                            Upload Resume <span class="text-danger">*</span>
+                                        </label>
+
+                                        <input type="file" name="resume" id="resume" class="form-control"
+                                            accept=".pdf" required>
+
+                                        <small id="fileName" class="text-success d-block mt-1"></small>
+                                        <small class="text-muted">
+                                            Only PDF allowed | Max size: 2MB
+                                        </small>
+                                    </div>
+
+                                    <!-- Submit -->
+                                    <div class="text-center mt-4">
+                                        <button type="submit" id="submitBtn"
+                                            class="btn btn-primary btn-lg rounded-pill shadow px-5">
+                                            <i class="fas fa-paper-plane mr-2"></i>
+                                            Submit Application
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-
-                        <form action="{{ route('apply_job-application', $job->id) }}" method="POST"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <!-- Job Info -->
-                            <div class="mb-4">
-                                <label class="form-label fw-semibold text-secondary">Position</label>
-                                <input type="text" class="form-control bg-light" value="{{ $job->title }}" readonly>
-                            </div>
-
-                            <!-- Cover Letter -->
-                            <div class="mb-4">
-                                <label for="cover_letter" class="form-label fw-semibold text-secondary">Cover Letter <span
-                                        class="text-danger">*</span></label>
-                                <textarea name="cover_letter" id="cover_letter" class="form-control shadow-sm" rows="5"
-                                    placeholder="Write a short and professional cover letter..." required></textarea>
-                            </div>
-
-                            <!-- Resume Upload -->
-                            <div class="mb-4">
-                                <label for="resume" class="form-label fw-semibold text-secondary">Upload Resume <span
-                                        class="text-danger">*</span></label>
-                                <input type="file" name="resume" id="resume" class="form-control shadow-sm"
-                                    accept=".pdf,.doc,.docx" required>
-                                <small class="text-muted d-block mt-1">Accepted formats: PDF, DOC, DOCX | Max size:
-                                    2MB</small>
-                            </div>
-
-                            <!-- Hidden Status -->
-                            <input type="hidden" name="status" value="pending">
-
-                            <!-- Submit -->
-                            <div class="text-center mt-5">
-                                <button type="submit" class="btn btn-primary px-5 py-2 fw-semibold rounded-pill shadow-sm">
-                                    <i class="fas fa-paper-plane me-2"></i> Submit Application
-                                </button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-@endsection
+        @endsection
 
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // SweetAlert for delete confirmation (future-proof)
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const form = this.closest('form');
-                    Swal.fire({
-                        title: "Are You Sure?",
-                        text: "This will delete your application permanently.",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: '#dc3545',
-                        cancelButtonColor: '#6c757d',
-                        confirmButtonText: 'Yes, delete it!',
-                        cancelButtonText: 'Cancel'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            form.submit();
+        @push('scripts')
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+
+                    /* Cover Letter Counter */
+                    const textarea = document.getElementById('cover_letter');
+                    const counter = document.getElementById('letterCount');
+
+                    textarea.addEventListener('input', function() {
+                        counter.innerText = this.value.length;
+                    });
+
+                    /* Resume File Name Preview */
+                    const resumeInput = document.getElementById('resume');
+                    const fileName = document.getElementById('fileName');
+
+                    resumeInput.addEventListener('change', function() {
+                        if (this.files.length > 0) {
+                            fileName.innerText = "Selected: " + this.files[0].name;
                         }
                     });
-                });
-            });
 
-            // Auto-hide alerts
-            document.querySelectorAll('.alert').forEach(alert => {
-                setTimeout(() => {
-                    const bsAlert = new bootstrap.Alert(alert);
-                    bsAlert.close();
-                }, 5000);
-            });
-        });
-    </script>
-@endpush
+                    /* Disable Button After Submit */
+                    const form = document.querySelector('form');
+                    const submitBtn = document.getElementById('submitBtn');
+
+                    form.addEventListener('submit', function() {
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = 'Submitting...';
+                    });
+
+                });
+            </script>
+        @endpush

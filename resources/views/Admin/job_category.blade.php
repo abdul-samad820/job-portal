@@ -8,52 +8,54 @@
             <div class="col-12">
 
                 <!-- Header Section -->
-                <div class="p-4 rounded shadow-sm mb-4" style="background:#f3f7ff; border-left:5px solid #007bff;">
+                <!-- Soft Header Section -->
+<div class="p-4 rounded shadow-sm mb-4" style="background: #f7f9ff; border-left: 5px solid #007bff;">
 
-                    <div class="d-flex justify-content-between flex-wrap align-items-center">
+    <div class="d-flex justify-content-between flex-wrap align-items-center mb-2">
+        <div>
+            <h1 class="h4 font-weight-bold text-dark mb-1 d-flex align-items-center">
+                <i class="fa fa-layer-group text-primary mr-2"></i>
+                Job Categories
+            </h1>
+            <p class="text-muted small mb-0">
+                Manage all categories used for job postings.
+            </p>
+        </div>
 
-                        <div>
-                            <h4 class="text-dark font-weight-bold mb-1">
-                                <i class="fa fa-layer-group text-primary mr-2"></i>
-                                Job Categories
-                            </h4>
-                            <p class="text-muted mb-0" style="font-size:13px;">
-                                Manage all categories used for job postings.
-                            </p>
-                        </div>
+        <nav aria-label="breadcrumb" class="mt-3 mt-md-0">
+            <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
+                <li class="breadcrumb-item">
+                    <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active font-weight-bold">Categories</li>
+            </ol>
+        </nav>
+    </div>
 
-                        <!-- Breadcrumb -->
-                        <nav aria-label="breadcrumb" class="mt-3 mt-md-0">
-                            <ol class="breadcrumb bg-white shadow-sm px-3 py-2 rounded">
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                                </li>
-                                <li class="breadcrumb-item active">Categories</li>
-                            </ol>
-                        </nav>
+    <!-- Search + Add Button -->
+    <div class="d-flex justify-content-between flex-wrap align-items-center mt-3">
 
-                    </div>
+        <form method="GET" action="{{ route('admin.job_category') }}" 
+              class="form-inline w-100" style="max-width: 400px;">
+            <input 
+                class="form-control mr-2 w-75" 
+                type="search" 
+                placeholder="Search category..." 
+                name="search" 
+                value="{{ request('search') }}"
+            >
+            <button class="btn btn-primary" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
 
-                    <!-- Search + Add Button -->
-                    <div class="d-flex justify-content-between flex-wrap align-items-center mt-3">
+        <a href="{{ route('admin.job_category_add') }}" 
+           class="btn btn-primary rounded-pill d-flex align-items-center mt-3 mt-md-0">
+            <i class="fa fa-plus mr-2"></i> Add New
+        </a>
 
-                        <form action="{{ route('admin.job_category') }}" method="GET" class="form-inline mb-2"
-                            style="max-width:420px;">
-
-                            <input type="search" name="search" placeholder="Search category..."
-                                class="form-control mr-2 w-75" value="{{ request('search') }}">
-
-                            <button class="btn btn-primary">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </form>
-
-                        <a href="{{ route('admin.job_category_add') }}" class="btn btn-primary d-flex align-items-center">
-                            <i class="fa fa-plus mr-2"></i> Add Category
-                        </a>
-                    </div>
-
-                </div>
+    </div>
+</div>
 
                 <!-- Table Card -->
                 <div class="card shadow-sm border-0 rounded">
