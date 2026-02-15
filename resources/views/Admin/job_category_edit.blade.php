@@ -7,10 +7,8 @@
     <div class="card p-4">
 
         <form action="{{ route('admin.job_category_update', $category->id) }}" method="POST" enctype="multipart/form-data">
-
             @csrf
             @method('PUT')
-
             {{-- Category Name --}}
             <div class="form-group">
                 <label class="font-weight-bold">Category Name <span class="text-danger">*</span></label>
@@ -64,5 +62,5 @@
         </form>
 
     </div>
- 
+
 @endsection

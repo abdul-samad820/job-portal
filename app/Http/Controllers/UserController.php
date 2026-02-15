@@ -10,6 +10,7 @@ use App\Models\JobApplication;
 use App\Models\User_profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -327,32 +328,37 @@ public function update_user_profile(Request $request)
         'experience' => 'nullable|string|max:1255',
     ]);
 
+    // ✅ Handle Profile Image (Storage System)
     if ($request->hasFile('profile_image')) {
 
-        if ($profile->profile_image && file_exists(public_path('uploads/user_profile/' . $profile->profile_image))) {
-            unlink(public_path('uploads/user_profile/' . $profile->profile_image));
+        // Delete old image
+        if ($profile->profile_image) {
+            Storage::disk('public')
+                ->delete('user_profile/' . $profile->profile_image);
         }
 
-        $file = $request->file('profile_image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/user_profile/'), $filename);
+        // Store new image
+        $path = $request->file('profile_image')
+                        ->store('user_profile', 'public');
 
-        $data['profile_image'] = $filename;
+        $data['profile_image'] = basename($path);
     }
 
+    // Education JSON
     if ($request->has('education') && is_array($request->education)) {
         $data['education'] = json_encode($request->education);
     }
 
     $profile->update($data);
 
-    return redirect()->route('user.profile')->with('success', 'Profile updated successfully!');
+    return redirect()->route('user.profile')
+        ->with('success', 'Profile updated successfully!');
 }
 
 public function account_setting()
 {
     $userId = Auth::guard('user')->id();
-    $user_data = User::findOrFail($userId);
+ $user_data = Auth::guard('user')->user();
 
     return view('User.user_account_setting', compact('user_data'));
 }
@@ -379,5 +385,9 @@ public function account_setting_update(Request $request, $id)
     $user_data->update($data);
     return back()->with('success', 'Account details updated successfully!');
 }
-
+public function readNotifications()
+{
+    auth()->user()->unreadNotifications->markAsRead();
+    return back();
+}
 }

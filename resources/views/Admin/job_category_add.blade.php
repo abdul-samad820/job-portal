@@ -7,9 +7,7 @@
     <div class="card p-4">
 
         <form action="{{ route('admin.job_category_create') }}" method="POST" enctype="multipart/form-data">
-
             @csrf
-
             {{-- Category Name --}}
             <fieldset class="form-group">
                 <label class="font-weight-bold">Category Name <span class="text-danger">*</span></label>

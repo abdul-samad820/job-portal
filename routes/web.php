@@ -46,6 +46,9 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->controller(AdminC
     Route::put('/profile/update', 'update_profile')->name('profile.update');
     Route::post('/logout', 'logout')->name('logout');
     Route::get('/selected', 'selectedList')->name('selectedList');
+    Route::post('/notifications/read', 'readNotifications')
+    ->name('notifications.read');
+       
      
 // Job Category Routes
 
@@ -115,7 +118,8 @@ Route::middleware(['user'])->controller(UserController::class)->prefix('user')->
      Route::get('/unsave-job/{id}', 'unsave_job')->name('unsave.job');
      Route::get('/saved-jobs', 'saved_jobs')->name('saved.jobs');
 
-
+     Route::post('/notifications/read', 'readNotifications')
+    ->name('notifications.read');
     });
 
 // This stays outside because it's a different controller
@@ -149,20 +153,18 @@ Route::controller(JobApplicationController::class)->group(function () {
 
 });
 
-
-Route::get('/test-mail', function () {
-
-    \Mail::raw('Test Email from Job Hub using Brevo SMTP', function ($message) {
-        $message->to('samadkhwaja393@gmail.com') // apna email daalna
-                ->subject('Brevo SMTP Working');
-    });
-
-    return "Mail Sent Successfully!";
-});
-
 Route::post('/notifications/read', function () {
     Auth::guard('user')->user()
         ->unreadNotifications
         ->markAsRead();
     return back();
 })->name('notifications.read');
+
+Route::post('/admin/notifications/read', function () {
+    auth('admin')->user()->unreadNotifications->markAsRead();
+    return back();
+})->name('admin.notifications.read');
+
+Route::get('/admin/application/{id}/download-resume',
+    [JobApplicationController::class, 'downloadResume'])
+    ->name('admin.resume.download');

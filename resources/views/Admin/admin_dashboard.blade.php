@@ -1,164 +1,34 @@
 @extends('layouts.index')
 @section('title', 'Dashboard')
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/style-admin-file.css') }}">
+@endpush
+
 @section('content')
-    <style>
-        .chart-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-
-        .total-count {
-            font-size: 28px;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-
-        .status-card {
-            background: linear-gradient(135deg, #ffffff 0%, #f9fafc 100%);
-            border: 1px solid #f1f3f5;
-            transition: all .25s ease;
-        }
-
-        .status-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        .icon-circle {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 13px;
-        }
-
-        .progress-bar {
-            transition: width 0.8s ease;
-        }
-
-        .badge-warning {
-            box-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
-        }
-
-        .stat-hover {
-            transition: all .25s ease;
-        }
-
-        .stat-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-        }
-
-        .premium-progress {
-            height: 10px;
-            border-radius: 50px;
-            background: #e9ecef;
-            overflow: hidden;
-        }
-
-        .premium-bar {
-            width: 0%;
-            border-radius: 50px;
-            background: linear-gradient(90deg, #007bff, #00c6ff);
-            position: relative;
-            transition: width 1.5s ease-in-out;
-        }
-
-        /* Shine Animation */
-        .premium-bar::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -50%;
-            width: 50%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.4);
-            transform: skewX(-25deg);
-            animation: shine 2s infinite;
-        }
-
-        @keyframes shine {
-            0% {
-                left: -50%;
-            }
-
-            100% {
-                left: 150%;
-            }
-        }
-
-        .chart-wrapper {
-            position: relative;
-            width: 260px;
-            height: 260px;
-            margin: auto;
-        }
-
-        .chart-center-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-
-        .chart-total {
-            font-size: 32px;
-            font-weight: 700;
-            color: #2c3e50;
-            line-height: 1;
-        }
-
-        .chart-label {
-            font-size: 13px;
-            color: #6c757d;
-            letter-spacing: 0.5px;
-        }
-
-        /* Smooth animation for number */
-        .chart-total {
-            transition: all 0.4s ease;
-        }
-    </style>
-
     <div class="row">
-
         <div class="col-md-3 mb-3">
             <div class="card stat-pill">
                 <div class="d-flex justify-content-between align-items-center p-3">
-
                     <div>
                         <div class="stat-value mb-1">{{ $totalJobs }}</div>
                         <div class="stat-label">Total Jobs</div>
                     </div>
-
                     <div class="stat-round-icon">
                         <i class="fas fa-user"></i>
                     </div>
-
                 </div>
             </div>
         </div>
         <div class="col-md-3 mb-3">
             <div class="card stat-pill">
                 <div class="d-flex justify-content-between align-items-center p-3">
-
                     <div>
-                        <a href="{{ route('admin.selectedList') }}">
-                            <div class="stat-value mb-1">{{ $activeJobs }}</div>
-                            <div class="stat-label">Active Jobs</div>
+                        <div class="stat-value mb-1">{{ $activeJobs }}</div>
+                        <div class="stat-label">Active Jobs</div>
                     </div>
-
                     <div class="stat-round-icon">
                         <i class="fas fa-bookmark"></i>
                     </div>
-                    </a>
                 </div>
             </div>
         </div>
@@ -264,39 +134,66 @@
         <div class="col-lg-6 mb-4">
             <div class="card border-0 shadow-sm premium-top-card h-100">
 
-                <div class="card-body p-4">
+                <div class="card border-0 shadow-sm rounded-4 stat-hover">
+                    <div class="card-body p-4">
 
-                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
 
-                        <!-- Left Content -->
-                        <div>
-                            <div class="small text-uppercase text-muted font-weight-bold mb-1">
-                                Top Performing Job
+                            <!-- Left Content -->
+                            <div>
+                                <div class="text-uppercase text-muted fw-semibold small mb-2 letter-spacing">
+                                    Top Performing Job
+                                </div>
+
+                                <h5 class="fw-bold text-dark mb-2">
+                                    {{ $topJob->title ?? 'No Data Available' }}
+                                </h5>
+
+                                @if ($topJob)
+                                    <div class="text-muted small">
+                                        <span class="badge bg-light text-dark border me-2 px-3 py-1 rounded-pill">
+                                            {{ ucfirst($topJob->type ?? 'N/A') }}
+                                        </span>
+
+                                        @if (!empty($topJob->location))
+                                            <span class="text-muted">
+                                                <i class="fas fa-map-marker-alt me-1"></i>
+                                                {{ $topJob->location }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
 
-                            <h5 class="font-weight-bold text-dark mb-1">
-                                {{ $topJob->title ?? 'No Data Available' }}
-                            </h5>
-
-                            @if ($topJob)
-                                <small class="text-muted">
-                                    {{ ucfirst($topJob->type ?? '') }}
-                                    @if (!empty($topJob->location))
-                                        • {{ $topJob->location }}
-                                    @endif
-                                </small>
-                            @endif
-                        </div>
-
-                        <!-- Right Counter -->
-                        <div class="text-right">
-                            <div class="top-count text-danger">
-                                {{ $topJob->applications_count ?? 0 }}
+                            <!-- Right Counter -->
+                            <div class="text-end">
+                                <div class="display-6 fw-bold text-gradient">
+                                    {{ $topJob->applications_count ?? 0 }}
+                                </div>
+                                <div class="text-muted small text-uppercase fw-semibold">
+                                    Applications
+                                </div>
                             </div>
-                            <small class="text-muted text-uppercase">
-                                Applications
-                            </small>
+
                         </div>
+
+                        <!-- Subtle Divider -->
+                        <hr class="my-3">
+
+                        <!-- Progress Bar -->
+                        @if ($topJob)
+                            <div>
+                                <div class="d-flex justify-content-between small mb-2">
+                                    <span class="text-muted">Performance</span>
+                                    <span class="fw-semibold text-primary">High Demand</span>
+                                </div>
+
+                                <div class="premium-progress">
+                                    <div class="premium-bar" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                        @endif
+
                     </div>
                 </div>
             </div>
@@ -304,70 +201,93 @@
 
         <!-- ================= RIGHT : SYSTEM ALERTS ================= -->
         <div class="col-lg-6 mb-4">
-            <div class="card border-0 shadow-sm premium-alert-card h-100">
-
+            <div class="card premium-card h-100">
                 <div class="card-body p-4">
 
-                    <h6 class="font-weight-bold mb-4">
-                        System Alerts
-                    </h6>
+                    <!-- Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h6 class="font-weight-bold mb-0 text-dark text-uppercase small">
+                            <i class="fas fa-shield-alt text-primary mr-2"></i>
+                            System Alerts
+                        </h6>
 
+                        <span class="badge premium-badge-light">
+                            {{ ($expiringJobs ?? 0) + ($pendingCount ?? 0) }}
+                        </span>
+                    </div>
+
+                    {{-- Expiring Jobs --}}
                     @if ($expiringJobs > 0)
-                        <div class="alert-box alert-warning-box mb-3">
-                            <div class="d-flex align-items-center">
+                        <div class="premium-alert warning mb-3 d-flex align-items-center">
 
-                                <div class="alert-icon bg-warning">
-                                    <i class="fa fa-clock"></i>
+                            <!-- Left Side -->
+                            <div class="d-flex align-items-center flex-grow-1">
+
+                                <div class="alert-icon warning-icon mr-3">
+                                    <i class="fas fa-clock"></i>
                                 </div>
 
-                                <div class="ml-3 flex-grow-1">
-                                    <div class="font-weight-bold">
+                                <div>
+                                    <div class="font-weight-bold text-dark">
                                         {{ $expiringJobs }} Jobs Expiring
                                     </div>
                                     <small class="text-muted">
-                                        Expiring in next 3 days
+                                        Deadline within next 3 days
                                     </small>
                                 </div>
 
-                                <span class="badge badge-warning">
-                                    Action
-                                </span>
-
                             </div>
+
+                            <!-- Right Button -->
+                            <a href="{{ route('admin.job') }}" class="btn btn-sm premium-btn-warning ml-3">
+                                View
+                            </a>
+
                         </div>
                     @endif
 
 
-                    @if ($pendingApplications > 0)
-                        <div class="alert-box alert-danger-box mb-3">
-                            <div class="d-flex align-items-center">
+                    {{-- Pending Applications --}}
+                    @if ($pendingCount > 0)
+                        <div class="premium-alert danger mb-3 d-flex align-items-center">
 
-                                <div class="alert-icon bg-danger">
-                                    <i class="fa fa-exclamation-circle"></i>
+                            <div class="d-flex align-items-center flex-grow-1">
+
+                                <div class="alert-icon danger-icon mr-3">
+                                    <i class="fas fa-user-clock"></i>
                                 </div>
 
-                                <div class="ml-3 flex-grow-1">
-                                    <div class="font-weight-bold">
-                                        {{ $pendingApplications }} Applications Pending
+                                <div>
+                                    <div class="font-weight-bold text-dark">
+                                        {{ $pendingCount }} Applications Pending
                                     </div>
                                     <small class="text-muted">
                                         Waiting for review
                                     </small>
                                 </div>
 
-                                <span class="badge badge-danger">
-                                    Review
-                                </span>
-
                             </div>
+
+                            <a href="{{ route('job_application') }}" class="btn btn-sm premium-btn-danger ml-3">
+                                Review
+                            </a>
+
                         </div>
                     @endif
 
 
-                    @if ($expiringJobs == 0 && $pendingApplications == 0)
-                        <div class="text-success small d-flex align-items-center">
-                            <i class="fa fa-check-circle mr-2"></i>
-                            All systems running smoothly.
+                    {{-- All Clear --}}
+                    @if ($expiringJobs == 0 && $pendingCount == 0)
+                        <div class="text-center py-5">
+                            <div class="success-icon mb-3">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="font-weight-bold text-success">
+                                All systems running smoothly
+                            </div>
+                            <small class="text-muted">
+                                No urgent alerts at the moment
+                            </small>
                         </div>
                     @endif
 
@@ -564,9 +484,9 @@
                     data: {
                         datasets: [{
                             data: dataValues,
-                            backgroundColor: isEmpty ?
-                                ['#e9ecef'] :
-                                ['#f6c23e', '#36b9cc', '#1cc88a', '#e74a3b'],
+                            backgroundColor: isEmpty ? ['#e9ecef'] : ['#f6c23e', '#36b9cc',
+                                '#1cc88a', '#e74a3b'
+                            ],
                             borderWidth: 0
                         }]
                     },

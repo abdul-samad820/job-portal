@@ -11,22 +11,37 @@ use Http\Middleware\Admin_mid;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+  use App\Notifications\LoginSecurityNotification;
 
 class AdminController extends Controller
 {
+public function login(Request $request)
+{
+    $data = $request->validate([
+        'email' => 'required',
+        'password' => 'required',
+    ]);
 
-  public function login(Request $request){
- $data = $request->validate([
- 'email'=>'required', 
- 'password' => 'required', 
- ]);
-if (Auth::guard('admin')->attempt($data)) {
-   $request->session()->regenerate();
-   return redirect()->route('admin.dashboard');
-}else {
+    if (Auth::guard('admin')->attempt($data)) {
+
+        $request->session()->regenerate();
+
+        $admin = Auth::guard('admin')->user();
+
+        if (!$admin->unreadNotifications()
+                ->where('type', LoginSecurityNotification::class)
+                ->whereDate('created_at', today())
+                ->exists()) {
+
+            $admin->notify(new LoginSecurityNotification($request->ip()));
+        }
+
+        return redirect()->route('admin.dashboard');
+    }
+
     return back()->withErrors(['email' => 'Invalid email or password.'])->withInput();
 }
-  }
+
   public function logout(Request $request){
       Auth::guard('admin')->logout();  
       $request->session()->invalidate();  
@@ -78,16 +93,12 @@ public function viewResume($id)
 
     return back()->with('success', 'Application status updated successfully.');
 }
-
 public function dashboard()
 {
-    $adminId = Auth::guard('admin')->id();
+    $admin = Auth::guard('admin')->user();
+    $adminId = $admin->id;
 
     $jobIds = Job::where('admin_id', $adminId)->pluck('id');
-
-    // -------------------------------
-    // JOB COUNTS
-    // -------------------------------
 
     $totalJobs = Job::where('admin_id', $adminId)->count();
 
@@ -99,67 +110,44 @@ public function dashboard()
         ->where('last_date', '<', now())
         ->count();
 
-    // -------------------------------
-    // APPLICATION COUNTS
-    // -------------------------------
-
     $totalApplications = JobApplication::whereIn('job_id', $jobIds)->count();
 
-    $totalSelected = JobApplication::whereIn('job_id', $jobIds)
-        ->where('status', 'hired')
+    $pendingCount = JobApplication::whereIn('job_id', $jobIds)
+        ->where('status', 'pending')
         ->count();
 
-    $totalshortlisted = JobApplication::whereIn('job_id', $jobIds)
+    $shortlistedCount = JobApplication::whereIn('job_id', $jobIds)
         ->where('status', 'shortlisted')
         ->count();
 
-    // -------------------------------
-// APPLICATION STATUS COUNTS
-// -------------------------------
+    $hiredCount = JobApplication::whereIn('job_id', $jobIds)
+        ->where('status', 'hired')
+        ->count();
 
-$pendingCount = JobApplication::whereIn('job_id', $jobIds)
-    ->where('status', 'pending')
-    ->count();
+    $rejectedCount = JobApplication::whereIn('job_id', $jobIds)
+        ->where('status', 'rejected')
+        ->count();
 
-$shortlistedCount = JobApplication::whereIn('job_id', $jobIds)
-    ->where('status', 'shortlisted')
-    ->count();
+    $topJob = Job::withCount('applications')
+        ->where('admin_id', $adminId)
+        ->orderBy('applications_count', 'desc')
+        ->first();
 
-$hiredCount = JobApplication::whereIn('job_id', $jobIds)
-    ->where('status', 'hired')
-    ->count();
-
-$rejectedCount = JobApplication::whereIn('job_id', $jobIds)
-    ->where('status', 'rejected')
-    ->count();
-
-$topJob = Job::withCount('applications')
-    ->where('admin_id', $adminId)
-    ->orderBy('applications_count','desc')
-    ->first();
-
-    $expiringJobs = Job::where('admin_id',$adminId)
-    ->whereBetween('last_date',[now(),now()->addDays(3)])
-    ->count();
-
-$pendingApplications = JobApplication::whereIn('job_id',$jobIds)
-    ->where('status','pending')
-    ->count();
+    $expiringJobs = Job::where('admin_id', $adminId)
+        ->whereBetween('last_date', [now(), now()->addDays(2)])
+        ->count();
 
     return view('Admin.admin_dashboard', compact(
         'totalJobs',
         'activeJobs',
         'expiredJobs',
         'totalApplications',
-        'totalSelected',
-        'totalshortlisted',
         'pendingCount',
-'shortlistedCount',
-'hiredCount',
-'rejectedCount',
-'topJob',
-'expiringJobs',
-'pendingApplications'
+        'shortlistedCount',
+        'hiredCount',
+        'rejectedCount',
+        'topJob',
+        'expiringJobs'
     ));
 }
 public function selectedList()
@@ -196,24 +184,25 @@ public function update_profile(Request $request)
         'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ]);
 
-   
-    if ($request->hasFile('profile_image')) {
 
-        if ($admin->profile_image && file_exists(public_path('uploads/admins/' . $admin->profile_image))) {
-            unlink(public_path('uploads/admins/' . $admin->profile_image));
-        }
-
-        $file = $request->file('profile_image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/admins/'), $filename);
-
-        $data['profile_image'] = $filename;
+if ($request->hasFile('profile_image')) {
+    if ($admin->profile_image) {
+        Storage::disk('public')
+            ->delete('admins/' . $admin->profile_image);
     }
+    $path = $request->file('profile_image')
+                    ->store('admins', 'public');
+    $data['profile_image'] = basename($path);
+}
 
-    $admin->update($data);
+$admin->update($data);
 
     return back()->with('success', 'Profile updated successfully!');
 }
-
+public function readNotifications()
+{
+    auth('admin')->user()->unreadNotifications->markAsRead();
+    return back();
+}
 
 }

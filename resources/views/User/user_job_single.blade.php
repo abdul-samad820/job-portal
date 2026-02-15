@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('title', 'Job Details')
-
 @section('content')
 
     <style>
@@ -175,10 +174,13 @@
                     <div class="p-4 light-card shadow-sm">
 
                         <div class="text-center mb-3">
+
+
                             <img src="{{ $singlejob->admin->profile_image
-                                ? asset('uploads/admins/' . $singlejob->admin->profile_image)
+                                ? Storage::url('admins/' . $singlejob->admin->profile_image)
                                 : asset('admins/dist/img/default.png') }}"
-                                class="img-circle elevation-2" style="width:40px; height:40px; object-fit:cover;">
+                                class="img-circle elevation-2" style="width:40px; height:40px; object-fit:cover;"
+                                alt="Company Image">
 
 
                             <h5 class="font-weight-bold text-primary">
@@ -270,15 +272,9 @@
                                 </div>
                             </div>
                         @endforeach
-
                     </div>
                 </div>
-
             </div>
-
         </div> <!-- white box end -->
-
     </div> <!-- container end -->
-
-
 @endsection

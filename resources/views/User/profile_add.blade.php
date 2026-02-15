@@ -1,10 +1,10 @@
-@extends('layouts.user_index') {{-- change layout if needed --}}
+@extends('layouts.user_index')
 @section('title', 'Add Profile')
 
 @section('content')
-    <div class="container py-5">
+    <div class="container py-4">
         <div class="row justify-content-center">
-            <div class="col-lg-10">
+            <div class="col-lg-9">
 
                 <div class="card shadow-sm mb-4">
                     <div class="card-body d-flex gap-3 align-items-center">
@@ -45,29 +45,32 @@
                     </div>
 
                     {{-- Profile Image --}}
+                    {{-- Profile Image --}}
                     <div class="card mb-3">
                         <div class="card-header">
                             <strong>Profile Photo</strong>
                         </div>
 
-                        <div class="card-body d-flex align-items-center gap-3">
+                        <div class="card-body d-flex align-items-center">
 
-                            {{-- Current Image Preview --}}
                             @php
                                 $userImg =
                                     $profile && $profile->profile_image
-                                        ? asset('uploads/user_profile/' . $profile->profile_image)
+                                        ? Storage::url('user_profile/' . $profile->profile_image)
                                         : asset('admins/dist/img/default.png');
                             @endphp
 
-                            <img src="{{ $userImg }}" class="rounded-circle shadow-sm" width="80" height="80"
-                                style="object-fit:cover;">
+                            {{-- Current Image Preview --}}
+                            <img src="{{ $userImg }}" class="rounded-circle shadow-sm mr-3" width="80"
+                                height="80" style="object-fit:cover;">
 
                             {{-- Upload Field --}}
                             <div class="flex-grow-1">
                                 <input type="file" name="profile_image" class="form-control">
 
-                                <small class="text-muted">Upload JPG or PNG (Max 2MB)</small>
+                                <small class="text-muted">
+                                    Upload JPG or PNG (Max 2MB)
+                                </small>
                             </div>
 
                         </div>
@@ -103,11 +106,7 @@
                             </label>
 
                             <textarea name="experience" rows="5" class="form-control @error('experience') is-invalid @enderror"
-                                placeholder="Example:
-2 Years Experience
-Worked at XYZ Company as a Laravel Developer
-Handled Backend APIs
-Managed Admin Dashboard">{{ old('experience', $profile->experience) }}</textarea>
+                                placeholder="Example:2 Years Experience Worked at XYZ Company as a Laravel DeveloperHandled Backend APIs Managed Admin Dashboard">{{ old('experience', $profile->experience) }}</textarea>
 
                             @error('experience')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -210,8 +209,8 @@ Managed Admin Dashboard">{{ old('experience', $profile->experience) }}</textarea
 
                     {{-- Submit --}}
                     <div class="d-flex justify-content-end gap-4">
-                        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary">Cancel</a>
-                        <button type="submit" class="btn btn-primary">Save Profile</button>
+                        <a href="{{ url()->previous() }}" class="btn btn-outline-secondary mr-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4">Save Profile</button>
                     </div>
                 </form>
 

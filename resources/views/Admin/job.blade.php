@@ -6,9 +6,6 @@
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
-
-                <!-- Header Box -->
-                <!-- Soft Header Section -->
                 <div class="p-4 rounded shadow-sm mb-4" style="background: #f7f9ff; border-left: 5px solid #007bff;">
 
                     <div class="d-flex justify-content-between flex-wrap align-items-center mb-2">
@@ -37,20 +34,17 @@
                     <!-- Search + Add Button -->
                     <div class="d-flex justify-content-between flex-wrap align-items-center mt-3">
 
-                     <form method="GET" action="{{ route('admin.job') }}" 
-      class="d-flex w-100" style="max-width:370px;">
+                        <form method="GET" action="{{ route('admin.job') }}" class="d-flex w-100"
+                            style="max-width:370px;">
 
-    <input type="search"
-           name="search"
-           class="form-control mr-2"
-           placeholder="Search jobs..."
-           value="{{ request('search') }}">
+                            <input type="search" name="search" class="form-control mr-2" placeholder="Search jobs..."
+                                value="{{ request('search') }}">
 
-    <button class="btn btn-primary px-3" type="submit">
-        <i class="fa fa-search"></i>
-    </button>
+                            <button class="btn btn-primary px-3" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
 
-</form>
+                        </form>
 
                         <a href="{{ route('admin.job_add') }}"
                             class="btn btn-primary rounded-pill d-flex align-items-center mt-3 mt-md-0">
@@ -92,9 +86,8 @@
 
                                             <!-- job Image -->
                                             <td>
-                                                <img src="{{ $job->job_image ? asset('uploads/job/' . $job->job_image) : asset('admins/dist/img/default.png') }}"
-                                                    class="img-thumbnail"
-                                                    style="width:60px; height:60px; object-fit:cover; border:1px solid #ddd;">
+                                                <img src="{{ $job->job_image ? asset('storage/jobs/' . $job->job_image) : asset('admins/dist/img/default.png') }}"
+                                                    style="width:70px;height:70px;object-fit:cover;border-radius:6px;">
                                             </td>
 
 

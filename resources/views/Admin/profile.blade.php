@@ -14,11 +14,10 @@
 
                         <!-- Profile Image -->
                         <img src="{{ Auth::guard('admin')->user()->profile_image
-                            ? asset('uploads/admins/' . Auth::guard('admin')->user()->profile_image)
+                            ? asset('storage/admins/' . Auth::guard('admin')->user()->profile_image)
                             : asset('admins/dist/img/default.png') }}"
                             class="img-circle elevation-2" style="width:100px; height:100px; object-fit:cover;"
-                            alt="Company_Image">
-
+                            alt="Company Image">
                         <!-- Company Name -->
                         <h4 class="mt-3 font-weight-bold text-dark">{{ $profile->company_name }}</h4>
 
@@ -97,10 +96,10 @@
 
                                 <div class="mb-3">
                                     <img src="{{ $profile->profile_image
-                                        ? asset('uploads/admins/' . $profile->profile_image)
+                                        ? asset('storage/admins/' . $profile->profile_image)
                                         : asset('admins/dist/img/default.png') }}"
-                                        class="rounded-circle" style="width:120px; height:120px; object-fit:cover;">
-
+                                        class="rounded-circle" style="width:120px; height:120px; object-fit:cover;"
+                                        alt="Company Image">
                                 </div>
 
                                 <label class="font-weight-bold d-block">Company Image</label>

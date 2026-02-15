@@ -10,6 +10,7 @@ use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Storage;
 
 class JobController extends Controller
 {
@@ -219,13 +220,11 @@ public function user_job_filter(Request $request)
 
  
         $data['admin_id'] = Auth::guard('admin')->id();
-
-         if ($request->hasFile('job_image')) {
-        $file = $request->file('job_image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/job/'), $filename);
-        $data['job_image'] = $filename;
-    }
+if ($request->hasFile('job_image')) {
+    $path = $request->file('job_image')
+                    ->store('jobs', 'public');
+    $data['job_image'] = basename($path);
+}
         Job::create($data); 
         return redirect()->route('admin.job')->with('success', 'Job created successfully!');
     }
@@ -261,17 +260,16 @@ public function user_job_filter(Request $request)
 
     if ($request->hasFile('job_image')) {
 
-        if ($job->job_image && file_exists(public_path('uploads/job/' . $job->job_image))) {
-            unlink(public_path('uploads/job/' . $job->job_image));
-        }
-
-        $file = $request->file('job_image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/job/'), $filename);
-
-        $data['job_image'] = $filename;
+    if ($job->job_image) {
+        Storage::disk('public')
+            ->delete('jobs/' . $job->job_image);
     }
 
+    $path = $request->file('job_image')
+                    ->store('jobs', 'public');
+
+    $data['job_image'] = basename($path);
+}
         $job->update($data);
  
         return redirect()->route('admin.job')->with('success', 'Job updated successfully!');

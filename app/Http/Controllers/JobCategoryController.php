@@ -6,6 +6,7 @@ use App\Models\JobCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Storage;
 
 class JobCategoryController extends Controller
 {
@@ -41,8 +42,9 @@ class JobCategoryController extends Controller
     if ($request->hasFile('category_image')) {
         $file = $request->file('category_image');
         $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/categories/'), $filename);
-        $data['category_image'] = $filename;
+        $path = $request->file('category_image')
+        ->store('categories', 'public');
+$data['category_image'] = basename($path);
     }
 
     JobCategory::create($data);
@@ -73,17 +75,17 @@ class JobCategoryController extends Controller
 
     if ($request->hasFile('category_image')) {
 
-        if ($category->category_image && file_exists(public_path('uploads/categories/' . $category->category_image))) {
-            unlink(public_path('uploads/categories/' . $category->category_image));
-        }
-
-        $file = $request->file('category_image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/categories/'), $filename);
-
-        $data['category_image'] = $filename;
+    // old image delete
+    if ($category->category_image) {
+        Storage::disk('public')
+            ->delete('categories/' . $category->category_image);
     }
 
+    $path = $request->file('category_image')
+        ->store('categories', 'public');
+
+    $data['category_image'] = basename($path);
+}
     $category->update($data);
 
     return redirect()->route('admin.job_category')

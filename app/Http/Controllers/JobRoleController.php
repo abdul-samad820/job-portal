@@ -70,21 +70,31 @@ public function job_role_edit($id)
 }
 
     public function job_role_update(Request $request, $id)
-    {
-        $role = JobRole::findOrFail($id);
-        $this->authorize('update', $role);
+{
+    $role = JobRole::findOrFail($id);
+    $this->authorize('update', $role);
 
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:500',
-            'category_id' => 'required|integer|exists:job_categories,id',
-        ]);
+    $adminId = Auth::guard('admin')->id();
 
-        $role->update($data);
+    $data = $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string|max:500',
+        'category_id' => [
+            'required', 
+            'integer',
+            Rule::exists('job_categories', 'id')
+                ->where(function ($query) use ($adminId) {
+                    $query->where('admin_id', $adminId);
+                }),
+        ],
+    ]);
 
-        return redirect()->route('admin.job_role')->with('success', 'Role updated successfully!');
-    }
+    $role->update($data);
 
+    return redirect()
+        ->route('admin.job_role')
+        ->with('success', 'Role updated successfully!');
+}
 
     public function job_role_delete($id)
     {

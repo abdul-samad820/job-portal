@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\Storage;
 class Job extends Model
 {
     protected $fillable = ['title','description','location',
@@ -27,7 +27,20 @@ public function applications()
 {
     return $this->hasMany(JobApplication::class, 'job_id');
 }
+protected static function boot()
+{
+    parent::boot();
 
+    static::deleting(function ($job) {
+
+        if ($job->job_image &&
+            Storage::disk('public')->exists('jobs/' . $job->job_image)) {
+
+            Storage::disk('public')
+                ->delete('jobs/' . $job->job_image);
+        }
+    });
+}
 }
 
 

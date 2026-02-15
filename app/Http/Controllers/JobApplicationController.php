@@ -6,9 +6,11 @@ use App\Models\Job;
 use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User_profile;
 use App\Mail\ApplicationStatusMail;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\NewJobApplicationNotification;
 use App\Notifications\ApplicationStatusNotification;
 
 class JobApplicationController extends Controller
@@ -24,7 +26,7 @@ class JobApplicationController extends Controller
         return view('User.user_job_application', compact('job','alreadyApplied'));
     }
 
-  public function apply_job_application(Request $request, $id)
+ public function apply_job_application(Request $request, $id)
 {
     $user_id = Auth::guard('user')->id();
 
@@ -33,9 +35,9 @@ class JobApplicationController extends Controller
             ->with('error', 'Please login first!');
     }
 
-    $job = Job::findOrFail($id);
+    $job = Job::with('admin')->findOrFail($id);
 
-    // Deadline Check (FIRST)
+    // Deadline Check
     if ($job->last_date && now()->greaterThan($job->last_date)) {
         return back()->with('error', 'Application deadline has passed.');
     }
@@ -68,24 +70,26 @@ class JobApplicationController extends Controller
         'resume' => 'required|mimes:pdf|max:2048',
     ]);
 
-    // Store Resume
-    $file = $request->file('resume');
-    $filename = time() . '_' . $file->getClientOriginalName();
-    $file->storeAs('resumes', $filename, 'public');
+   $path = $request->file('resume')->store('resumes', 'public');
+$application = JobApplication::create([
+    'user_id' => $user_id,
+    'job_id' => $id,
+    'cover_letter' => $request->cover_letter,
+    'resume' => basename($path), // only filename
+    'status' => 'pending',
+]);
 
-    // Save Application
-    JobApplication::create([
-        'user_id' => $user_id,
-        'job_id' => $id,
-        'cover_letter' => $request->cover_letter,
-        'resume' => 'storage/resumes/' . $filename,
-        'status' => 'pending',
-    ]);
+
+    // 🔔 SEND NOTIFICATION (AFTER SUCCESS)
+    if ($job->admin) {
+        $job->admin->notify(
+            new NewJobApplicationNotification($job, auth('user')->user())
+        );
+    }
 
     return redirect()->route('user.jobs')
         ->with('success', 'Your application has been submitted successfully.');
 }
-
    public function admin_applications(Request $request)
 {
     $adminId = auth('admin')->id();
@@ -145,4 +149,23 @@ class JobApplicationController extends Controller
  
         return back()->with('success', 'Application status updated successfully.');
     }
+
+ 
+public function downloadResume($id)
+{
+    $application = JobApplication::with('job')->findOrFail($id);
+
+    // Security check (admin only access own job)
+    if (auth('admin')->id() !== $application->job->admin_id) {
+        abort(403, 'Unauthorized');
+    }
+
+    $filePath = 'resumes/' . $application->resume;
+
+    if (!Storage::disk('public')->exists($filePath)) {
+        abort(404, 'Resume not found');
+    }
+
+    return Storage::disk('public')->download($filePath);
+}
 }

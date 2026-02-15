@@ -6,56 +6,48 @@
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
+                <div class="p-4 rounded shadow-sm mb-4" style="background: #f7f9ff; border-left: 5px solid #007bff;">
 
-                <!-- Header Section -->
-                <!-- Soft Header Section -->
-<div class="p-4 rounded shadow-sm mb-4" style="background: #f7f9ff; border-left: 5px solid #007bff;">
+                    <div class="d-flex justify-content-between flex-wrap align-items-center mb-2">
+                        <div>
+                            <h1 class="h4 font-weight-bold text-dark mb-1 d-flex align-items-center">
+                                <i class="fa fa-layer-group text-primary mr-2"></i>
+                                Job Categories
+                            </h1>
+                            <p class="text-muted small mb-0">
+                                Manage all categories used for job postings.
+                            </p>
+                        </div>
 
-    <div class="d-flex justify-content-between flex-wrap align-items-center mb-2">
-        <div>
-            <h1 class="h4 font-weight-bold text-dark mb-1 d-flex align-items-center">
-                <i class="fa fa-layer-group text-primary mr-2"></i>
-                Job Categories
-            </h1>
-            <p class="text-muted small mb-0">
-                Manage all categories used for job postings.
-            </p>
-        </div>
+                        <nav aria-label="breadcrumb" class="mt-3 mt-md-0">
+                            <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item active font-weight-bold">Categories</li>
+                            </ol>
+                        </nav>
+                    </div>
 
-        <nav aria-label="breadcrumb" class="mt-3 mt-md-0">
-            <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
-                <li class="breadcrumb-item">
-                    <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">Dashboard</a>
-                </li>
-                <li class="breadcrumb-item active font-weight-bold">Categories</li>
-            </ol>
-        </nav>
-    </div>
+                    <!-- Search + Add Button -->
+                    <div class="d-flex justify-content-between flex-wrap align-items-center mt-3">
 
-    <!-- Search + Add Button -->
-    <div class="d-flex justify-content-between flex-wrap align-items-center mt-3">
+                        <form method="GET" action="{{ route('admin.job_category') }}" class="form-inline w-100"
+                            style="max-width: 400px;">
+                            <input class="form-control mr-2 w-75" type="search" placeholder="Search category..."
+                                name="search" value="{{ request('search') }}">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </form>
 
-        <form method="GET" action="{{ route('admin.job_category') }}" 
-              class="form-inline w-100" style="max-width: 400px;">
-            <input 
-                class="form-control mr-2 w-75" 
-                type="search" 
-                placeholder="Search category..." 
-                name="search" 
-                value="{{ request('search') }}"
-            >
-            <button class="btn btn-primary" type="submit">
-                <i class="fa fa-search"></i>
-            </button>
-        </form>
+                        <a href="{{ route('admin.job_category_add') }}"
+                            class="btn btn-primary rounded-pill d-flex align-items-center mt-3 mt-md-0">
+                            <i class="fa fa-plus mr-2"></i> Add New
+                        </a>
 
-        <a href="{{ route('admin.job_category_add') }}" 
-           class="btn btn-primary rounded-pill d-flex align-items-center mt-3 mt-md-0">
-            <i class="fa fa-plus mr-2"></i> Add New
-        </a>
-
-    </div>
-</div>
+                    </div>
+                </div>
 
                 <!-- Table Card -->
                 <div class="card shadow-sm border-0 rounded">
@@ -81,11 +73,12 @@
 
                                             <!-- Category Image -->
                                             <td>
-                                                <img src="{{ asset('uploads/categories/' . $category->category_image) }}"
+                                                <img src="{{ $category->category_image
+                                                    ? asset('storage/categories/' . $category->category_image)
+                                                    : asset('admins/dist/img/default.png') }}"
                                                     class="img-thumbnail"
-                                                    style="width:60px; height:60px; object-fit:cover; border:1px solid #ddd;">
+                                                    style="width:60px;height:60px;object-fit:cover;border:1px solid #ddd;">
                                             </td>
-
                                             <!-- Name -->
                                             <td class="font-weight-bold text-dark">
                                                 {{ $category->name }}

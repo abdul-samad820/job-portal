@@ -2,25 +2,56 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class Admin extends Authenticatable
 {
-      use Notifiable;
-       public $timestamps = false;
+    use Notifiable;
 
-       protected $guard = 'admin';
+    public $timestamps = false;
 
-    protected $fillable = ['email', 'password','company_name','description','contact_number','location', 'expertise','profile_image','role'];
+    protected $guard = 'admin';
 
-    protected function casts(): array {
+    protected $fillable = [
+        'email',
+        'password',
+        'company_name',
+        'description',
+        'contact_number',
+        'location',
+        'expertise',
+        'profile_image',
+        'role'
+    ];
+
+    protected function casts(): array
+    {
         return [
             'password' => 'hashed',
         ];
     }
-    public function jobs(){
-        return $this->hasMany(job::class);
+
+    // Relationship
+    public function jobs()
+    {
+        return $this->hasMany(Job::class);
+    }
+
+    // Auto delete profile image when admin deleted
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($admin) {
+
+            if ($admin->profile_image &&
+                Storage::disk('public')->exists('admins/' . $admin->profile_image)) {
+
+                Storage::disk('public')
+                    ->delete('admins/' . $admin->profile_image);
+            }
+        });
     }
 }

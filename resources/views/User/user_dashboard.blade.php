@@ -1,156 +1,11 @@
 @extends('layouts.user_index')
 @section('title', 'Dashboard')
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/style-user-file.css') }}">
+@endpush
 @section('content')
 
-    <style>
-        .white-box {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .job-box {
-            transition: 0.2s ease;
-        }
-
-        .job-box:hover {
-            background: #eef5ff;
-            border-left: 4px solid #3b82f6;
-            transform: translateX(3px);
-        }
-
-        /* Quick Action */
-        .action-box {
-            background: #f8f9fb;
-            transition: 0.3s ease;
-            text-decoration: none;
-            color: #333;
-        }
-
-        .action-box:hover {
-            background: #eef5ff;
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-        }
-
-        .icon-circle {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: auto;
-        }
-
-        .stat-box {
-            display: flex;
-            align-items: center;
-            padding: 16px;
-            border-radius: 12px;
-            background: #f8f9fb;
-            transition: all 0.3s ease;
-        }
-
-        .stat-box:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .stat-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            font-size: 16px;
-        }
-
-        .stat-warning .stat-icon {
-            background: #ffc107;
-        }
-
-        .stat-primary .stat-icon {
-            background: #007bff;
-        }
-
-        .stat-success .stat-icon {
-            background: #28a745;
-        }
-
-        .stat-danger .stat-icon {
-            background: #dc3545;
-        }
-
-        .counter {
-            font-size: 22px;
-            font-weight: 700;
-        }
-
-        .toast-wrapper {
-            top: 25px;
-            right: 25px;
-            z-index: 1055;
-            animation: slideIn 0.5s ease;
-        }
-
-        .custom-toast {
-            min-width: 340px;
-            background: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .toast-header-custom {
-            background: linear-gradient(45deg, #007bff, #00c6ff);
-            color: #fff;
-            padding: 12px 15px;
-            font-size: 14px;
-        }
-
-        .toast-body-custom {
-            padding: 15px;
-            font-size: 13px;
-            color: #333;
-        }
-
-        .toast-progress {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #007bff, #00c6ff);
-            width: 100%;
-            animation: progressLine 5s linear forwards;
-        }
-
-        /* Slide animation */
-        @keyframes slideIn {
-            from {
-                transform: translateX(120%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* Progress animation */
-        @keyframes progressLine {
-            from {
-                width: 100%;
-            }
-
-            to {
-                width: 0%;
-            }
-        }
-    </style>
 
     @if (session('login_success'))
         <div class="position-fixed toast-wrapper">
@@ -518,8 +373,11 @@
 
                             {{-- Job Image --}}
                             <div class="job-logo mr-3">
-                                <img src="{{ $job->admin->profile_image ? asset('uploads/admins/' . $job->admin->profile_image) : asset('default/company.png') }}"
-                                    width="50" height="50" style="border-radius: 8px; object-fit: cover;">
+                                <img src="{{ $job->admin && $job->admin->profile_image
+                                    ? asset('storage/admins/' . $job->admin->profile_image)
+                                    : asset('default/company.png') }}"
+                                    width="50" height="50" style="border-radius:8px; object-fit:cover;"
+                                    alt="Company Logo">
                             </div>
 
                             {{-- Job Info --}}

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,201 +20,8 @@
 
     <!-- AdminLTE Theme -->
     <link rel="stylesheet" href="{{ asset('admins/dist/css/adminlte.min.css') }}">
-
+   <link rel="stylesheet" href="{{ asset('css/style-user-file.css') }}">
     @stack('styles')
-
-    <!-- Typography Override -->
-    <style>
-        /* Default Body Font */
-        body,
-        p,
-        li,
-        a,
-        input,
-        textarea,
-        select,
-        label {
-            font-family: 'Inter', sans-serif !important;
-            font-weight: 400;
-            font-size: 14px !important;
-        }
-
-        /* Headings */
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            font-family: 'Montserrat', sans-serif !important;
-            font-weight: 600 !important;
-            font-size: 16px !important;
-        }
-
-        /* Large Page Titles */
-        .page-title,
-        .main-title,
-        .header-title {
-            font-family: 'Montserrat', sans-serif !important;
-            font-weight: 700 !important;
-        }
-
-        /* Buttons + Badges + Sidebar Links */
-        .btn,
-        button,
-        .badge,
-        .nav-link,
-        .sidebar a {
-            font-family: 'Inter', sans-serif !important;
-            font-weight: 500 !important;
-        }
-
-        /* Active link background */
-        .nav-sidebar .nav-link.active {
-            background-color: #e8f1ff !important;
-            /* light blue */
-            color: #007bff !important;
-            /* blue text */
-        }
-
-        /* Active icon color */
-        .nav-sidebar .nav-link.active i {
-            color: #007bff !important;
-        }
-
-        /* Hover color */
-        .nav-sidebar .nav-link:hover {
-            background-color: #f0f6ff !important;
-            color: #006ee6 !important;
-        }
-
-
-
-        /* Force dropdown below icon on LEFT side */
-        .nav-item.dropdown .dropdown-menu {
-            left: auto !important;
-            right: 0 !important;
-            /* EXACT under the icon */
-            transform: translateX(-10px) translateY(12px) !important;
-            min-width: 150px;
-        }
-
-        /* Prevent inside-container overflow */
-        .navbar .dropdown-menu {
-            position: absolute !important;
-        }
-
-        .nav-sidebar .nav-link {
-            padding: 10px 14px !important;
-            border-radius: 6px;
-            color: #2e3a49 !important;
-            font-size: 14px;
-        }
-
-        /* Smaller logo */
-        .brand-link .logo-sm {
-            height: 40px;
-            /* pehle 58 tha */
-            width: auto;
-        }
-
-        /* Thoda compact brand height */
-        .brand-link {
-            padding: 8px 10px !important;
-        }
-
-        .nav-sidebar .nav-icon {
-            font-size: 16px;
-            width: 20px;
-        }
-
-        /* 🔔 Bell Shake */
-        @keyframes bellShake {
-            0% {
-                transform: rotate(0);
-            }
-
-            15% {
-                transform: rotate(15deg);
-            }
-
-            30% {
-                transform: rotate(-10deg);
-            }
-
-            45% {
-                transform: rotate(8deg);
-            }
-
-            60% {
-                transform: rotate(-6deg);
-            }
-
-            75% {
-                transform: rotate(4deg);
-            }
-
-            100% {
-                transform: rotate(0);
-            }
-        }
-
-        .notification-bell.shake {
-            animation: bellShake 0.8s ease-in-out;
-            transform-origin: top center;
-        }
-
-        /* 🔴 Badge Pulse */
-        @keyframes pulseBadge {
-            0% {
-                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.6);
-            }
-
-            70% {
-                box-shadow: 0 0 0 8px rgba(220, 53, 69, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
-            }
-        }
-
-        .pulse-badge {
-            animation: pulseBadge 1.5s infinite;
-        }
-
-        .user-panel {
-            display: flex !important;
-            align-items: center !important;
-        }
-
-        /* Profile image base styling */
-        .user-panel .image img {
-            width: 48px;
-            height: 48px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        /* When sidebar collapsed */
-        .sidebar-mini.sidebar-collapse .user-panel {
-            justify-content: center !important;
-            text-align: center;
-        }
-
-        .sidebar-mini.sidebar-collapse .user-panel .info {
-            display: none !important;
-        }
-
-        .sidebar-mini.sidebar-collapse .user-panel .image {
-            margin: 0 auto !important;
-        }
-
-        .sidebar-mini.sidebar-collapse .user-panel .image img {
-            width: 40px;
-            height: 40px;
-        }
-    </style>
 </head>
 
 
@@ -237,32 +43,29 @@
 
             <!-- Sidebar -->
             <div class="sidebar">
-
                 <!-- User Panel -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
                     <div class="image">
                         @php
+
                             $profile = Auth::guard('user')->user()->profile ?? null;
 
                             $userImg =
                                 $profile && $profile->profile_image
-                                    ? asset('uploads/user_profile/' . $profile->profile_image)
+                                    ? Storage::url('user_profile/' . $profile->profile_image)
                                     : asset('admins/dist/img/default.png');
                         @endphp
 
                         <img src="{{ $userImg }}" class="rounded-circle"
-                            style="width:50px; height:50px; object-fit:cover;">
-
-
-
+                            style="width:50px; height:50px; object-fit:cover;" alt="User Image">
                     </div>
+
                     <div class="info ml-2">
                         <a href="{{ route('user.profile') }}" class="d-block text-capitalize font-weight-bold">
                             {{ Auth::guard('user')->user()->name ?? 'Candidate' }}
                         </a>
                     </div>
                 </div>
-
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"

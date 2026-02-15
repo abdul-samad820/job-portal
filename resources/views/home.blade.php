@@ -62,29 +62,27 @@
         }
 
         .testimonial-card {
-    background: #d9ecff;
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    height: 100%;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-    transition: 0.3s;
-}
+            background: #d9ecff;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            height: 100%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            transition: 0.3s;
+        }
 
-.testimonial-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
-}
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+        }
 
-.testimonial-card img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
-}
-
-
+        .testimonial-card img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
     </style>
 
     <!-- HERO SECTION -->
@@ -132,11 +130,19 @@
 
                 @foreach ($all_categories as $cat)
                     <div class="coverflow-item">
-                        <div class="p-2">
-                            <img src="{{ $cat->category_image ? asset('uploads/categories/' . $cat->category_image) : asset('default/category.png') }}"
-                                style="width:55px; height:55px; object-fit:cover; border-radius:6px;">
-                            <h6 class="mt-2 font-weight-bold" style="font-size:14px;">{{ $cat->name }}</h6>
-                            <small class="text-muted">{{ $cat->jobs_count }} Jobs</small>
+
+
+                        <div class="p-2 text-center">
+                            <img src="{{ $cat->category_image ? Storage::url('categories/' . $cat->category_image) : asset('default/category.png') }}"
+                                style="width:55px; height:55px; object-fit:cover; border-radius:6px;" alt="Category Image">
+
+                            <h6 class="mt-2 font-weight-bold" style="font-size:14px;">
+                                {{ $cat->name }}
+                            </h6>
+
+                            <small class="text-muted">
+                                {{ $cat->jobs_count }} Jobs
+                            </small>
                         </div>
                     </div>
                 @endforeach
@@ -202,104 +208,104 @@
 
     </div>
 
-   <div class="container my-5">
-    <h2 class="text-center font-weight-bold mb-5">
-        Trusted by leading startups
-    </h2>
+    <div class="container my-5">
+        <h2 class="text-center font-weight-bold mb-5">
+            Trusted by leading startups
+        </h2>
 
-    <div id="testimonialCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+        <div id="testimonialCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
 
-        <div class="carousel-inner">
+            <div class="carousel-inner">
 
-            <!-- ITEM -->
-            <div class="carousel-item active">
-                <div class="row">
+                <!-- ITEM -->
+                <div class="carousel-item active">
+                    <div class="row">
 
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <div class="testimonial-card">
-                            <img src="{{ asset('admins/dist/img/girl-image.jpg') }}">
-                            <h6>Gabbie</h6>
-                            <small>Designer</small>
-                            <p>Great platform for hiring.</p>
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="testimonial-card">
+                                <img src="{{ asset('admins/dist/img/girl-image.jpg') }}">
+                                <h6>Gabbie</h6>
+                                <small>Designer</small>
+                                <p>Great platform for hiring.</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <div class="testimonial-card">
-                            <img src="{{ asset('admins/dist/img/user4-128x128.jpg') }}">
-                            <h6>Sarah</h6>
-                            <small>Team Lead</small>
-                            <p>Improved our workflow.</p>
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="testimonial-card">
+                                <img src="{{ asset('admins/dist/img/user4-128x128.jpg') }}">
+                                <h6>Sarah</h6>
+                                <small>Team Lead</small>
+                                <p>Improved our workflow.</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <div class="testimonial-card">
-                            <img src="{{ asset('admins/dist/img/user2-160x160.jpg') }}">
-                            <h6>James</h6>
-                            <small>Manager</small>
-                            <p>Highly recommended tool.</p>
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="testimonial-card">
+                                <img src="{{ asset('admins/dist/img/user2-160x160.jpg') }}">
+                                <h6>James</h6>
+                                <small>Manager</small>
+                                <p>Highly recommended tool.</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <div class="testimonial-card">
-                            <img src="{{ asset('admins/dist/img/user1-128x128.jpg') }}">
-                            <h6>Alex</h6>
-                            <small>HR</small>
-                            <p>We use it daily.</p>
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="testimonial-card">
+                                <img src="{{ asset('admins/dist/img/user1-128x128.jpg') }}">
+                                <h6>Alex</h6>
+                                <small>HR</small>
+                                <p>We use it daily.</p>
+                            </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
+
+                <!-- SECOND ITEM -->
+                <div class="carousel-item">
+                    <div class="row">
+
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="testimonial-card">
+                                <img src="{{ asset('admins/dist/img/team1.jpg') }}">
+                                <h6>Elsa</h6>
+                                <small>CEO</small>
+                                <p>Boosted productivity.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="testimonial-card">
+                                <img src="{{ asset('admins/dist/img/user7-128x128.jpg') }}">
+                                <h6>Lisa</h6>
+                                <small>Manager</small>
+                                <p>Very smooth experience.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="testimonial-card">
+                                <img src="{{ asset('admins/dist/img/team2.jpg') }}">
+                                <h6>Ned</h6>
+                                <small>Lead</small>
+                                <p>Hiring made simple.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 col-12">
+                            <div class="testimonial-card">
+                                <img src="{{ asset('admins/dist/img/team3.jpg') }}">
+                                <h6>Mike</h6>
+                                <small>Designer</small>
+                                <p>Great UI and support.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
 
-            <!-- SECOND ITEM -->
-            <div class="carousel-item">
-                <div class="row">
-
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <div class="testimonial-card">
-                            <img src="{{ asset('admins/dist/img/team1.jpg') }}">
-                            <h6>Elsa</h6>
-                            <small>CEO</small>
-                            <p>Boosted productivity.</p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <div class="testimonial-card">
-                            <img src="{{ asset('admins/dist/img/user7-128x128.jpg') }}">
-                            <h6>Lisa</h6>
-                            <small>Manager</small>
-                            <p>Very smooth experience.</p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <div class="testimonial-card">
-                            <img src="{{ asset('admins/dist/img/team2.jpg') }}">
-                            <h6>Ned</h6>
-                            <small>Lead</small>
-                            <p>Hiring made simple.</p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 col-12">
-                        <div class="testimonial-card">
-                            <img src="{{ asset('admins/dist/img/team3.jpg') }}">
-                            <h6>Mike</h6>
-                            <small>Designer</small>
-                            <p>Great UI and support.</p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-
-        {{-- <!-- Controls -->
+            {{-- <!-- Controls -->
         <a class="carousel-control-prev" href="#testimonialCarousel" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span>
         </a>
@@ -308,8 +314,8 @@
             <span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span>
         </a> --}}
 
+        </div>
     </div>
-</div>
 
 
 

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Admin Job Portal')</title>
-      <link rel="icon" type="image/png" href="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @stack('styles')
 
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
@@ -57,82 +57,227 @@
 
             <!-- Right: search + icons -->
             <ul class="navbar-nav ml-auto align-items-center">
-                <li class="nav-item">
-                    <div class="navbar-search-block">
-                        <form class="form-inline">
-                            <div class="input-group input-group-sm">
-                                <input class="form-control form-control-navbar" type="search"
-                                    placeholder="Search jobs, companies..." aria-label="Search">
-                                <div class="input-group-append">
-                                    <button class="btn btn-navbar" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                    <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </div>
+
+                <li class="nav-item mr-3">
+                    <form class="form-inline" method="GET" action="#">
+
+                        <div class="input-group input-group-sm">
+                            <input class="form-control border-0 shadow-sm" type="search" name="q"
+                                placeholder="Search jobs, applicants..." value="{{ request('q') }}"
+                                style="border-radius:20px 0 0 20px;">
+
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit" style="border-radius:0 20px 20px 0;">
+                                    <i class="fas fa-search"></i>
+                                </button>
                             </div>
-                        </form>
+                        </div>
+                    </form>
+                </li>
+
+                @php
+                    $admin = auth('admin')->user();
+                    $notifications = $admin->unreadNotifications;
+                    $unreadCount = $notifications->count();
+                @endphp
+
+                <li class="nav-item dropdown mr-3">
+
+                    {{-- 🔔 Bell Icon --}}
+                    <a class="nav-link position-relative" data-toggle="dropdown" href="#">
+
+                        <i class="far fa-bell fa-lg"></i>
+
+                        @if ($unreadCount > 0)
+                            <span class="badge badge-danger"
+                                style="
+                  position:absolute;
+                  top:4px;
+                  right:4px;
+                  font-size:10px;
+                  padding:4px 6px;
+                  border-radius:50px;">
+                                {{ $unreadCount }}
+                            </span>
+                        @endif
+                    </a>
+
+                    {{-- Dropdown --}}
+                    <div class="dropdown-menu dropdown-menu-right p-0 shadow-lg border-0"
+                        style="width:360px; border-radius:14px; overflow:hidden;">
+
+                        {{-- Header --}}
+                        <div class="px-4 py-3 d-flex justify-content-between align-items-center"
+                            style="background:#f8f9fc;">
+
+                            <div>
+                                <div class="font-weight-bold">
+                                    Notifications
+                                </div>
+                                <small class="text-muted">
+                                    {{ $unreadCount }} Unread
+                                </small>
+                            </div>
+
+                            <i class="fas fa-bell text-primary"></i>
+                        </div>
+
+                        {{-- Divider --}}
+                        <div class="dropdown-divider m-0"></div>
+
+                        {{-- Notification List --}}
+                        <div style="max-height:320px; overflow-y:auto;">
+
+                            @forelse($notifications->take(5) as $notification)
+                                <a href="#" class="dropdown-item px-4 py-3" style="transition:0.2s;">
+
+                                    <div class="d-flex align-items-start">
+
+                                        {{-- Icon --}}
+                                        <div class="mr-3">
+                                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-sm"
+                                                style="width:40px; height:40px;">
+                                                <i class="fas fa-bell"></i>
+                                            </div>
+                                        </div>
+
+                                        {{-- Content --}}
+                                        <div class="flex-fill">
+
+                                            <div class="font-weight-bold small mb-1">
+                                                {{ $notification->data['title'] ?? 'Notification' }}
+                                            </div>
+
+                                            <div class="text-muted small">
+                                                {{ $notification->data['message'] ?? '' }}
+                                            </div>
+
+                                            <div class="text-muted mt-1" style="font-size:11px;">
+                                                <i class="far fa-clock mr-1"></i>
+                                                {{ $notification->created_at->diffForHumans() }}
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </a>
+
+                                <div class="dropdown-divider m-0"></div>
+
+                            @empty
+
+                                <div class="text-center py-5 text-muted">
+                                    <i class="far fa-check-circle fa-2x mb-2 text-success"></i>
+                                    <div class="small">
+                                        You're all caught up 🎉
+                                    </div>
+                                </div>
+                            @endforelse
+
+                        </div>
+
+                        {{-- Footer --}}
+                        @if ($unreadCount > 0)
+                            <div class="text-center py-2" style="background:#f8f9fc;">
+
+                                <form method="POST" action="{{ route('admin.notifications.read') }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-outline-primary px-4">
+                                        Mark all as read
+                                    </button>
+                                </form>
+
+                            </div>
+                        @endif
+
                     </div>
                 </li>
 
-                <!-- Notifications -->
+
+                {{-- 👤 PROFILE DROPDOWN --}}
                 <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#"><i class="far fa-bell"></i><span
-                            class="badge badge-warning navbar-badge">5</span></a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header">5 Notifications</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-check mr-2 text-primary"></i> New application received
-                            <span class="float-right text-muted text-sm">10 mins</span>
-                        </a>
+
+                    {{-- PROFILE TRIGGER --}}
+                    <a class="nav-link d-flex align-items-center p-0" data-toggle="dropdown" href="#"
+                        style="cursor:pointer;">
+
+                        <div class="position-relative">
+                            <img src="{{ $admin->profile_image
+                                ? Storage::url('admins/' . $admin->profile_image)
+                                : asset('admins/dist/img/default.png') }}"
+                                class="rounded-circle shadow-sm" width="38" height="38"
+                                style="object-fit:cover; border:2px solid #fff;">
+
+                            {{-- Online Dot --}}
+                            <span
+                                style="
+                position:absolute;
+                bottom:2px;
+                right:2px;
+                width:10px;
+                height:10px;
+                background:#28a745;
+                border-radius:50%;
+                border:2px solid #fff;">
+                            </span>
+                        </div>
+                    </a>
+
+                    {{-- DROPDOWN MENU --}}
+                    <div class="dropdown-menu dropdown-menu-right shadow-lg border-0 p-0"
+                        style="width:260px; border-radius:14px; overflow:hidden;">
+
+                        {{-- HEADER --}}
+                        <div class="text-center p-4" style="background: linear-gradient(135deg, #007bff, #0056b3);">
+
+                            <img src="{{ $admin->profile_image
+                                ? Storage::url('admins/' . $admin->profile_image)
+                                : asset('admins/dist/img/default.png') }}"
+                                class="rounded-circle shadow mb-2" width="70" height="70"
+                                style="object-fit:cover; border:3px solid #fff;">
+
+                            <div class="text-white font-weight-bold">
+                                {{ $admin->company_name }}
+                            </div>
+
+                            <small class="text-white-50">
+                                {{ $admin->email }}
+                            </small>
+                        </div>
+
+                        {{-- MENU ITEMS --}}
+                        <div class="py-2">
+
+                            <a class="dropdown-item d-flex align-items-center py-2"
+                                href="{{ route('admin.profile') }}" style="transition:0.2s;">
+
+                                <i class="fas fa-user-circle text-primary mr-2"></i>
+                                <span>My Profile</span>
+                            </a>
+
+                            <a class="dropdown-item d-flex align-items-center py-2"
+                                href="{{ route('admin.dashboard') }}" style="transition:0.2s;">
+
+                                <i class="fas fa-chart-line text-info mr-2"></i>
+                                <span>Dashboard</span>
+                            </a>
+
+                            <div class="dropdown-divider my-2"></div>
+
+                            <form method="POST" action="{{ route('admin.logout') }}">
+                                @csrf
+                                <button type="submit"
+                                    class="dropdown-item d-flex align-items-center py-2 text-danger"
+                                    style="transition:0.2s;">
+
+                                    <i class="fas fa-sign-out-alt mr-2"></i>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
+
+                        </div>
                     </div>
                 </li>
-
-               <!-- Profile Dropdown -->
-<li class="nav-item dropdown">
-    <a class="nav-link d-flex align-items-center" data-toggle="dropdown" href="#" aria-expanded="false">
-
-        <img src="{{ Auth::guard('admin')->user()->profile_image 
-            ? asset('uploads/admins/' . Auth::guard('admin')->user()->profile_image)
-            : asset('admins/dist/img/default.png') }}"
-            class="rounded-circle"
-            width="34" height="34" style="object-fit:cover;">
-
-    </a>
-
-    <div class="dropdown-menu dropdown-menu-right shadow-lg border-0"
-         style="width: 220px; border-radius:10px;">
-
-        <!-- Header -->
-        <div class="text-center p-3 border-bottom">
-            <img src="{{ Auth::guard('admin')->user()->profile_image 
-                ? asset('uploads/admins/' . Auth::guard('admin')->user()->profile_image)
-                : asset('admins/dist/img/default.png') }}"
-                class="rounded-circle mb-2"
-                width="55" height="55" style="object-fit:cover;">
-
-            <h6 class="mb-0 font-weight-bold">{{ Auth::guard('admin')->user()->company_name }}</h6>
-            <small class="text-muted">{{ Auth::guard('admin')->user()->email }}</small>
-        </div>
-
-        <!-- Menu Items -->
-        <a class="dropdown-item py-2" href="{{ route('admin.profile') }}">
-            <i class="fas fa-user mr-2 text-primary"></i> Profile
-        </a>
-
-        <div class="dropdown-divider"></div>
-
-        <form method="POST" action="{{ route('admin.logout') }}">
-            @csrf
-            <button class="dropdown-item py-2 text-danger" type="submit">
-                <i class="fas fa-sign-out-alt mr-2"></i> Logout
-            </button>
-        </form>
-    </div>
-</li>
-
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -148,7 +293,7 @@
                 </div>
 
                 <!-- PROFILE -->
-               
+
                 <!-- MENU -->
                 <nav class="mt-4 w-100">
                     <ul class="nav flex-column jobi-menu">
@@ -185,6 +330,13 @@
                             <a href="{{ route('job_application') }}" class="nav-link jobi-link">
                                 <i class="fas fa-clipboard-list"></i>
                                 <p>Application</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a href="{{ route('admin.selectedList') }}" class="nav-link jobi-link">
+                                <i class="fas fa-user-tie"></i>
+                                <p>Selected Candidate</p>
                             </a>
                         </li>
 

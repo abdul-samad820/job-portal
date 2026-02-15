@@ -1,71 +1,130 @@
 @extends('layouts.index')
-@section('title', 'Selected List')
-
+@section('title', 'Selected Candidates')
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/style-admin-file.css') }}">
+@endpush
 @section('content')
     <div class="container-fluid py-4">
 
-        <!-- Page Header -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">Selected Applicants</h1>
+        <!-- PREMIUM HEADER -->
+        <div class="p-4 rounded shadow-sm mb-4" style="background:#f8faff; border-left:5px solid #007bff;">
 
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 bg-white border rounded px-3 py-2">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">Selected List</li>
-                </ol>
-            </nav>
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+                <div>
+                    <h4 class="font-weight-bold mb-1 d-flex align-items-center">
+                        <i class="fas fa-user-check text-success mr-2"></i>
+                        Selected Candidates
+                    </h4>
+                    <small class="text-muted">
+                        View all shortlisted and hired applicants.
+                    </small>
+                </div>
+
+                <div class="badge badge-primary px-4 py-3">
+                    {{ $selectedApplicants->count() }} Total
+                </div>
+
+            </div>
         </div>
 
-        <!-- Main Card -->
-        <div class="card shadow-sm border-0 rounded">
-            <div class="card-body">
+        <!-- MAIN CARD -->
+        <div class="card border-0 shadow-sm rounded-lg">
+            <div class="card-body p-4">
 
                 @if ($selectedApplicants->isEmpty())
-                    <div class="alert alert-info text-center py-3 mb-0">
-                        <i class="fa fa-info-circle mr-1"></i> No selected applicants found.
+                    <div class="text-center py-5">
+                        <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Selected Candidates Yet</h5>
+                        <p class="text-muted small">
+                            Shortlisted or hired candidates will appear here.
+                        </p>
                     </div>
                 @else
-                    <!-- Table -->
-                    <div class="table-responsive mt-3">
-                        <table class="table table-hover align-middle">
-                            <thead class="thead-light">
+                    <div class="table-responsive">
+                        <table class="table align-middle table-hover">
+                            <thead class="bg-light">
                                 <tr>
                                     <th>#</th>
-                                    <th>User Name</th>
+                                    <th>Candidate</th>
                                     <th>Email</th>
-                                    <th>Job Title</th>
+                                    <th>Job Position</th>
                                     <th>Status</th>
+                                    <th>Applied On</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 @foreach ($selectedApplicants as $index => $app)
+                                    @php
+                                        $profile = $app->user->profile ?? null;
+                                        $userImg =
+                                            $profile && $profile->profile_image
+                                                ? asset('storage/user_profile/' . $profile->profile_image)
+                                                : asset('admins/dist/img/default.png');
+                                    @endphp
+
                                     <tr>
+
                                         <td>{{ $index + 1 }}</td>
 
-                                        <td class="font-weight-bold text-dark">
-                                            {{ $app->user->name ?? 'N/A' }}
+                                        <!-- Candidate -->
+                                        <td>
+                                            <div class="d-flex align-items-center">
+
+                                                <img src="{{ $userImg }}" width="45" height="45"
+                                                    class="rounded-circle mr-3" style="object-fit:cover;">
+
+                                                <div>
+                                                    <div class="font-weight-bold">
+                                                        {{ $app->user->name ?? 'N/A' }}
+                                                    </div>
+                                                    <small class="text-muted">
+                                                        Candidate
+                                                    </small>
+                                                </div>
+
+                                            </div>
                                         </td>
 
-                                        <td>{{ $app->user->email ?? 'N/A' }}</td>
+                                        <!-- Email -->
+                                        <td class="text-muted">
+                                            {{ $app->user->email ?? 'N/A' }}
+                                        </td>
 
-                                        <td>{{ $app->job->title ?? 'N/A' }}</td>
+                                        <!-- Job -->
+                                        <td>
+                                            <span class="font-weight-bold text-dark">
+                                                {{ $app->job->title ?? 'N/A' }}
+                                            </span>
+                                        </td>
 
+                                        <!-- Status -->
                                         <td>
                                             @if ($app->status == 'hired')
-                                                <span class="badge badge-success px-3 py-2">Hired</span>
+                                                <span class="status-badge hired">
+                                                    <i class="fas fa-check-circle"></i>
+                                                    Hired
+                                                </span>
                                             @elseif($app->status == 'shortlisted')
-                                                <span class="badge badge-warning px-3 py-2 text-dark">Shortlisted</span>
+                                                <span class="status-badge shortlisted">
+                                                    <i class="fas fa-user-tie"></i>
+                                                    Shortlisted
+                                                </span>
                                             @endif
                                         </td>
+
+                                        <!-- Date -->
+                                        <td class="text-muted">
+                                            {{ $app->created_at->format('d M Y') }}
+                                        </td>
+
                                     </tr>
                                 @endforeach
                             </tbody>
-
                         </table>
                     </div>
+
                 @endif
 
             </div>

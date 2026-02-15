@@ -166,7 +166,7 @@
                 @enderror
             </div>
 
-             {{-- Last Date --}}
+            {{-- Last Date --}}
             <div class="form-group">
                 <label class="font-weight-bold">Last Date to Apply</label>
                 <input class="form-control" type="date" name="last_date"
@@ -174,9 +174,9 @@
                 @error('last_date')
                     <small class="text-danger d-block">{{ $message }}</small>
                 @enderror
-            </div> 
-             
-  {{-- job Image Upload --}}
+            </div>
+
+            {{-- job Image Upload --}}
             <div class="form-group">
                 <label class="font-weight-bold">Job Image</label>
 

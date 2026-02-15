@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
-    use Notifiable;   // ✅ IMPORTANT
+    use Notifiable;
 
     protected $fillable = [
         'name',
@@ -33,4 +34,18 @@ class User extends Authenticatable
     {
         return $this->hasOne(User_profile::class);
     }
+    protected static function booted()
+{
+    static::deleting(function ($user) {
+
+        if ($user->profile && $user->profile->profile_image) {
+
+            Storage::disk('public')->delete(
+                'user_profile/' . $user->profile->profile_image
+            );
+        }
+
+        $user->profile()?->delete();
+    });
+}
 }

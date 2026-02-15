@@ -29,26 +29,25 @@
             </fieldset>
 
             {{-- Category Select --}}
-          <fieldset class="mb-3">
-    <label class="font-weight-bold">Select Category <span class="text-danger">*</span></label>
+            <fieldset class="mb-3">
+                <label class="font-weight-bold">Select Category <span class="text-danger">*</span></label>
 
-    <select name="category_id" class="form-control" required>
-        <option value="">-- Select Category --</option>
+                <select name="category_id" class="form-control" required>
+                    <option value="">-- Select Category --</option>
 
-        @foreach ($categories as $category)
-            <option value="{{ $category->id }}"
-                {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                {{ $category->name }}
-            </option>
-        @endforeach
-    </select>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
 
-    @error('category_id')
-        <small class="text-danger d-block mt-1">
-            <i class="fa fa-exclamation-circle mr-1"></i> {{ $message }}
-        </small>
-    @enderror
-</fieldset>
+                @error('category_id')
+                    <small class="text-danger d-block mt-1">
+                        <i class="fa fa-exclamation-circle mr-1"></i> {{ $message }}
+                    </small>
+                @enderror
+            </fieldset>
 
 
             {{-- Role Description --}}

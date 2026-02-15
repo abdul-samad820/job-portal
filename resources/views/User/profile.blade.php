@@ -11,18 +11,17 @@
                 <div class="card rounded-4 shadow-lg bg-white mb-4">
                     <div class="card-body text-center p-5">
 
-                        {{-- Profile Image --}}
                         <div class="mb-3 text-center">
 
                             @php
                                 $userImg =
                                     $profile && $profile->profile_image
-                                        ? asset('uploads/user_profile/' . $profile->profile_image)
+                                        ? Storage::url('user_profile/' . $profile->profile_image)
                                         : asset('admins/dist/img/default.png');
                             @endphp
 
                             <img src="{{ $userImg }}" class="rounded-circle border border-3 border-primary shadow-sm"
-                                style="width:150px; height:150px; object-fit:cover;">
+                                style="width:150px; height:150px; object-fit:cover;" alt="User Profile Image">
 
                         </div>
 
@@ -141,18 +140,12 @@
                                         </div>
                                     @endif
                                 @endforeach
-
                             </div>
-
                         </div>
                     @else
                         <p class="text-muted">No experience added.</p>
                     @endif
-
                 </div>
-
-
-
                 <!-- SKILLS -->
                 <div class="card rounded-3 shadow-lg mb-4 p-4">
                     <h5 class="card-title text-dark border-bottom pb-2 mb-3 fw-bold">
@@ -210,8 +203,6 @@
                         <p class="text-muted">No education added.</p>
                     @endif
                 </div>
-
-
             </div>
         </div>
     </div>
