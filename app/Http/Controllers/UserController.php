@@ -73,15 +73,8 @@ public function user_dashboard()
         ->whereNotIn('id', JobApplication::where('user_id', $userId)->pluck('job_id'))
         ->count();
 
-    $recentAppliedJobs = JobApplication::with('job')   
-        ->where('user_id', $userId)
-        ->orderBy('id', 'desc')
-        ->take(5)
-        ->get();
-
-    // ==========================
-    //  RECOMMENDED JOBS LOGIC
-    // ==========================
+   $recentAppliedJobs = JobApplication::with(['job.admin'])->where('user_id', $userId)->latest()
+   ->take(4)->get();
 
     $profile = User_profile::where('user_id', $userId)->first();
 
@@ -213,8 +206,6 @@ public function saved_jobs()
     return view('User.user_saved_jobs', compact('savedJobs'));
 }
 
-
-
 public function user_jobs(Request $request)
 {
     $userId = Auth::guard('user')->id();
@@ -258,7 +249,7 @@ public function user_jobs(Request $request)
         $query->where('salary', '<=', $request->max_salary);
     }
 
-    $jobs = $query->orderBy('id', 'desc')->paginate(10);
+    $jobs = $query->orderBy('id', 'desc')->paginate(5);
 
     $categories = JobCategory::all();
     $roles = JobRole::all();
@@ -289,9 +280,14 @@ public function user_job_single($id){
 }
  
 
-public function job_applied(){
+public function job_applied()
+{
     $userId = Auth::guard('user')->id();
-    $applications = JobApplication::where('user_id', $userId)->with('job')->get();
+
+    $applications = JobApplication::with('job')
+        ->where('user_id', $userId)
+        ->latest()
+        ->paginate(5);   
     return view('user.user_applied_jobs', compact('applications'));
 }
 

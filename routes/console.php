@@ -1,15 +1,7 @@
 <?php
 
-namespace App\Console;
+use Illuminate\Support\Facades\Artisan;
 
-use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
-class Kernel extends ConsoleKernel
-{
-    protected function schedule(Schedule $schedule): void
-    {
-        $schedule->command('admin:check-notifications')
-                 ->hourly();
-    }
-}
+Artisan::command('inspire', function () {
+    $this->comment('Keep pushing forward!');
+});

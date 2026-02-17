@@ -11,25 +11,26 @@
 
         <div class="row">
             <div class="col-12">
-                <div class="p-4 rounded shadow-sm mb-4" style="background:#f7f9ff; border-left:5px solid #007bff;">
+                <div class="p-4 rounded shadow-sm mb-4 bg-light border-left border-primary"
+                    style="border-width:4px !important;">
 
-                    <div class="d-flex justify-content-between flex-wrap align-items-center mb-2">
+                    <!-- Row 1 : Title + Breadcrumb -->
+                    <div class="d-flex justify-content-between flex-wrap align-items-center">
 
                         <div>
-                            <h1 class="h4 font-weight-bold text-dark mb-1 d-flex align-items-center">
+                            <h4 class="font-weight-bold text-dark mb-1">
                                 <i class="fa fa-file-alt text-primary mr-2"></i>
                                 Job Applications
-                            </h1>
-                            <p class="text-muted small mb-0">
+                            </h4>
+                            <small class="text-muted">
                                 View, manage and update all job applications.
-                            </p>
+                            </small>
                         </div>
 
-                        <!-- Breadcrumb -->
                         <nav aria-label="breadcrumb" class="mt-3 mt-md-0">
                             <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
                                 <li class="breadcrumb-item">
-                                    <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">
+                                    <a href="{{ route('admin.dashboard') }}">
                                         Dashboard
                                     </a>
                                 </li>
@@ -41,18 +42,22 @@
 
                     </div>
 
-                    <!-- Search -->
-                    <form action="{{ route('job_application') }}" method="GET"
-                        class="d-flex align-items-center mt-3 w-100" style="max-width:370px;">
+                    <!-- Row 2 : Search -->
+                    <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
 
-                        <input type="search" name="search" class="form-control flex-grow-1 mr-2"
-                            placeholder="Search by user or job..." value="{{ request('search') }}">
+                        <form action="{{ route('job_application') }}" method="GET" class="form-inline">
 
-                        <button class="btn btn-primary px-3" type="submit">
-                            <i class="fa fa-search"></i>
-                        </button>
+                            <input type="search" name="search" class="form-control mr-2"
+                                placeholder="Search by user or job..." value="{{ request('search') }}"
+                                style="max-width:280px;">
 
-                    </form>
+                            <button class="btn btn-outline-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+
+                        </form>
+
+                    </div>
 
                 </div>
 
@@ -147,7 +152,7 @@
 
                                             <!-- RESUME -->
                                             <td>
-                                                <a href="{{ asset('storage/resumes/' . $app->resume) }}" target="_blank">
+                                                <a href="{{ Storage::url($app->resume) }}" target="_blank">
                                                     View
                                                 </a> |
                                                 <a href="{{ route('admin.resume.download', $app->id) }}"

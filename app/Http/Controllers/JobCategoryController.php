@@ -24,7 +24,7 @@ class JobCategoryController extends Controller
             });
         })
         ->orderBy('id', 'desc')
-        ->paginate(10);
+        ->paginate(5);
 
     return view('Admin.job_category', compact('categories'));
 }
@@ -42,9 +42,8 @@ class JobCategoryController extends Controller
     if ($request->hasFile('category_image')) {
         $file = $request->file('category_image');
         $filename = time() . '_' . $file->getClientOriginalName();
-        $path = $request->file('category_image')
-        ->store('categories', 'public');
-$data['category_image'] = basename($path);
+       $path = $request->file('category_image')->store('categories', 'public');
+       $data['category_image'] = $path;
     }
 
     JobCategory::create($data);
@@ -72,19 +71,15 @@ $data['category_image'] = basename($path);
         'description' => 'nullable|string|max:500',
         'category_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ]);
+if ($request->hasFile('category_image')) {
 
-    if ($request->hasFile('category_image')) {
-
-    // old image delete
     if ($category->category_image) {
-        Storage::disk('public')
-            ->delete('categories/' . $category->category_image);
+        Storage::disk('public')->delete($category->category_image);
     }
 
-    $path = $request->file('category_image')
-        ->store('categories', 'public');
-
-    $data['category_image'] = basename($path);
+    $path = $request->file('category_image')->store('categories', 'public');
+$data['category_image'] = $path;   
+    
 }
     $category->update($data);
 

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\User_profile;
 use App\Mail\ApplicationStatusMail;
 use Illuminate\Support\Facades\Auth;
+use App\Models\SavedJob;
 use App\Notifications\NewJobApplicationNotification;
 use App\Notifications\ApplicationStatusNotification;
 
@@ -56,29 +57,28 @@ class JobApplicationController extends Controller
     }
 
     // Already Applied Check
-    $alreadyApplied = JobApplication::where('user_id', $user_id)
-        ->where('job_id', $id)
-        ->exists();
+  $alreadyApplied = JobApplication::where('user_id', $user_id)
+    ->where('job_id', $id)
+    ->first();
 
-    if ($alreadyApplied) {
-        return back()->with('error', 'You have already applied for this job.');
-    }
+if ($alreadyApplied && $alreadyApplied->status !== 'rejected') {
+    return back()->with('error', 'You have already applied for this job.');
+}
 
     // Validation
     $request->validate([
         'cover_letter' => 'required|string|min:20|max:1000',
         'resume' => 'required|mimes:pdf|max:2048',
     ]);
+    $path = $request->file('resume')->store('resumes', 'public');
 
-   $path = $request->file('resume')->store('resumes', 'public');
 $application = JobApplication::create([
     'user_id' => $user_id,
     'job_id' => $id,
     'cover_letter' => $request->cover_letter,
-    'resume' => basename($path), // only filename
+    'resume' => ($path), // only filename
     'status' => 'pending',
 ]);
-
 
     // 🔔 SEND NOTIFICATION (AFTER SUCCESS)
     if ($job->admin) {
@@ -108,7 +108,7 @@ $application = JobApplication::create([
             $query->orWhere('resume', 'like', "%$search%");
         })
         ->orderBy('id', 'desc')
-        ->paginate(10);
+        ->paginate(5);
 
     return view('Admin.job_application', compact('applications'));
 }
@@ -155,17 +155,25 @@ public function downloadResume($id)
 {
     $application = JobApplication::with('job')->findOrFail($id);
 
-    // Security check (admin only access own job)
     if (auth('admin')->id() !== $application->job->admin_id) {
         abort(403, 'Unauthorized');
     }
 
-    $filePath = 'resumes/' . $application->resume;
-
-    if (!Storage::disk('public')->exists($filePath)) {
+    if (!Storage::disk('public')->exists($application->resume)) {
         abort(404, 'Resume not found');
     }
+    return Storage::disk('public')->download($application->resume);
+}
+public function applyFromSaved($id)
+{
+    $userId = Auth::guard('user')->id();
 
-    return Storage::disk('public')->download($filePath);
+    // Delete saved job immediately
+    SavedJob::where('user_id', $userId)
+        ->where('job_id', $id)
+        ->delete();
+
+    // Redirect to apply form
+    return redirect()->route('apply_form_job_application', $id);
 }
 }

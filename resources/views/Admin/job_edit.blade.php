@@ -193,8 +193,7 @@
             @if ($job->job_image)
                 <div class="mb-3">
                     <label class="font-weight-bold d-block">Current Image:</label>
-                    <img src="{{ asset('uploads/job/' . $job->job_image) }}" class="img-thumbnail"
-                        style="max-width: 150px;">
+                    <img src="{{ Storage::url($job->job_image) }}" class="img-thumbnail" style="max-width:150px;">
                 </div>
             @endif
 

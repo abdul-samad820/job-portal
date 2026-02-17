@@ -1,57 +1,65 @@
 @extends('layouts.index')
 @section('title', 'Job Management')
-
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/style-admin-file.css') }}">
+@endpush
 @section('content')
 
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
-                <div class="p-4 rounded shadow-sm mb-4" style="background: #f7f9ff; border-left: 5px solid #007bff;">
+                <div class="p-4 rounded shadow-sm mb-4 bg-light border-left border-primary"
+                    style="border-width:4px !important;">
 
-                    <div class="d-flex justify-content-between flex-wrap align-items-center mb-2">
+                    <!-- Row 1 : Title + Breadcrumb -->
+                    <div class="d-flex justify-content-between flex-wrap align-items-center">
+
                         <div>
-                            <h1 class="h4 font-weight-bold text-dark mb-1 d-flex align-items-center">
+                            <h4 class="font-weight-bold text-dark mb-1">
                                 <i class="fa fa-briefcase text-primary mr-2"></i>
                                 Job Management
-                            </h1>
-                            <p class="text-muted small mb-0">
+                            </h4>
+                            <small class="text-muted">
                                 View, manage and edit all job postings.
-                            </p>
+                            </small>
                         </div>
 
                         <nav aria-label="breadcrumb" class="mt-3 mt-md-0">
                             <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
                                 <li class="breadcrumb-item">
-                                    <a href="{{ route('admin.dashboard') }}" class="text-decoration-none">
-                                        Dashboard
-                                    </a>
+                                    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                                 </li>
-                                <li class="breadcrumb-item active font-weight-bold">Jobs</li>
+                                <li class="breadcrumb-item active font-weight-bold">
+                                    Jobs
+                                </li>
                             </ol>
                         </nav>
+
                     </div>
 
-                    <!-- Search + Add Button -->
-                    <div class="d-flex justify-content-between flex-wrap align-items-center mt-3">
+                    <!-- Row 2 : Search + Add Button -->
+                    <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
 
-                        <form method="GET" action="{{ route('admin.job') }}" class="d-flex w-100"
-                            style="max-width:370px;">
+                        <!-- Search -->
+                        <form method="GET" action="{{ route('admin.job') }}" class="form-inline">
 
                             <input type="search" name="search" class="form-control mr-2" placeholder="Search jobs..."
-                                value="{{ request('search') }}">
+                                value="{{ request('search') }}" style="max-width:280px;">
 
-                            <button class="btn btn-primary px-3" type="submit">
+                            <button class="btn btn-outline-primary">
                                 <i class="fa fa-search"></i>
                             </button>
 
                         </form>
 
-                        <a href="{{ route('admin.job_add') }}"
-                            class="btn btn-primary rounded-pill d-flex align-items-center mt-3 mt-md-0">
-                            <i class="fa fa-plus mr-2"></i> Add New Job
+                        <!-- Add Button -->
+                        <a href="{{ route('admin.job_add') }}" class="btn btn-primary rounded-pill px-4 mt-3 mt-md-0">
+                            <i class="fa fa-plus mr-2"></i>
+                            Add Job
                         </a>
 
                     </div>
+
                 </div>
 
                 <!-- Jobs Table -->
@@ -86,7 +94,7 @@
 
                                             <!-- job Image -->
                                             <td>
-                                                <img src="{{ $job->job_image ? asset('storage/jobs/' . $job->job_image) : asset('admins/dist/img/default.png') }}"
+                                                <img src="{{ Storage::url($job->job_image) }}"
                                                     style="width:70px;height:70px;object-fit:cover;border-radius:6px;">
                                             </td>
 
@@ -106,7 +114,29 @@
                                             </td>
 
 
-                                            <td><span class="badge badge-info">{{ $job->type }}</span></td>
+                                            @php
+                                                $typeClasses = [
+                                                    'Full-time' => 'badge-success',
+                                                    'Part-time' => 'badge-primary',
+                                                    'Internship' => 'badge-warning',
+                                                    'Contract' => 'badge-dark',
+                                                ];
+
+                                                $typeIcons = [
+                                                    'Full-time' => 'fa-briefcase',
+                                                    'Part-time' => 'fa-clock',
+                                                    'Internship' => 'fa-user-graduate',
+                                                    'Contract' => 'fa-file-signature',
+                                                ];
+                                            @endphp
+
+                                            <td>
+                                                <span
+                                                    class="badge {{ $typeClasses[$job->type] ?? 'badge-secondary' }} px-3 py-2 badge-pill">
+                                                    <i class="fa {{ $typeIcons[$job->type] ?? 'fa-briefcase' }} mr-1"></i>
+                                                    {{ $job->type }}
+                                                </span>
+                                            </td>
 
                                             <td>
                                                 <span class="{{ $isExpired ? 'text-danger' : 'text-success' }}">
@@ -116,26 +146,20 @@
                                             </td>
 
                                             <td class="text-center">
-                                                <div class="d-flex justify-content-center align-items-center">
+                                                <a href="{{ route('admin.job_edit', $job->id) }}"
+                                                    class="btn btn-sm btn-outline-primary mr-1">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
 
-                                                    <!-- EDIT BUTTON -->
-                                                    <a href="{{ route('admin.job_edit', $job->id) }}"
-                                                        class="btn btn-sm btn-outline-primary d-flex align-items-center mr-2 px-3 py-1">
-                                                        <i class="fa fa-edit mr-1"></i> Edit
-                                                    </a>
+                                                <form action="{{ route('admin.job_delete', $job->id) }}" method="POST"
+                                                    class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
 
-                                                    <!-- DELETE BUTTON -->
-                                                    <form action="{{ route('admin.job_delete', $job->id) }}" method="POST"
-                                                        class="m-0 p-0">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-outline-danger d-flex align-items-center px-3 py-1 delete-btn">
-                                                            <i class="fa fa-trash mr-1"></i> Delete
-                                                        </button>
-                                                    </form>
-
-                                                </div>
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger delete-btn">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
                                             </td>
 
                                         </tr>
@@ -165,53 +189,128 @@
 
             </div>
         </div>
-    </div>
-
-@endsection
-
-
-{{-- ===================== MODALS ===================== --}}
-@foreach ($jobs as $job)
+        @foreach ($jobs as $job)
     <div class="modal fade" id="jobModal{{ $job->id }}" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content shadow">
+            <div class="modal-content border-0 shadow-lg rounded">
 
-                <div class="modal-header bg-light">
-                    <h5 class="modal-title">{{ $job->title }} — Details</h5>
-                    <button class="close" data-dismiss="modal">&times;</button>
-                </div>
+                <!-- Header -->
+                <div class="modal-header bg-primary text-white">
 
-                <div class="modal-body">
+                    <div class="d-flex align-items-center">
 
-                    <h6 class="font-weight-bold mb-2">Overview</h6>
-                    <p class="text-muted">{{ $job->overview ?? '—' }}</p>
+                        <img src="{{ $job->job_image ? Storage::url('jobs/' . $job->job_image) : asset('admins/dist/img/default.png') }}"
+                            style="width:55px;height:55px;object-fit:cover;border-radius:10px;" class="mr-3">
 
-                    <hr>
+                        <div>
+                            <h5 class="mb-0 font-weight-bold">
+                                {{ $job->title }}
+                            </h5>
+                            <small class="opacity-75">
+                                {{ $job->location }}
+                            </small>
+                        </div>
 
-                    <h6 class="font-weight-bold">Responsibilities</h6>
-                    <p>{{ $job->responsibilities ?? '—' }}</p>
-                    <hr>
+                    </div>
 
-                    <h6 class="font-weight-bold">Required Skills</h6>
-                    <p>{{ $job->required_skills ?? '—' }}</p>
-                    <hr>
-
-                    <h6 class="font-weight-bold">Basic Info</h6>
-                    <p><strong>Experience:</strong> {{ $job->experience }}</p>
-                    <p><strong>Location:</strong> {{ $job->location }}</p>
-                    <p><strong>Salary:</strong> {{ $job->salary }} LPA</p>
-                    <p><strong>Type:</strong> {{ $job->type }}</p>
+                    <button class="close text-white" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
 
                 </div>
 
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <!-- Body -->
+                <div class="modal-body px-4 py-3">
+
+                    <!-- Basic Info Cards -->
+                    <div class="row text-center mb-4">
+
+                        <div class="col-md-3 mb-2">
+                            <div class="border rounded p-2 bg-light">
+                                <small class="text-muted d-block">Experience</small>
+                                <strong>{{ $job->experience ?? 'N/A' }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <div class="border rounded p-2 bg-light">
+                                <small class="text-muted d-block">Salary</small>
+                                <strong class="text-success">
+                                    {{ $job->salary ?? 'N/A' }}
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <div class="border rounded p-2 bg-light">
+                                <small class="text-muted d-block">Type</small>
+                                <span class="badge badge-info px-3 py-1">
+                                    {{ $job->type }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <div class="border rounded p-2 bg-light">
+                                <small class="text-muted d-block">Last Date</small>
+                                <strong>
+                                    {{ \Carbon\Carbon::parse($job->last_date)->format('d M Y') }}
+                                </strong>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Overview -->
+                    <div class="mb-4">
+                        <h6 class="font-weight-bold border-bottom pb-2">
+                            Overview
+                        </h6>
+                        <p class="text-muted mt-2 mb-0">
+                            {{ $job->overview ?? 'No overview provided.' }}
+                        </p>
+                    </div>
+
+                    <!-- Responsibilities -->
+                    <div class="mb-4">
+                        <h6 class="font-weight-bold border-bottom pb-2">
+                            Responsibilities
+                        </h6>
+                        <p class="mt-2 mb-0">
+                            {{ $job->responsibilities ?? 'Not specified.' }}
+                        </p>
+                    </div>
+
+                    <!-- Required Skills -->
+                    <div>
+                        <h6 class="font-weight-bold border-bottom pb-2">
+                            Required Skills
+                        </h6>
+                        <p class="mt-2 mb-0">
+                            {{ $job->required_skills ?? 'Not specified.' }}
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer bg-light">
+                    <button class="btn btn-secondary" data-dismiss="modal">
+                        Close
+                    </button>
+
                 </div>
 
             </div>
         </div>
     </div>
 @endforeach
+    </div>
+
+@endsection
+
+
+{{-- ===================== MODALS ===================== --}}
 
 
 @push('scripts')

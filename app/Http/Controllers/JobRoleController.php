@@ -26,7 +26,7 @@ class JobRoleController extends Controller
             });
         }) 
             ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->paginate(5);
 
         return view('Admin.job_role', compact('roles'));
     }

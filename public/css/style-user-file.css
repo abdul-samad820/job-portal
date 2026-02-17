@@ -338,4 +338,20 @@
             }
         }
 
-      
+.job-card-pro {
+    transition: all 0.25s ease;
+    border-radius: 14px;
+}
+.job-card-pro:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+.job-footer-link {
+    font-size: 12px;
+    font-weight: 500;
+}
+.status-badge {
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 20px;
+}

@@ -53,32 +53,26 @@ public function login(Request $request)
   public function jobapplications(Request $request){
    $adminId = auth('admin')->id();
 $jobIds = Job::where('admin_id', $adminId)->pluck('id');
-$applications = JobApplication::with(['user','job'])
-    ->whereIn('job_id', $jobIds)
-    ->paginate(10);
 
-     return view('Admin.job_application',compact('applications'));
+$applications = JobApplication::with(['user.profile','job'])
+    ->whereHas('job', function ($q) use ($adminId) {
+        $q->where('admin_id', $adminId);
+    })->latest() ->paginate(5);
   }
 
 public function viewResume($id)
 {
     $application = JobApplication::with('job')->findOrFail($id);
 
-    
     if (auth('admin')->id() !== $application->job->admin_id) {
         abort(403, 'Unauthorized');
     }
-    $storedPath = $application->resume;
-    $relative = preg_replace('#^storage/#', '', $storedPath); 
-    $disk = Storage::disk('public');
 
-    if (! $disk->exists($relative)) {
+    if (!Storage::disk('public')->exists($application->resume)) {
         abort(404, 'Resume not found');
     }
 
-    $fullPath = $disk->path($relative); 
-    return response()->file($fullPath);
-
+    return Storage::disk('public')->response($application->resume);
 }
 
  public function updateApplicationStatus(Request $request, $id)

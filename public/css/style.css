@@ -1,26 +1,7 @@
-/* -------------------- BASIC TYPOGRAPHY -------------------- */
-/* -------- GLOBAL FONT FIX -------- */
-
-    html, body {
-        height: 100%;
-    }
-
-    body {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .wrapper {
-        flex: 1 0 auto;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .content-wrapper {
-        flex: 1 0 auto;
-        padding-top: 90px !important; /* Because navbar is fixed-top */
-    }
-
+html, body {
+    overflow-x: hidden;
+     height: 100%;
+}
     footer.main-footer {
         flex-shrink: 0;
         background: #fff;
@@ -32,12 +13,10 @@ body {
     font-size: 14px !important;        /* ← Global font size */
     line-height: 1.4 !important;
 }
-
 p, a, li, input, textarea, select, label, span, div {
     font-size: 14px !important;        /* ← Normal text */
     font-family: "Montserrat", sans-serif !important;
 }
-
 /* -------- HEADINGS FIX (AdminLTE override bypass) -------- */
 h1, h2, h3, h4, h5, h6 {
     font-family: "Montserrat", sans-serif !important;
@@ -55,7 +34,6 @@ h6 { font-size: 12px !important; }
 .table td, .table th {
     font-size: 14px !important;
 }
-
 /* -------- BADGE / BUTTON TEXT FIX -------- */
  .btn {
     font-size: 14px !important;
@@ -65,10 +43,9 @@ h6 { font-size: 12px !important; }
  font-size: 13px !important;
     font-family: "Montserrat", sans-serif !important;
 }
-
-.content-wrapper {
+/* .content-wrapper {
     padding-top: 80px !important;
-}
+} */
 .card {
     border-radius: 12px;
     border: 0;
@@ -151,7 +128,7 @@ h6 { font-size: 12px !important; }
 }
 
 .job-info {
-    max-width: 63%; /* 👈 This fixes everything */
+    max-width: 63%; /**/
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -161,31 +138,18 @@ h6 { font-size: 12px !important; }
     color: #6b7280;
     font-size: 13px;
 }
-/* -------------------- SIDEBAR MAIN -------------------- */
-/* -----------------------------------------
-   MAIN SIDEBAR
------------------------------------------ */
-/* -------------------- SIDEBAR MAIN -------------------- */
 
-/* NORMAL SIDEBAR WIDTH */
-/* Normal sidebar */
 .main-sidebar {
-    width: 210px !important;
-    min-width: 210px !important;
-    max-width: 210px !important;
-    background: #ffffff !important;
+    width: 210px ;
+    background: #ffffff;
     border-right: 1px solid #e6e6e6;
     transition: all 0.25s ease-in-out;
-    overflow-x: hidden !important;
+    /* overflow-x: hidden !important; */
 }
-
 /* COLLAPSE SIDEBAR WIDTH */
 .sidebar-collapse .main-sidebar {
-    width: 65px !important;
-    min-width: 65px !important;
-    max-width: 65px !important;
+    width: 65px ;
 }
-
 /* Sidebar wrapper */
 .jobi-sidebar .sidebar {
     height: 100%;
@@ -193,7 +157,6 @@ h6 { font-size: 12px !important; }
     flex-direction: column;
     align-items: center;
 }
-
 /* -------------------- BRAND -------------------- */
 .jobi-brand img {
     width: 46px;
@@ -237,6 +200,16 @@ h6 { font-size: 12px !important; }
     width: 38px !important;
     height: 38px !important;
 }
+/* Disable sidebar auto expand on hover */
+.sidebar-mini.sidebar-collapse .main-sidebar:hover {
+    width: 75px !important;
+}
+.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-link p {
+    display: none !important;
+}
+.wrapper {
+    min-height: 100vh;
+}
 
 /* -------------------- MENU -------------------- */
 .jobi-menu {
@@ -246,12 +219,11 @@ h6 { font-size: 12px !important; }
 }
 
 .jobi-menu .nav-link {
-    width: 100% !important;
-    padding: 10px 12px !important;
+    width: 100% ;
+    padding: 10px 15px ;
     border-radius: 10px;
-    display: flex !important;
+    display: flex ;
     align-items: center;
-    white-space: nowrap !important;
 }
 
 /* ICON LEFT — FIXED */
@@ -272,7 +244,7 @@ h6 { font-size: 12px !important; }
     background: #2f80ed !important;
     color: #fff !important;
     border-radius: 12px;
-    width: 75% !important;   /* ← full width fix */
+    width: 100% !important;   /* ← full width fix */
     padding-left: 18px !important;
     padding-right: 18px !important;
     margin: 0 !important;     /* ← remove shifting */
@@ -289,46 +261,29 @@ h6 { font-size: 12px !important; }
     background: #eef6ff !important;
    background: #2f80ed !important;
     width: 100% !important;         /* ← full width hover */
-   
-   
 }
 
 .jobi-menu .nav-link:hover i {
     color: #eef6ff !important;
 }
-
-/* -------------------- COLLAPSE MODE -------------------- */
-
-/* Hide text only */
 .sidebar-collapse .jobi-menu .nav-link p {
     display: none !important;
 }
 
 /* Icon stays LEFT perfectly */
 .sidebar-collapse .jobi-menu .nav-link {
-      justify-content: center !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    justify-content: flex-start !important;  /* LEFT ALIGN */
+    padding-left: 18px !important;
 }
 .sidebar-collapse .jobi-menu .nav-link i {
     margin-right: 0 !important;
-    width: auto !important;
 }
 
 /* -------------------- CONTENT SHIFT -------------------- */
-.content-wrapper,
-.main-footer,
-.main-header {
-    margin-left: 210px !important;      /* Slim sidebar width */
-    transition: all 0.25s ease-in-out;
-}
 
-.sidebar-collapse .content-wrapper,
-.sidebar-collapse .main-footer,
-.sidebar-collapse .main-header {
-    margin-left: 65px !important;
-}
-
+/* .main-footer {
+    position: relative !important;
+} */
 /* -------------------- RESPONSIVE -------------------- */
 @media (max-width: 767.98px) {
     .main-sidebar {

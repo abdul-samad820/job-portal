@@ -63,7 +63,7 @@ public function job(Request $request)
         $query->whereRaw("REPLACE(salary, ' LPA', '') <= ?", [$maxSalary]);
     }
 
-    $jobs = $query->orderBy('id', 'desc')->paginate(10);
+    $jobs = $query->orderBy('id', 'desc')->paginate(5);
 
 
     $categories = JobCategory::where('admin_id', $adminId)->get();
@@ -176,7 +176,7 @@ public function user_job_filter(Request $request)
             break;
     }
 
-    $jobs = $query->paginate(10)->appends($request->query());
+    $jobs = $query->paginate(5)->appends($request->query());
  $savedJobIds = SavedJob::where('user_id', $userId)
                     ->pluck('job_id')
                     ->toArray();
@@ -223,7 +223,7 @@ public function user_job_filter(Request $request)
 if ($request->hasFile('job_image')) {
     $path = $request->file('job_image')
                     ->store('jobs', 'public');
-    $data['job_image'] = basename($path);
+  $data['job_image'] = $path;
 }
         Job::create($data); 
         return redirect()->route('admin.job')->with('success', 'Job created successfully!');
@@ -261,14 +261,14 @@ if ($request->hasFile('job_image')) {
     if ($request->hasFile('job_image')) {
 
     if ($job->job_image) {
-        Storage::disk('public')
-            ->delete('jobs/' . $job->job_image);
+       Storage::disk('public')->delete($job->job_image);
+$data['job_image'] = $path;
     }
 
     $path = $request->file('job_image')
                     ->store('jobs', 'public');
 
-    $data['job_image'] = basename($path);
+   $data['job_image'] = $path;
 }
         $job->update($data);
  

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+
     <title>Job Hub Homepage</title>
     <link rel="icon" type="image/png" href="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}">
     <link rel="stylesheet" href="{{ asset('css/style2.css') }}">
@@ -18,16 +18,22 @@
 </head>
 
 <body>
-    <nav id="jobiNav" class="navbar navbar-expand-lg navbar-light fixed-top py-2">
-        <a class="navbar-brand ml-3" href="#">
-            <img src="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}" style="height: 62px;">
+  <nav id="jobiNav" class="navbar navbar-expand-lg navbar-light fixed-top py-2">
+
+    <div class="container">
+
+        <a class="navbar-brand" href="#">
+            <img src="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}" style="height: 55px;">
         </a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMenu">
+        <button class="navbar-toggler border-0" type="button"
+                data-toggle="collapse" data-target="#navMenu"
+                aria-controls="navMenu" aria-expanded="false">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navMenu">
+        <div class="collapse navbar-collapse mobile-menu" id="navMenu">
+
             <ul class="navbar-nav mx-auto text-center">
                 <li class="nav-item"><a class="nav-link font-weight-bold" href="#">Home</a></li>
                 <li class="nav-item"><a class="nav-link font-weight-bold" href="{{ route('user.jobs') }}">Jobs</a></li>
@@ -37,28 +43,31 @@
                 <li class="nav-item"><a class="nav-link font-weight-bold" href="#">Blog</a></li>
             </ul>
 
-            <div class="mr-3">
-                <a href="{{ route('user.register') }}" class="font-weight-bold text-dark">Register</a> |
-                <a href="{{ route('user.login') }}" class="font-weight-bold text-dark">Login</a>
+            <div class="text-center text-lg-right mt-3 mt-lg-0">
+                <a href="{{ route('user.register') }}" class="d-block d-lg-inline font-weight-bold text-dark mr-lg-2">Register</a>
+                <a href="{{ route('user.login') }}" class="d-block d-lg-inline font-weight-bold text-dark mr-lg-3">Login</a>
+                <a href="{{ route('user.dashboard') }}" class="btn btn-hire mt-2 mt-lg-0">Go To Profile</a>
             </div>
 
-            <a href="{{ route('user.dashboard') }}" class="btn btn-hire ml-lg-2">Go To Profile</a>
         </div>
-    </nav>
+
+    </div>
+
+</nav>
 
     <div class="container-fluid p-0 position-relative">
         @yield('content')
     </div>
 
-    <footer class="container pb-4 mt-3">
-        <div class="row">
+    <footer class="container mt-5 pt-4 pb-4">
+        <div class="row text-center text-md-left">
             <!-- Logo + Email -->
-            <div class="col-md-3 mb-4">
+            <div class="col-12 col-md-3 mb-4">
                 <div class="footer-logo"><img src="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}"
                         style="height: 120px;"></div>
             </div>
             <!-- Services -->
-            <div class="col-md-3 mb-3">
+            <div class="col-6 col-md-3 mb-3">
                 <h6 class="font-weight-bold mb-3">Services</h6>
                 <a href="#">Browse Jobs</a>
                 <a href="#">Companies</a>
@@ -67,7 +76,7 @@
             </div>
 
             <!-- Company -->
-            <div class="col-md-3 mb-3">
+            <div class="col-6 col-md-3 mb-3">
                 <h6 class="font-weight-bold mb-3">Company</h6>
                 <a href="#">About us</a>
                 <a href="#">FAQ’s</a>
@@ -76,7 +85,7 @@
             </div>
 
             <!-- Blog -->
-            <div class="col-md-3 mb-3">
+            <div class="col-6 col-md-3 mb-3">
                 <h6 class="font-weight-bold mb-3">Blog</h6>
                 <a href="#">Blog List</a>
                 <a href="#">Blog Grid</a>
@@ -110,15 +119,17 @@
 
 
     <script>
-        window.addEventListener("scroll", function() {
-            const nav = document.getElementById("jobiNav");
+       window.addEventListener("scroll", function() {
+    const nav = document.getElementById("jobiNav");
 
-            if (window.scrollY > 80) {
-                nav.classList.add("nav-scrolled");
-            } else {
-                nav.classList.remove("nav-scrolled");
-            }
-        });
+    if (window.innerWidth > 991) { // Desktop only
+        if (window.scrollY > 80) {
+            nav.classList.add("nav-scrolled");
+        } else {
+            nav.classList.remove("nav-scrolled");
+        }
+    }
+});
     </script>
     @stack('scripts')
 </body>

@@ -45,7 +45,7 @@
 
                 <div class="rounded-circle d-flex align-items-center justify-content-center"
                     style="width:50px; height:50px; background:#D8E8FF;">
-                    <i class="fas fa-user" style="color:#10392E; font-size:18px;"></i>
+                    <i class="fas fa-briefcase" style="color:#10392E; font-size:18px;"></i>
                 </div>
             </div>
         </div>
@@ -62,12 +62,12 @@
 
                 <div class="rounded-circle d-flex align-items-center justify-content-center"
                     style="width:50px; height:50px; background:#D8E8FF;">
-                    <i class="fas fa-bookmark" style="color:#10392E; font-size:18px;"></i>
+                    <i class="fas fa-check-circle" style="color:#10392E; font-size:18px;"></i>
                 </div>
             </div>
         </div>
 
-        {{-- Placeholder --}}
+        {{-- saved jobs  --}}
         <div class="col-12 col-sm-6 col-md-3 mb-3">
             <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm"
                 style="border-radius:20px;">
@@ -79,12 +79,12 @@
 
                 <div class="rounded-circle d-flex align-items-center justify-content-center"
                     style="width:50px; height:50px; background:#D8E8FF;">
-                    <i class="fas fa-eye" style="color:#10392E; font-size:18px;"></i>
+                    <i class="fas fa-bookmark" style="color:#10392E; font-size:18px;"></i>
                 </div>
             </div>
         </div>
 
-        {{-- Placeholder 2 --}}
+        {{-- recommended jobs --}}
         <div class="col-12 col-sm-6 col-md-3 mb-3">
             <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm"
                 style="border-radius:20px;">
@@ -96,7 +96,7 @@
 
                 <div class="rounded-circle d-flex align-items-center justify-content-center"
                     style="width:50px; height:50px; background:#D8E8FF;">
-                    <i class="fas fa-magic" style="color:#10392E; font-size:18px;"></i>
+                    <i class="fas fa-lightbulb" style="color:#10392E; font-size:18px;"></i>
 
                 </div>
             </div>
@@ -354,63 +354,94 @@
     </div>
 
     {{-- SAVED + RECENT JOBS SECTION --}}
-    <div class="row mt-4">
-        {{-- Recent Applied Jobs --}}
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm border-0 rounded-lg">
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-0 rounded-lg">
 
-                <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 font-weight-bold text-dark">Recent Applied Jobs</h6>
-                </div>
+            <div class="card-header bg-white border-0 py-3">
+                <h6 class="mb-0 font-weight-bold text-dark">
+                    Recent Applied Jobs
+                </h6>
+            </div>
 
-                <div class="card-body pt-0">
+            <div class="card-body">
+                <div class="row">
 
                     @forelse ($recentAppliedJobs as $recentjob)
                         @php $job = $recentjob->job; @endphp
 
-                        <div class="d-flex align-items-center p-3 mb-2 bg-light rounded job-box"
-                            style="transition: .2s; border-left: 4px solid transparent;">
+                        <div class="col-md-3 mb-4">
+                            <div class="card job-card-pro border-0 shadow-sm h-100">
+                                <div class="card-body d-flex flex-column">
 
-                            {{-- Job Image --}}
-                            <div class="job-logo mr-3">
-                                <img src="{{ $job->admin && $job->admin->profile_image
-                                    ? asset('storage/admins/' . $job->admin->profile_image)
-                                    : asset('default/company.png') }}"
-                                    width="50" height="50" style="border-radius:8px; object-fit:cover;"
-                                    alt="Company Logo">
-                            </div>
+                                    {{-- Top Section --}}
+                                    <div class="d-flex align-items-center mb-3">
 
-                            {{-- Job Info --}}
-                            <div class="flex-grow-1">
+                                        <div class="mr-3">
+                                            <img src="{{ $job->admin && $job->admin->profile_image
+                                                ? asset('storage/admins/' . $job->admin->profile_image)
+                                                : asset('default/company.png') }}"
+                                                width="50" height="50"
+                                                style="border-radius:12px; object-fit:cover;">
+                                        </div>
 
-                                <div class="font-weight-bold text-dark" style="font-size: 14px;">
-                                    {{ $job->title }}
+                                        <div>
+                                            <div class="font-weight-bold" style="font-size:14px;">
+                                                {{ $job->title }}
+                                            </div>
+
+                                            <div class="text-muted" style="font-size:12px;">
+                                                {{ ucfirst($job->type) }} • {{ $job->location }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    {{-- Salary --}}
+                                    <div class="text-success font-weight-bold mb-2" style="font-size:13px;">
+                                        ₹ {{ $job->salary ?? 'Not Disclosed' }} LPA
+                                    </div>
+
+                                    {{-- Status --}}
+                                    @php
+                                        $statusClass = [
+                                            'pending' => 'badge-warning',
+                                            'shortlisted' => 'badge-info',
+                                            'hired' => 'badge-success',
+                                            'rejected' => 'badge-danger',
+                                        ][$recentjob->status] ?? 'badge-secondary';
+                                    @endphp
+
+                                    <div class="mb-3">
+                                        <span class="badge {{ $statusClass }} status-badge">
+                                            {{ ucfirst($recentjob->status) }}
+                                        </span>
+                                    </div>
+
+                                    {{-- Push footer to bottom --}}
+                                    <div class="mt-auto text-right">
+                                        <a href="{{ route('user.job_applied') }}" 
+                                           class="text-primary job-footer-link">
+                                            View Details 
+                                            <i class="fas fa-arrow-right ml-1"></i>
+                                        </a>
+                                    </div>
+
                                 </div>
-
-                                <div class="text-muted" style="font-size: 12px;">
-                                    {{ ucfirst($job->type) }} • {{ $job->location }}
-                                </div>
-
-                                <div class="text-success" style="font-size: 12px;">
-                                    <i class="fas fa-rupee-sign"></i> {{ $job->salary ?? 'Not Disclosed' }} LPA
-                                </div>
-
-                                <div class="text-primary" style="font-size: 12px;">
-                                    Status: {{ ucfirst($recentjob->status) }}
-                                </div>
-                            </div>
-                            <div class="text-muted ml-3">
-                                <a href="{{ route('user.job_applied') }}"><i class="fas fa-chevron-right"></i></a>
                             </div>
                         </div>
+
                     @empty
-                        <p class="text-muted">No recent job applications found.</p>
+                        <div class="col-12 text-center text-muted">
+                            No recent job applications found.
+                        </div>
                     @endforelse
 
                 </div>
             </div>
         </div>
     </div>
+</div>
 @endsection
 @push('scripts')
     <script>

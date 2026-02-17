@@ -47,7 +47,7 @@
             @if ($category->category_image)
                 <div class="mb-3">
                     <label class="font-weight-bold d-block">Current Image:</label>
-                    <img src="{{ asset('uploads/categories/' . $category->category_image) }}" class="img-thumbnail"
+                    <img src="{{ Storage::url($category->category_image) }}" class="img-thumbnail"
                         style="max-width: 150px;">
                 </div>
             @endif

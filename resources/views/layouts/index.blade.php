@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -34,13 +35,9 @@
 
 
     <!-- Custom Typography Override -->
-
-<body class="hold-transition sidebar-mini layout-fixed sidebar-collapse">
-
-    <div class="wrapper">
-
+<body class="hold-transition sidebar-mini layout-fixed">
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light fixed-top border-0">
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light border-0">
             <!-- Left: pushmenu -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -82,21 +79,12 @@
                 @endphp
 
                 <li class="nav-item dropdown mr-3">
-
-                    {{-- 🔔 Bell Icon --}}
                     <a class="nav-link position-relative" data-toggle="dropdown" href="#">
-
-                        <i class="far fa-bell fa-lg"></i>
+                        <i class="far fa-bell fa-md"></i>
 
                         @if ($unreadCount > 0)
                             <span class="badge badge-danger"
-                                style="
-                  position:absolute;
-                  top:4px;
-                  right:4px;
-                  font-size:10px;
-                  padding:4px 6px;
-                  border-radius:50px;">
+                                style="position:absolute;top:4px;right:4px;font-size:10px;padding:2px 3px;border-radius:50px;">
                                 {{ $unreadCount }}
                             </span>
                         @endif
@@ -169,7 +157,7 @@
                                 <div class="text-center py-5 text-muted">
                                     <i class="far fa-check-circle fa-2x mb-2 text-success"></i>
                                     <div class="small">
-                                        You're all caught up 🎉
+                                        You're all caught up
                                     </div>
                                 </div>
                             @endforelse
@@ -192,12 +180,7 @@
 
                     </div>
                 </li>
-
-
-                {{-- 👤 PROFILE DROPDOWN --}}
                 <li class="nav-item dropdown">
-
-                    {{-- PROFILE TRIGGER --}}
                     <a class="nav-link d-flex align-items-center p-0" data-toggle="dropdown" href="#"
                         style="cursor:pointer;">
 

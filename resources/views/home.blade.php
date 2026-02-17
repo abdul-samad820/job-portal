@@ -60,34 +60,10 @@
         .arrow-right {
             right: -10px;
         }
-
-        .testimonial-card {
-            background: #d9ecff;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            height: 100%;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-            transition: 0.3s;
-        }
-
-        .testimonial-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
-        }
-
-        .testimonial-card img {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 10px;
-        }
     </style>
 
     <!-- HERO SECTION -->
     <div class="position-relative" style="height:100vh; min-height:500px; width:100%; overflow:hidden;">
-
         <!-- Fullscreen Responsive Image -->
         <img src="{{ asset('admins/dist/img/group_image.jpg') }}" class="position-absolute w-100 h-100"
             style="object-fit: cover; object-position:center; top:0; left:0;">
@@ -96,8 +72,8 @@
         <div class="position-absolute w-100 h-100" style="top:0; left:0; background:rgba(255,255,255,0.45);"></div>
 
         <!-- HERO TEXT -->
-        <div class="position-absolute w-100 text-center px-3" style="top:50%; left:0; transform:translateY(-50%); z-index:5;">
-
+        {{-- <div class="position-absolute w-100 text-center px-3" style="top:50%; left:0; transform:translateY(-50%); z-index:5;"> --}}
+<div class="hero-text position-absolute w-100 text-center px-3">
             <h1 class="font-weight-bold" style="font-size: clamp(32px, 5vw, 62px); line-height:1.2;">
                 Find your job without <br> any hassle.
             </h1>
@@ -107,7 +83,6 @@
             </p>
 
         </div>
-
     </div>
 
     <!-- ============================ -->
@@ -133,7 +108,7 @@
 
 
                         <div class="p-2 text-center">
-                            <img src="{{ $cat->category_image ? Storage::url('categories/' . $cat->category_image) : asset('default/category.png') }}"
+                            <img src="{{ $cat->category_image ? Storage::url($cat->category_image) : asset('default/category.png') }}"
                                 style="width:55px; height:55px; object-fit:cover; border-radius:6px;" alt="Category Image">
 
                             <h6 class="mt-2 font-weight-bold" style="font-size:14px;">
@@ -149,10 +124,6 @@
 
             </div>
         </div>
-
-
-
-
         <!-- ============================ -->
         <!-- NEW JOB LISTING              -->
         <!-- ============================ -->
@@ -162,224 +133,177 @@
             <a href="{{ route('user.jobs') }}" class="btn-hire font-weight-bold">Explore all jobs →</a>
         </div>
 
-        <div class="job-list-box">
+        <div class="job-list-wrapper">
             @foreach ($recentJobs as $job)
-                <div
-                    class="job-row d-flex align-items-center justify-content-between flex-wrap mb-4 py-3 px-2 shadow-sm rounded">
+                <div class="job-card">
 
-                    <!-- Logo + Title -->
-                    <div class="d-flex align-items-center col-md-4 col-12 mb-2">
-                        <div class="job-logo mr-3">
-                            <img src="{{ $job->job_image ? asset('uploads/job/' . $job->job_image) : asset('default/logo.png') }}"
-                                width="65" height="65" style=" border-radius: 8px;">
+                    <div class="row align-items-center">
+
+                        <!-- Logo + Title -->
+                        <div class="col-lg-5 col-md-6 col-12 d-flex align-items-center mb-3 mb-lg-0">
+                            <img src="{{ $job->job_image ? Storage::url($job->job_image) : asset('default/logo.png') }}"
+                                class="job-img">
+
+                            <div class="ml-3">
+                                <h6 class="job-title mb-1">{{ $job->title }}</h6>
+                                <span class="job-badge">{{ $job->type }}</span>
+                            </div>
                         </div>
 
-                        <div>
-                            <h6 class="font-weight-bold mb-1">{{ $job->title }}</h6>
-                            <small class="text-muted">{{ $job->type }}</small>
+                        <!-- Location -->
+                        <div class="col-lg-3 col-md-6 col-6 text-md-center mb-2 mb-md-0">
+                            <div class="job-meta">
+                                {{ $job->created_at->format('d M Y') }}
+                            </div>
+                            <div class="job-location">
+                                {{ $job->location }}
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Date + Location -->
-                    <div class="col-md-4 col-12 text-md-center mb-2">
-                        <small class="text-muted">
-                            {{ $job->created_at->format('d M Y') }} • {{ $job->location }}
-                        </small>
-                    </div>
+                        <!-- Category -->
+                        <div class="col-lg-2 col-md-6 col-6 text-md-center">
+                            <span class="job-category">
+                                {{ $job->category->name ?? 'No Category' }}
+                            </span>
+                        </div>
 
-                    <!-- Category -->
-                    <div class="col-md-2 col-6 text-md-center">
-                        <small class="font-weight-bold">
-                            {{ $job->category->name ?? 'No Category' }}
-                        </small>
-                    </div>
+                        <!-- Button -->
+                        <div class="col-lg-2 col-md-12 text-lg-right text-md-center mt-3 mt-lg-0">
+                            <a href="{{ route('apply_form_job_application', ['id' => $job->id]) }}"
+                                class="btn-apply-modern">
+                                Apply Now
+                            </a>
+                        </div>
 
-                    <!-- Apply Button -->
-                    <div class="col-md-2 col-6 text-right">
-                        <a href="{{ route('apply_form_job_application', ['id' => $job->id]) }}" class="apply-btn">
-                            APPLY
-                        </a>
                     </div>
-
                 </div>
             @endforeach
-
         </div>
 
     </div>
 
-    <div class="container my-5">
-        <h2 class="text-center font-weight-bold mb-5">
-            Trusted by leading startups
-        </h2>
 
-        <div id="testimonialCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+    <div class="py-5" style="background:#f8fbff;">
+        <div class="container">
 
-            <div class="carousel-inner">
+            <h2 class="text-center font-weight-bold mb-5">
+                Trusted by leading startups
+            </h2>
 
-                <!-- ITEM -->
-                <div class="carousel-item active">
-                    <div class="row">
+            <div class="row">
 
-                        <div class="col-lg-3 col-md-6 col-12">
-                            <div class="testimonial-card">
-                                <img src="{{ asset('admins/dist/img/girl-image.jpg') }}">
-                                <h6>Gabbie</h6>
-                                <small>Designer</small>
-                                <p>Great platform for hiring.</p>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 col-12">
-                            <div class="testimonial-card">
-                                <img src="{{ asset('admins/dist/img/user4-128x128.jpg') }}">
-                                <h6>Sarah</h6>
-                                <small>Team Lead</small>
-                                <p>Improved our workflow.</p>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 col-12">
-                            <div class="testimonial-card">
-                                <img src="{{ asset('admins/dist/img/user2-160x160.jpg') }}">
-                                <h6>James</h6>
-                                <small>Manager</small>
-                                <p>Highly recommended tool.</p>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 col-12">
-                            <div class="testimonial-card">
-                                <img src="{{ asset('admins/dist/img/user1-128x128.jpg') }}">
-                                <h6>Alex</h6>
-                                <small>HR</small>
-                                <p>We use it daily.</p>
-                            </div>
-                        </div>
-
+                <!-- CARD -->
+                <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
+                    <div class="testimonial-card">
+                        <img src="{{ asset('admins/dist/img/girl-image.jpg') }}">
+                        <h6>Gabbie</h6>
+                        <small>Designer</small>
+                        <p>Great platform for hiring.</p>
                     </div>
                 </div>
 
-                <!-- SECOND ITEM -->
-                <div class="carousel-item">
-                    <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
+                    <div class="testimonial-card">
+                        <img src="{{ asset('admins/dist/img/user4-128x128.jpg') }}">
+                        <h6>Sarah</h6>
+                        <small>Team Lead</small>
+                        <p>Improved our workflow.</p>
+                    </div>
+                </div>
 
-                        <div class="col-lg-3 col-md-6 col-12">
-                            <div class="testimonial-card">
-                                <img src="{{ asset('admins/dist/img/team1.jpg') }}">
-                                <h6>Elsa</h6>
-                                <small>CEO</small>
-                                <p>Boosted productivity.</p>
-                            </div>
-                        </div>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
+                    <div class="testimonial-card">
+                        <img src="{{ asset('admins/dist/img/user2-160x160.jpg') }}">
+                        <h6>James</h6>
+                        <small>Manager</small>
+                        <p>Highly recommended tool.</p>
+                    </div>
+                </div>
 
-                        <div class="col-lg-3 col-md-6 col-12">
-                            <div class="testimonial-card">
-                                <img src="{{ asset('admins/dist/img/user7-128x128.jpg') }}">
-                                <h6>Lisa</h6>
-                                <small>Manager</small>
-                                <p>Very smooth experience.</p>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 col-12">
-                            <div class="testimonial-card">
-                                <img src="{{ asset('admins/dist/img/team2.jpg') }}">
-                                <h6>Ned</h6>
-                                <small>Lead</small>
-                                <p>Hiring made simple.</p>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-3 col-md-6 col-12">
-                            <div class="testimonial-card">
-                                <img src="{{ asset('admins/dist/img/team3.jpg') }}">
-                                <h6>Mike</h6>
-                                <small>Designer</small>
-                                <p>Great UI and support.</p>
-                            </div>
-                        </div>
-
+                <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
+                    <div class="testimonial-card">
+                        <img src="{{ asset('admins/dist/img/user1-128x128.jpg') }}">
+                        <h6>Alex</h6>
+                        <small>HR</small>
+                        <p>We use it daily.</p>
                     </div>
                 </div>
 
             </div>
-
-            {{-- <!-- Controls -->
-        <a class="carousel-control-prev" href="#testimonialCarousel" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon bg-dark rounded-circle p-3"></span>
-        </a>
-
-        <a class="carousel-control-next" href="#testimonialCarousel" role="button" data-slide="next">
-            <span class="carousel-control-next-icon bg-dark rounded-circle p-3"></span>
-        </a> --}}
-
         </div>
     </div>
 
-
-
     <!-- ========== Fade-Up Animation (JS inline) ========== -->
 @endsection
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
 
-        const track = document.getElementById("coverflowTrack");
-        const items = document.querySelectorAll(".coverflow-item");
+@push('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
 
-        let index = Math.floor(items.length / 2);
+            /* ========== COVERFLOW ========== */
 
-        function updateCoverflow() {
-            items.forEach((item, i) => {
-                item.classList.remove("active", "left", "right");
+            const track = document.getElementById("coverflowTrack");
+            const items = document.querySelectorAll(".coverflow-item");
 
-                if (i === index) item.classList.add("active");
-                else if (i < index) item.classList.add("left");
-                else item.classList.add("right");
-            });
+            if (track && items.length > 0) {
 
-            const offset = -(index * 230) + (window.innerWidth / 2 - 120);
-            track.style.transform = `translateX(${offset}px)`;
-        }
+                let index = Math.floor(items.length / 2);
 
-        updateCoverflow();
+                function updateCoverflow() {
+                    items.forEach((item, i) => {
+                        item.classList.remove("active", "left", "right");
 
-        document.querySelector(".arrow-left").onclick = () => {
-            index = Math.max(0, index - 1);
-            updateCoverflow();
-        };
-        document.querySelector(".arrow-right").onclick = () => {
-            index = Math.min(items.length - 1, index + 1);
-            updateCoverflow();
-        };
+                        if (i === index) item.classList.add("active");
+                        else if (i < index) item.classList.add("left");
+                        else item.classList.add("right");
+                    });
 
-        setInterval(() => {
-            index = (index + 1) % items.length;
-            updateCoverflow();
-        }, 3000);
-
-    });
-
-    (function() {
-        var io = new IntersectionObserver(function(entries) {
-            entries.forEach(function(e) {
-                if (e.isIntersecting) {
-                    e.target.style.opacity = "1";
-                    e.target.style.transform = "translateY(0)";
+                    const itemWidth = window.innerWidth < 768 ? 150 : 230;
+                    const offset = -(index * itemWidth) + (window.innerWidth / 2 - itemWidth / 2);
+                    track.style.transform = `translateX(${offset}px)`;
                 }
+
+                updateCoverflow();
+
+                const leftBtn = document.querySelector(".arrow-left");
+                const rightBtn = document.querySelector(".arrow-right");
+
+                if (leftBtn) {
+                    leftBtn.onclick = () => {
+                        index = Math.max(0, index - 1);
+                        updateCoverflow();
+                    };
+                }
+
+                if (rightBtn) {
+                    rightBtn.onclick = () => {
+                        index = Math.min(items.length - 1, index + 1);
+                        updateCoverflow();
+                    };
+                }
+
+                setInterval(() => {
+                    index = (index + 1) % items.length;
+                    updateCoverflow();
+                }, 3000);
+            }
+
+            /* ========== SCROLL ANIMATION ========== */
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("show");
+                    }
+                });
+            }, {
+                threshold: 0.2
             });
-        }, {
-            threshold: 0.15
-        });
 
-        document.querySelectorAll("[data-animate]").forEach(el => io.observe(el));
+            document.querySelectorAll("[data-animate]").forEach(function(el) {
+                observer.observe(el);
+            });
 
-        // Accordion arrows
-        $('#acc').on('show.bs.collapse', e => {
-            $(e.target).prev().find('.arrow').text('▴');
         });
-        $('#acc').on('hide.bs.collapse', e => {
-            $(e.target).prev().find('.arrow').text('▾');
-        });
-    })();
-</script>
+    </script>
+@endpush
