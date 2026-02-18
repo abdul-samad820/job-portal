@@ -174,33 +174,29 @@
                                                 </span>
                                             </td>
 
-                                          <td class="text-center align-middle">
+                                            <td class="text-center align-middle">
 
-    <div class="d-flex justify-content-center align-items-center">
+                                                <div class="d-flex justify-content-center align-items-center">
 
-        <a href="{{ route('admin.job_edit', $job->id) }}"
-           class="btn btn-sm btn-outline-primary mr-2">
-            <i class="fa fa-edit"></i>
-        </a>
+                                                    <a href="{{ route('admin.job_edit', $job->id) }}"
+                                                        class="btn btn-sm btn-outline-primary mr-2">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
 
-        <form action="{{ route('admin.job_delete', $job->id) }}"
-              method="POST"
-              class="mb-0">
-            @csrf
-            @method('DELETE')
+                                                    <form action="{{ route('admin.job_delete', $job->id) }}" method="POST"
+                                                        class="mb-0">
+                                                        @csrf
+                                                        @method('DELETE')
 
-            <button type="submit"
-                    class="btn btn-sm btn-outline-danger delete-btn">
-                <i class="fa fa-trash"></i>
-            </button>
-        </form>
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-outline-danger delete-btn">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </form>
 
-    </div>
+                                                </div>
 
-</td>
-
-
-
+                                            </td>
                                         </tr>
 
                                     @empty
@@ -231,66 +227,71 @@
         @foreach ($jobs as $job)
             <div class="modal fade" id="jobModal{{ $job->id }}" tabindex="-1">
                 <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+                    <div class="modal-content border-0 shadow">
 
-                    <div class="modal-content border-0 shadow-lg rounded">
-
-                        <!-- Header -->
-                        <div class="modal-header bg-primary text-white">
+                        <!-- ================= HEADER ================= -->
+                        <div class="modal-header text-white" style="background: linear-gradient(135deg,#007bff,#0056b3);">
 
                             <div class="d-flex align-items-center">
 
-                                <img src="{{ $job->job_image ? Storage::url('jobs/' . $job->job_image) : asset('admins/dist/img/default.png') }}"
-                                    style="width:55px;height:55px;object-fit:cover;border-radius:10px;" class="mr-3">
+                                <img src="{{ Storage::url($job->job_image) }}" class="mr-3 shadow"
+                                    style="width:60px;height:60px;object-fit:cover;border-radius:12px;">
 
                                 <div>
-                                    <h5 class="mb-0 font-weight-bold">
+                                    <h5 class="mb-1 font-weight-bold">
                                         {{ $job->title }}
                                     </h5>
-                                    <small class="opacity-75">
+                                    <small>
+                                        <i class="fa fa-map-marker-alt mr-1"></i>
                                         {{ $job->location }}
                                     </small>
                                 </div>
 
                             </div>
 
-                            <button class="close text-white" data-dismiss="modal">
+                            <button type="button" class="close text-white" data-dismiss="modal">
                                 <span>&times;</span>
                             </button>
 
                         </div>
 
-                        <!-- Body -->
-                        <div class="modal-body px-4 py-3">
+                        <!-- ================= BODY ================= -->
+                        <div class="modal-body px-4 py-4">
 
-                            <!-- Basic Info Cards -->
+                            <!-- INFO CARDS -->
                             <div class="row text-center mb-4">
 
-                                <div class="col-md-3 mb-2">
-                                    <div class="border rounded p-2 bg-light">
+                                <div class="col-md-3 col-6 mb-3">
+                                    <div class="p-3 border rounded bg-light h-100">
+                                        <i class="fa fa-briefcase text-primary mb-2"></i>
                                         <small class="text-muted d-block">Experience</small>
                                         <strong>{{ $job->experience ?? 'N/A' }}</strong>
                                     </div>
                                 </div>
 
-                                <div class="col-md-3 mb-2">
-                                    <div class="border rounded p-2 bg-light">
+                                <div class="col-md-3 col-6 mb-3">
+                                    <div class="p-3 border rounded bg-light h-100">
+                                        <i class="fa fa-money-bill-wave text-success mb-2"></i>
                                         <small class="text-muted d-block">Salary</small>
                                         <strong class="text-success">
-                                            {{ $job->salary ?? 'N/A' }}
+                                            {{ $job->salary ?? 'N/A' }} LPA
                                         </strong>
                                     </div>
                                 </div>
 
-                                <div class="col-md-3 mb-2">
-                                    <div class="border rounded p-2 bg-light">
-                                        <small class="text-muted d-block">Type</small>
+                                <div class="col-md-3 col-6 mb-3">
+                                    <div class="p-3 border rounded bg-light h-100">
+                                        <i class="fa fa-clock text-info mb-2"></i>
+                                        <small class="text-muted d-block">Job Type</small>
                                         <span class="badge badge-info px-3 py-1">
                                             {{ $job->type }}
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mb-2">
-                                    <div class="border rounded p-2 bg-light">
+
+                                <div class="col-md-3 col-6 mb-3">
+                                    <div class="p-3 border rounded bg-light h-100">
+                                        <i class="fa fa-calendar-alt text-danger mb-2"></i>
                                         <small class="text-muted d-block">Last Date</small>
                                         <strong>
                                             {{ \Carbon\Carbon::parse($job->last_date)->format('d M Y') }}
@@ -300,41 +301,49 @@
 
                             </div>
 
-                            <!-- Overview -->
+                            <!-- OVERVIEW -->
                             <div class="mb-4">
-                                <h6 class="font-weight-bold border-bottom pb-2">
-                                    Overview
+                                <h6 class="font-weight-bold mb-2">
+                                    <i class="fa fa-info-circle text-primary mr-1"></i>
+                                    Job Overview
                                 </h6>
-                                <p class="text-muted mt-2 mb-0">
+                                <p class="text-muted mb-0">
                                     {{ $job->overview ?? 'No overview provided.' }}
                                 </p>
                             </div>
 
-                            <!-- Responsibilities -->
+                            <hr>
+
+                            <!-- RESPONSIBILITIES -->
                             <div class="mb-4">
-                                <h6 class="font-weight-bold border-bottom pb-2">
+                                <h6 class="font-weight-bold mb-2">
+                                    <i class="fa fa-tasks text-primary mr-1"></i>
                                     Responsibilities
                                 </h6>
-                                <p class="mt-2 mb-0">
+                                <p class="mb-0">
                                     {{ $job->responsibilities ?? 'Not specified.' }}
                                 </p>
                             </div>
 
-                            <!-- Required Skills -->
+                            <hr>
+
+                            <!-- SKILLS -->
                             <div>
-                                <h6 class="font-weight-bold border-bottom pb-2">
+                                <h6 class="font-weight-bold mb-2">
+                                    <i class="fa fa-tools text-primary mr-1"></i>
                                     Required Skills
                                 </h6>
-                                <p class="mt-2 mb-0">
+                                <p class="mb-0">
                                     {{ $job->required_skills ?? 'Not specified.' }}
                                 </p>
                             </div>
 
                         </div>
 
-                        <!-- Footer -->
+                        <!-- ================= FOOTER ================= -->
                         <div class="modal-footer bg-light">
-                            <button class="btn btn-secondary" data-dismiss="modal">
+
+                            <button class="btn btn-outline-secondary" data-dismiss="modal">
                                 Close
                             </button>
 
@@ -344,14 +353,10 @@
                 </div>
             </div>
         @endforeach
+
     </div>
 
 @endsection
-
-
-{{-- ===================== MODALS ===================== --}}
-
-
 @push('scripts')
     <script>
         $(document).ready(function() {

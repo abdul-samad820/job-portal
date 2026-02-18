@@ -25,7 +25,7 @@
 </head>
 
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition  layout-fixed">
     <div class="wrapper">
         <!-- Main Sidebar Container -->
         <!-- Main Sidebar -->
