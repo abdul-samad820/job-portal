@@ -73,7 +73,7 @@
 
         <!-- HERO TEXT -->
         {{-- <div class="position-absolute w-100 text-center px-3" style="top:50%; left:0; transform:translateY(-50%); z-index:5;"> --}}
-<div class="hero-text position-absolute w-100 text-center px-3">
+        <div class="hero-text position-absolute w-100 text-center px-3">
             <h1 class="font-weight-bold" style="font-size: clamp(32px, 5vw, 62px); line-height:1.2;">
                 Find your job without <br> any hassle.
             </h1>
@@ -92,7 +92,10 @@
     <div class="container mt-5">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="font-weight-bold">Most Demanding Categories</h2>
+            <h2 class="font-weight-bold border-bottom border-primary pb-2 d-inline-block">
+                Most Demanding Categories
+            </h2>
+
         </div>
         <div style="margin-top:50px;"></div>
 
@@ -129,9 +132,17 @@
         <!-- ============================ -->
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="font-weight-bold">New Job Listing</h2>
-            <a href="{{ route('user.jobs') }}" class="btn-hire font-weight-bold">Explore all jobs →</a>
+
+            <h2 class="font-weight-bold border-bottom border-primary pb-2 d-inline-block">
+                New Job Listing
+            </h2>
+
+            <a href="{{ route('user.jobs') }}" class="btn-hire font-weight-bold text-nowrap">
+                Explore all jobs →
+            </a>
+
         </div>
+
 
         <div class="job-list-wrapper">
             @foreach ($recentJobs as $job)
@@ -185,8 +196,7 @@
 
     <div class="py-5" style="background:#f8fbff;">
         <div class="container">
-
-            <h2 class="text-center font-weight-bold mb-5">
+            <h2 class="font-weight-bold border-bottom border-primary pb-2 d-inline-block">
                 Trusted by leading startups
             </h2>
 

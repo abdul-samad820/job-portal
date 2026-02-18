@@ -172,28 +172,6 @@ $rejectedCount = JobApplication::where('user_id', $userId)
 
 }
 
-public function save_job($jobId)
-{
-    $userId = Auth::guard('user')->id();
-
-    SavedJob::firstOrCreate([
-        'user_id' => $userId,
-        'job_id' => $jobId
-    ]);
-
-    return back()->with('success', 'Job Saved Successfully!');
-}
-
-public function unsave_job($jobId)
-{
-    $userId = Auth::guard('user')->id();
-
-    SavedJob::where('user_id', $userId)
-        ->where('job_id', $jobId)
-        ->delete();
-
-    return back()->with('success', 'Job Removed from Saved!');
-}
 
 public function saved_jobs()
 {
@@ -386,4 +364,16 @@ public function readNotifications()
     auth()->user()->unreadNotifications->markAsRead();
     return back();
 }
+public function saveJob(Job $job)
+{
+    auth('user')->user()->savedJobs()->syncWithoutDetaching([$job->id]);
+    
+    return back()->with('success', 'Job saved successfully.');
 }
+public function unsaveJob(Job $job)
+{
+    auth('user')->user()->savedJobs()->detach($job->id);
+    
+    return back()->with('success', 'Job removed from saved.');
+    }
+    }

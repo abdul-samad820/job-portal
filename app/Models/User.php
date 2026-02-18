@@ -48,4 +48,9 @@ class User extends Authenticatable
         $user->profile()?->delete();
     });
 }
+public function savedJobs()
+{
+    return $this->belongsToMany(Job::class, 'saved_jobs')
+        ->withTimestamps();
+}
 }

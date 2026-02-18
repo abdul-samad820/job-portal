@@ -27,6 +27,21 @@ public function applications()
 {
     return $this->hasMany(JobApplication::class, 'job_id');
 }
+public function savedByUsers()
+{
+    return $this->belongsToMany(User::class, 'saved_jobs')
+        ->withTimestamps();
+}
+public function isSavedByUser()
+{
+    if (!auth('user')->check()) {
+        return false;
+    }
+
+    return $this->savedByUsers()
+        ->where('user_id', auth('user')->id())
+        ->exists();
+}
 protected static function boot()
 {
     parent::boot();

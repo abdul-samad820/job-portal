@@ -34,4 +34,16 @@ protected static function boot()
         }
     });
 }
+protected static function booted()
+{
+    static::deleting(function ($application) {
+
+        \DB::table('notifications')
+            ->where('type', \App\Notifications\NewJobApplicationNotification::class)
+            ->whereJsonContains('data->application_id', $application->id)
+            ->delete();
+
+    });
+}
+
 }

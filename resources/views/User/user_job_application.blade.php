@@ -64,8 +64,16 @@
                                         </ul>
                                     </div>
                                 </div>
-
-                                <form action="{{ route('apply_job-application', $job->id) }}" method="POST"
+ @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+                                <form action="{{ route('apply_job-application', $job->id) }}" id="applicationForm" method="POST"
                                     enctype="multipart/form-data">
                                     @csrf
                                     <!-- Position -->
@@ -143,7 +151,7 @@
                     });
 
                     /* Disable Button After Submit */
-                    const form = document.querySelector('form');
+                   const form = document.querySelector('#applicationForm');
                     const submitBtn = document.getElementById('submitBtn');
 
                     form.addEventListener('submit', function() {

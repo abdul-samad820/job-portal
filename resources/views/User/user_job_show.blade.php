@@ -202,14 +202,21 @@
 
                                 <!-- BOOKMARK (TOP RIGHT) -->
                                 <div>
-                                    @if (isset($savedJobIds) && in_array($job->id, $savedJobIds))
-                                        <a href="{{ route('user.unsave.job', $job->id) }}" title="Remove from Saved">
-                                            <i class="fas fa-bookmark text-success" style="font-size:18px;"></i>
-                                        </a>
+                                    @if ($job->isSavedByUser())
+                                        <form method="POST" action="{{ route('saved.destroy', $job->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-link p-0">
+                                                <i class="fas fa-bookmark text-success"></i>
+                                            </button>
+                                        </form>
                                     @else
-                                        <a href="{{ route('user.save.job', $job->id) }}" title="Save Job">
-                                            <i class="far fa-bookmark text-muted" style="font-size:18px;"></i>
-                                        </a>
+                                        <form method="POST" action="{{ route('saved.store', $job->id) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-link p-0">
+                                                <i class="far fa-bookmark text-muted"></i>
+                                            </button>
+                                        </form>
                                     @endif
                                 </div>
 
@@ -277,11 +284,22 @@
                 @endforelse
 
                 <!-- Pagination -->
-                <div class="d-flex justify-content-center mt-4">
-                    <div class="shadow-sm p-2 rounded-pill bg-white">
-                        {{ $jobs->links('pagination::bootstrap-4') }}
-                    </div>
-                </div>
+             <div class="row mt-5">
+    <div class="col-12">
+
+        <div class="d-flex justify-content-center">
+            
+            <div class="card shadow-sm border-0 px-3 py-2">
+                
+                {{ $jobs->links('pagination::bootstrap-4') }}
+            
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
 
             </div>
 

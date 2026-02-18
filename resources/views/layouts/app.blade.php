@@ -1,31 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Job Hub Homepage</title>
     <link rel="icon" type="image/png" href="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}">
     <link rel="stylesheet" href="{{ asset('css/style2.css') }}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
-
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="{{ asset('admins/plugins/fontawesome-free/css/all.min.css') }}">
-
 </head>
-
 <body>
   <nav id="jobiNav" class="navbar navbar-expand-lg navbar-light fixed-top py-2">
-
     <div class="container">
-
         <a class="navbar-brand" href="#">
             <img src="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}" style="height: 55px;">
         </a>
-
         <button class="navbar-toggler border-0" type="button"
                 data-toggle="collapse" data-target="#navMenu"
                 aria-controls="navMenu" aria-expanded="false">
@@ -48,11 +39,8 @@
                 <a href="{{ route('user.login') }}" class="d-block d-lg-inline font-weight-bold text-dark mr-lg-3">Login</a>
                 <a href="{{ route('user.dashboard') }}" class="btn btn-hire mt-2 mt-lg-0">Go To Profile</a>
             </div>
-
         </div>
-
     </div>
-
 </nav>
 
     <div class="container-fluid p-0 position-relative">

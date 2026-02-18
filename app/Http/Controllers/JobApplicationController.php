@@ -30,12 +30,12 @@ class JobApplicationController extends Controller
  public function apply_job_application(Request $request, $id)
 {
     $user_id = Auth::guard('user')->id();
-
-    if (!$user_id) {
-        return redirect()->route('user.login')
-            ->with('error', 'Please login first!');
-    }
-
+    
+    // if (!$user_id) {
+    //     return redirect()->route('user.login')
+    //         ->with('error', 'Please login first!');
+    // }
+ 
     $job = Job::with('admin')->findOrFail($id);
 
     // Deadline Check
@@ -67,7 +67,7 @@ if ($alreadyApplied && $alreadyApplied->status !== 'rejected') {
 
     // Validation
     $request->validate([
-        'cover_letter' => 'required|string|min:20|max:1000',
+        'cover_letter' => 'required|string|min:20|max:500',
         'resume' => 'required|mimes:pdf|max:2048',
     ]);
     $path = $request->file('resume')->store('resumes', 'public');
@@ -78,7 +78,7 @@ $application = JobApplication::create([
     'cover_letter' => $request->cover_letter,
     'resume' => ($path), // only filename
     'status' => 'pending',
-]);
+]); 
 
     // 🔔 SEND NOTIFICATION (AFTER SUCCESS)
     if ($job->admin) {

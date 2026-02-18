@@ -11,7 +11,7 @@ use Http\Middleware\Admin_mid;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-  use App\Notifications\LoginSecurityNotification;
+use App\Notifications\LoginSecurityNotification;
 
 class AdminController extends Controller
 {
@@ -28,18 +28,28 @@ public function login(Request $request)
 
         $admin = Auth::guard('admin')->user();
 
-        if (!$admin->unreadNotifications()
-                ->where('type', LoginSecurityNotification::class)
-                ->whereDate('created_at', today())
-                ->exists()) {
+        $exists = $admin->notifications()
+            ->where('type', LoginSecurityNotification::class)
+            ->whereJsonContains('data->ip_address', $request->ip())
+            ->whereDate('created_at', today())
+            ->exists();
 
-            $admin->notify(new LoginSecurityNotification($request->ip()));
+        if (!$exists) {
+           $admin->notify(
+    new LoginSecurityNotification(
+        $request->ip(),
+        $request->userAgent()
+    )
+);
+
         }
 
         return redirect()->route('admin.dashboard');
     }
 
-    return back()->withErrors(['email' => 'Invalid email or password.'])->withInput();
+    return back()
+        ->withErrors(['email' => 'Invalid email or password.'])
+        ->withInput();
 }
 
   public function logout(Request $request){

@@ -114,16 +114,34 @@ Route::middleware(['user'])->controller(UserController::class)->prefix('user')->
      Route::post('/user_account_settings/{id}', 'account_setting_update')
     ->name('account_setting_update');
     
-     Route::get('/save-job/{id}', 'save_job')->name('save.job');
-     Route::get('/unsave-job/{id}', 'unsave_job')->name('unsave.job');
+   
      Route::get('/saved-jobs', 'saved_jobs')->name('saved.jobs');
 
      Route::post('/notifications/read', 'readNotifications')
     ->name('notifications.read');
     });
 
+
+    Route::middleware(['user'])->group(function () {
+
+    Route::post('/saved-jobs/{job}', 
+        [UserController::class, 'saveJob']
+    )->name('saved.store');
+
+    Route::delete('/saved-jobs/{job}', 
+        [UserController::class, 'unsaveJob']
+    )->name('saved.destroy');
+
+});
+
 // This stays outside because it's a different controller
-      Route::post('/user_apply_job-application/{id}', [JobApplicationController::class, 'apply_job_application'])->name('apply_job-application');
+      Route::middleware(['user'])->group(function () {
+
+    Route::post('/user_apply_job-application/{id}', 
+        [JobApplicationController::class, 'apply_job_application']
+    )->name('apply_job-application');
+
+});
 
       Route::get('/jobapplication', [JobApplicationController::class, 'admin_applications'])
       ->name('job_application');
@@ -151,7 +169,7 @@ Route::controller(JobApplicationController::class)->group(function () {
     Route::post('/application/update-status/{id}','updateStatus')->name('admin.application.updateStatus');
     Route::get('/admin/application/approve/{id}', 'approve_application')->name('admin.approve.application');
 
-});
+}); 
 
 Route::post('/notifications/read', function () {
     Auth::guard('user')->user()

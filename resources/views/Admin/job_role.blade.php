@@ -11,9 +11,9 @@
                     style="border-width:4px !important;">
 
                     <!-- Row 1 : Title + Breadcrumb -->
-                    <div class="d-flex justify-content-between flex-wrap align-items-center">
+                    <div class="d-md-flex justify-content-between align-items-center">
 
-                        <div>
+                        <div class="mb-3 mb-md-0">
                             <h4 class="font-weight-bold text-dark mb-1">
                                 <i class="fa fa-briefcase text-primary mr-2"></i>
                                 Job Roles
@@ -23,7 +23,7 @@
                             </small>
                         </div>
 
-                        <nav aria-label="breadcrumb" class="mt-3 mt-md-0">
+                        <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
                                 <li class="breadcrumb-item">
                                     <a href="{{ route('admin.dashboard') }}">Dashboard</a>
@@ -36,29 +36,60 @@
 
                     </div>
 
-                    <!-- Row 2 : Search + Add Button -->
-                    <div class="d-flex justify-content-between align-items-center flex-wrap mt-3">
+                    <!-- Row 2 : Search + Add -->
+                    <div class="mt-3">
 
-                        <!-- Search -->
-                        <form method="GET" action="{{ route('admin.job_role') }}" class="form-inline">
+                        <!-- Desktop Layout -->
+                        <div class="d-none d-md-flex justify-content-between align-items-center">
 
-                            <input class="form-control mr-2" type="search" placeholder="Search role..." name="search"
-                                value="{{ request('search') }}" style="max-width:280px;">
+                            <form method="GET" action="{{ route('admin.job_role') }}" class="form-inline">
 
-                            <button class="btn btn-outline-primary">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </form>
+                                <input type="search" name="search" class="form-control mr-2" placeholder="Search role..."
+                                    value="{{ request('search') }}" style="max-width:280px;">
 
-                        <!-- Add Button -->
-                        <a href="{{ route('admin.job_role_add') }}" class="btn btn-primary rounded-pill px-4 mt-3 mt-md-0">
-                            <i class="fa fa-plus mr-2"></i>
-                            Add Role
-                        </a>
+                                <button class="btn btn-outline-primary">
+                                    <i class="fa fa-search"></i>
+                                </button>
+
+                            </form>
+
+                            <a href="{{ route('admin.job_role_add') }}" class="btn btn-primary rounded-pill px-4">
+                                <i class="fa fa-plus mr-2"></i>
+                                Add Role
+                            </a>
+
+                        </div>
+
+                        <!-- Mobile Layout -->
+                        <div class="d-block d-md-none">
+
+                            <form method="GET" action="{{ route('admin.job_role') }}">
+
+                                <div class="input-group mb-3">
+                                    <input type="search" name="search" class="form-control" placeholder="Search role..."
+                                        value="{{ request('search') }}">
+
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-primary">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                            <a href="{{ route('admin.job_role_add') }}" class="btn btn-primary rounded-pill btn-block">
+                                <i class="fa fa-plus mr-2"></i>
+                                Add Role
+                            </a>
+
+                        </div>
 
                     </div>
 
                 </div>
+
+
 
                 <!-- Main Table Card -->
                 <div class="card shadow-sm border-0 rounded">
@@ -97,20 +128,25 @@
 
                                             <!-- Actions -->
                                             <td class="text-center">
-                                                <a href="{{ route('admin.job_role_edit', $role->id) }}"
-                                                    class="btn btn-sm btn-outline-primary mr-1">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
+                                                <div class="d-flex justify-content-center flex-wrap">
 
-                                                <form action="{{ route('admin.job_role_delete', $role->id) }}"
-                                                    method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
+                                                    <a href="{{ route('admin.job_role_edit', $role->id) }}"
+                                                        class="btn btn-sm btn-outline-primary mr-1 mb-1">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
 
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger delete-btn">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                                    <form action="{{ route('admin.job_role_delete', $role->id) }}"
+                                                        method="POST" class="mb-1">
+                                                        @csrf
+                                                        @method('DELETE')
+
+                                                        <button type="submit"
+                                                            class="btn btn-sm btn-outline-danger delete-btn">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </form>
+
+                                                </div>
                                             </td>
 
                                         </tr>

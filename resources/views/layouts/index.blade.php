@@ -78,108 +78,105 @@
                     $unreadCount = $notifications->count();
                 @endphp
 
-                <li class="nav-item dropdown mr-3">
-                    <a class="nav-link position-relative" data-toggle="dropdown" href="#">
-                        <i class="far fa-bell fa-md"></i>
+               <li class="nav-item dropdown mr-3">
+    <a class="nav-link position-relative" data-toggle="dropdown" href="#">
+        <i class="far fa-bell fa-lg"></i>
 
-                        @if ($unreadCount > 0)
-                            <span class="badge badge-danger"
-                                style="position:absolute;top:4px;right:4px;font-size:10px;padding:2px 3px;border-radius:50px;">
-                                {{ $unreadCount }}
-                            </span>
-                        @endif
-                    </a>
+        @if ($unreadCount > 0)
+            <span class="badge badge-danger badge-pill position-absolute"
+                  style="top:-5px; right:1px; font-size:10px;">
+                {{ $unreadCount }}
+            </span>
+        @endif
+    </a>
 
-                    {{-- Dropdown --}}
-                    <div class="dropdown-menu dropdown-menu-right p-0 shadow-lg border-0"
-                        style="width:360px; border-radius:14px; overflow:hidden;">
+    <div class="dropdown-menu dropdown-menu-right shadow border-0 p-0"
+         style="width:380px; border-radius:12px; overflow:hidden;">
 
-                        {{-- Header --}}
-                        <div class="px-4 py-3 d-flex justify-content-between align-items-center"
-                            style="background:#f8f9fc;">
+        {{-- Header --}}
+        <div class="px-4 py-3 bg-light d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="mb-0 font-weight-bold">Notifications</h6>
+                <small class="text-muted">
+                    {{ $unreadCount }} Unread
+                </small>
+            </div>
+            <i class="fas fa-bell text-primary"></i>
+        </div>
 
-                            <div>
-                                <div class="font-weight-bold">
-                                    Notifications
-                                </div>
-                                <small class="text-muted">
-                                    {{ $unreadCount }} Unread
-                                </small>
+        <div class="dropdown-divider m-0"></div>
+
+        {{-- Notification List --}}
+        <div style="max-height:350px; overflow-y:auto;">
+
+            @forelse($notifications->take(5) as $notification)
+
+                <a href="#"
+                   class="dropdown-item px-4 py-3 {{ is_null($notification->read_at) ? 'bg-light' : '' }}">
+
+                    <div class="d-flex">
+
+                        {{-- Icon --}}
+                        <div class="mr-3">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+                                 style="width:38px; height:38px;">
+                                <i class="fas fa-bell"></i>
                             </div>
-
-                            <i class="fas fa-bell text-primary"></i>
                         </div>
 
-                        {{-- Divider --}}
-                        <div class="dropdown-divider m-0"></div>
+                        {{-- Content --}}
+                        <div class="flex-fill">
 
-                        {{-- Notification List --}}
-                        <div style="max-height:320px; overflow-y:auto;">
+                            <div class="font-weight-bold small">
+                                {{ $notification->data['title'] ?? 'Notification' }}
+                            </div>
 
-                            @forelse($notifications->take(5) as $notification)
-                                <a href="#" class="dropdown-item px-4 py-3" style="transition:0.2s;">
+                            <div class="text-muted small mt-1">
+                                {{ Str::limit($notification->data['message'] ?? '', 80) }}
+                            </div>
 
-                                    <div class="d-flex align-items-start">
-
-                                        {{-- Icon --}}
-                                        <div class="mr-3">
-                                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center shadow-sm"
-                                                style="width:40px; height:40px;">
-                                                <i class="fas fa-bell"></i>
-                                            </div>
-                                        </div>
-
-                                        {{-- Content --}}
-                                        <div class="flex-fill">
-
-                                            <div class="font-weight-bold small mb-1">
-                                                {{ $notification->data['title'] ?? 'Notification' }}
-                                            </div>
-
-                                            <div class="text-muted small">
-                                                {{ $notification->data['message'] ?? '' }}
-                                            </div>
-
-                                            <div class="text-muted mt-1" style="font-size:11px;">
-                                                <i class="far fa-clock mr-1"></i>
-                                                {{ $notification->created_at->diffForHumans() }}
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                </a>
-
-                                <div class="dropdown-divider m-0"></div>
-
-                            @empty
-
-                                <div class="text-center py-5 text-muted">
-                                    <i class="far fa-check-circle fa-2x mb-2 text-success"></i>
-                                    <div class="small">
-                                        You're all caught up
-                                    </div>
-                                </div>
-                            @endforelse
+                            <small class="text-muted d-block mt-1">
+                                <i class="far fa-clock mr-1"></i>
+                                {{ $notification->created_at->diffForHumans() }}
+                            </small>
 
                         </div>
-
-                        {{-- Footer --}}
-                        @if ($unreadCount > 0)
-                            <div class="text-center py-2" style="background:#f8f9fc;">
-
-                                <form method="POST" action="{{ route('admin.notifications.read') }}">
-                                    @csrf
-                                    <button type="submit" class="btn btn-sm btn-outline-primary px-4">
-                                        Mark all as read
-                                    </button>
-                                </form>
-
-                            </div>
-                        @endif
 
                     </div>
-                </li>
+                </a>
+
+                <div class="dropdown-divider m-0"></div>
+
+            @empty
+
+                <div class="text-center py-5 text-muted">
+                    <i class="far fa-check-circle fa-2x mb-2 text-success"></i>
+                    <div class="small font-weight-bold">
+                        You're all caught up
+                    </div>
+                </div>
+
+            @endforelse
+
+        </div>
+
+        {{-- Footer --}}
+        @if ($unreadCount > 0)
+            <div class="text-center py-2 bg-light">
+
+                <form method="POST" action="{{ route('admin.notifications.read') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-outline-primary px-4">
+                        Mark all as read
+                    </button>
+                </form>
+
+            </div>
+        @endif
+
+    </div>
+</li>
+
                 <li class="nav-item dropdown">
                     <a class="nav-link d-flex align-items-center p-0" data-toggle="dropdown" href="#"
                         style="cursor:pointer;">

@@ -1,19 +1,21 @@
 <?php
-
 namespace App\Notifications;
-
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class LoginSecurityNotification extends Notification
 {
-    protected $ip;
+    use Queueable;
 
-    public function __construct($ip)
+    protected $ip;
+    protected $loginTime;
+    protected $userAgent;
+
+    public function __construct($ip, $userAgent = null)
     {
-        $this->ip = $ip;
+        $this->ip        = $ip;
+        $this->loginTime = now()->format('d M Y, h:i A');
+        $this->userAgent = $userAgent;
     }
 
     public function via($notifiable)
@@ -24,8 +26,11 @@ class LoginSecurityNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'title' => 'Security Alert',
-            'message' => "New login detected from IP: {$this->ip}",
+            'title'       => 'Security Alert',
+            'message'     => "Hello {$notifiable->name}, new login detected.",
+            'ip_address'  => $this->ip,
+            'login_time'  => $this->loginTime,
+            'browser'     => $this->userAgent,
         ];
     }
 }
