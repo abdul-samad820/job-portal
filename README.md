@@ -36,8 +36,7 @@ Built specifically as a placement-ready full-stack Laravel project.
 - Dashboard Analytics (Charts & Metrics)
 - Notification System
 
-## User
-
+-- User
 - Register / Login
 - Browse Jobs
 - Apply for Jobs
@@ -167,6 +166,22 @@ php artisan serve
 Now open in browser:
 
 http://127.0.0.1:8000
+
+## Screenshots
+
+<img width="2480" height="4768" alt="homepage" src="https://github.com/user-attachments/assets/e9f32888-5482-4906-87f6-af45e3b57580" />
+
+![admin-dashboard](https://github.com/user-attachments/assets/b44949e4-bcc4-4b60-aa73-fae2a00e0e85)
+
+![user-dashboard](https://github.com/user-attachments/assets/9c27f993-8244-4d6e-9c36-2f5a8ece3e85)
+
+![admin-application-status](https://github.com/user-attachments/assets/cd8a4b53-dae1-4e9c-a12f-cfa88f7b0c72)
+
+<img width="2480" height="4446" alt="user-job" src="https://github.com/user-attachments/assets/af7a1c7b-348c-4765-bf0e-e0f0af6db523" />
+
+
+![application-form](https://github.com/user-attachments/assets/9a94e3df-9985-4e88-9ee9-36974b4e1ac7)
+
 
 
 ## Future Improvements
