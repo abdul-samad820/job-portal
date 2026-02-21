@@ -44,7 +44,7 @@ class JobApplicationController extends Controller
     }
 
     // Profile Check
-    $profile = User_profile::where('user_id', $user_id)->first();
+    $profile = auth('user')->user()->profile;
 
     if (
         !$profile ||
@@ -90,33 +90,43 @@ $application = JobApplication::create([
     return redirect()->route('user.jobs')
         ->with('success', 'Your application has been submitted successfully.');
 }
-   public function admin_applications(Request $request)
+ public function admin_applications(Request $request)
 {
+
     $adminId = auth('admin')->id();
-    $search = $request->search;
-
     $jobIds = Job::where('admin_id', $adminId)->pluck('id');
-
-    $applications = JobApplication::with(['user', 'job','user.profile',]) 
-        ->whereIn('job_id', $jobIds)
-        ->when($search, function($query) use ($search) {
-
-            $query->whereHas('user', function($userQ) use ($search) {
-                $userQ->where('name', 'like', "%$search%");
-            });
-
-            $query->orWhere('resume', 'like', "%$search%");
+    $applications = JobApplication::with([
+        'user.profile',
+        'job',
+        'updatedBy'
+    ])
+    ->whereIn('job_id', $jobIds)
+    ->when($request->job, fn($q) =>
+    $q->where('job_id', $request->job)
+)
+    ->when($request->search, function($q) use ($request) {
+    $q->where(function($query) use ($request) {
+        $query->whereHas('user', function($uq) use ($request) {
+            $uq->where('name', 'like', '%'.$request->search.'%')
+               ->orWhere('email', 'like', '%'.$request->search.'%');
         })
-        ->orderBy('id', 'desc')
-        ->paginate(5);
+        ->orWhereHas('job', function($jq) use ($request) {
+            $jq->where('title', 'like', '%'.$request->search.'%');
+        });
+    });
+})
+    ->orderBy('created_at', 'desc')
+    ->paginate(10);
 
     return view('Admin.job_application', compact('applications'));
 }
+
 
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
             'status' => 'required|in:pending,shortlisted,rejected,hired'
+            
         ]);
 
         $application = JobApplication::with('job', 'user')->findOrFail($id);
@@ -126,10 +136,12 @@ $application = JobApplication::create([
         if ($application->job->admin_id != $adminId) {
             abort(403, "You are not allowed to update this application!");
         }
+       $oldStatus = $application->status;
 
-        $oldStatus = $application->status;
-        $application->status = $request->status;
-        $application->save();
+$application->status = $request->status;
+$application->status_updated_at = now();
+$application->updated_by_admin_id = $adminId;
+$application->save();
 
         if ($oldStatus != $request->status) {
    Mail::to($application->user->email)
@@ -176,4 +188,56 @@ public function applyFromSaved($id)
     // Redirect to apply form
     return redirect()->route('apply_form_job_application', $id);
 }
+
+public function updateNote(Request $request, $id)
+{
+    $application = JobApplication::with('job')->findOrFail($id);
+$request->validate([
+    'admin_note' => 'nullable|string|max:1000'
+]);
+if ($application->job->admin_id != auth('admin')->id()) {
+    abort(403);
+}
+
+    $application->admin_note = $request->admin_note;
+    $application->save();
+
+    return back()->with('success','Note saved');
+}
+public function jobapplications(Request $request)
+{
+    $adminId = auth('admin')->id();
+
+    $jobIds = Job::where('admin_id', $adminId)->pluck('id');
+
+    $applications = JobApplication::with([
+        'user.profile',
+        'job',
+        'updatedBy'
+    ])
+    ->whereIn('job_id', $jobIds)
+    ->orderBy('created_at','desc')
+    ->paginate(10);
+
+    $applications->getCollection()->transform(function ($app) {
+
+        $jobSkills = $app->job->required_skills ?? '';
+        $userSkills = $app->user->profile->core_skills ?? '';
+
+        $job = array_map('trim', explode(',', strtolower($jobSkills)));
+        $user = array_map('trim', explode(',', strtolower($userSkills)));
+
+        $matched = count(array_intersect($job, $user));
+        $total = count(array_filter($job));
+
+        $app->match_percentage = $total > 0
+            ? round(($matched / $total) * 100)
+            : 0;
+
+        return $app;
+    });
+
+    return view('Admin.job_application', compact('applications'));
+}
+
 }

@@ -424,14 +424,10 @@
                     @foreach ($recentJobs as $job)
                         <div class="d-flex align-items-center p-3 mb-2 bg-light rounded job-box"
                             style="transition: 0.2s; border-left: 4px solid transparent;">
-                          <div class="job-logo mr-3">
-    <img src="{{ $job->job_image 
-        ? Storage::url($job->job_image) 
-        : asset('default/logo.png') }}"
-        width="50"
-        height="50"
-        style="border-radius:8px; object-fit:cover;">
-</div>
+                            <div class="job-logo mr-3">
+                                <img src="{{ $job->job_image ? Storage::url($job->job_image) : asset('default/logo.png') }}"
+                                    width="50" height="50" style="border-radius:8px; object-fit:cover;">
+                            </div>
                             <div class="flex-grow-1">
 
 

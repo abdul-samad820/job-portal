@@ -84,13 +84,8 @@
                             </a>
 
                         </div>
-
                     </div>
-
                 </div>
-
-
-
                 <!-- Main Table Card -->
                 <div class="card shadow-sm border-0 rounded">
                     <div class="card-body">

@@ -1,6 +1,15 @@
 @extends('layouts.index')
 @section('title', 'Job Applications')
+<style>
+    <style>.table-responsive {
+        overflow: visible !important;
+    }
 
+    .dropdown-menu {
+        z-index: 1055 !important;
+    }
+</style>
+</style>
 @section('content')
 
     <div class="container-fluid py-4">
@@ -49,7 +58,7 @@
         {{-- ================= DESKTOP TABLE ================= --}}
         <div class="card shadow-sm d-none d-md-block">
             <div class="card-body">
-                <div class="table-responsive">
+                <div class="table-responsive" style="overflow: visible;">
                     <table class="table table-hover align-middle">
 
                         <thead class="thead-light">
@@ -76,11 +85,11 @@
                                     <td>{{ $app->job->title ?? 'Deleted Job' }}</td>
 
                                     <!-- STATUS DROPDOWN -->
-                                    <td>
+                                    <td class="align-middle">
                                         <form action="{{ route('admin.application.updateStatus', $app->id) }}"
                                             method="POST"> @csrf @method('POST')
 
-                                            <div class="d-md-flex align-items-center">
+                                            <div class="d-flex align-items-center justify-content-start">
                                                 <!-- Hidden input --> <input type="hidden" name="status"
                                                     id="statusInput{{ $app->id }}" value="{{ $app->status }}">
                                                 <div class="dropdown mr-2"> <button class="btn btn-light dropdown-toggle"
@@ -106,6 +115,7 @@
                                             </div>
                                         </form>
                                     </td>
+
                                     <td>
                                         <a href="{{ Storage::url($app->resume) }}" target="_blank">View</a> |
                                         <a href="{{ route('admin.resume.download', $app->id) }}" class="text-success">
@@ -216,6 +226,7 @@
                 $education = $profile && $profile->education ? json_decode($profile->education, true) : [];
             @endphp
 
+
             <div class="modal fade" id="userModal{{ $app->id }}" tabindex="-1">
                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
                     <div class="modal-content shadow">
@@ -227,7 +238,25 @@
                         </div>
 
                         <div class="modal-body">
+                            <div class="row text-center mb-3">
 
+                                <div class="col-md-4">
+                                    <strong>Email</strong><br>
+                                    {{ $app->user->email }}
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>Phone</strong><br>
+                                    {{ $app->user->phone ?? 'N/A' }}
+                                </div>
+
+                                <div class="col-md-4">
+                                    <strong>Location</strong><br>
+                                    {{ $app->user->address ?? 'N/A' }}
+                                </div>
+
+                            </div>
+                            <hr>
                             @php
                                 $profileImage =
                                     $profile && $profile->profile_image
@@ -250,8 +279,73 @@
                                 </small>
 
                             </div>
-                            <hr>
 
+                            <div class="card border-0 shadow-sm mb-3">
+
+                                <div class="card-header bg-white">
+                                    <h6 class="mb-0 font-weight-bold">
+                                        <i class="fa fa-chart-line text-success mr-2"></i>
+                                        Candidate Evaluation
+                                    </h6>
+                                </div>
+
+                                <div class="card-body">
+
+                                    {{-- Skill Match Section --}}
+                                    <div class="mb-4">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <strong>Skill Match</strong>
+                                            <span class="font-weight-bold">
+                                                {{ $app->match_percentage }}%
+                                            </span>
+                                        </div>
+
+                                        <div class="progress" style="height:8px; border-radius:6px;">
+                                            <div class="progress-bar 
+                    {{ $app->match_percentage >= 70 ? 'bg-success' : ($app->match_percentage >= 40 ? 'bg-warning' : 'bg-danger') }}"
+                                                style="width: {{ $app->match_percentage }}%">
+                                            </div>
+                                        </div>
+
+                                        <small class="text-muted">
+                                            Match calculated based on required vs candidate skills.
+                                        </small>
+                                    </div>
+
+                                    <hr>
+
+                                    {{-- Timeline Section --}}
+                                    <h6 class="font-weight-bold mb-3">
+                                        <i class="fa fa-clock text-primary mr-2"></i>
+                                        Application Timeline
+                                    </h6>
+
+                                    <div class="row text-center">
+
+                                        <div class="col-md-4 mb-2">
+                                            <small class="text-muted d-block">Applied On</small>
+                                            <strong>{{ $app->created_at->format('d M Y') }}</strong>
+                                        </div>
+
+                                        <div class="col-md-4 mb-2">
+                                            <small class="text-muted d-block">Status Updated</small>
+                                            <strong>
+                                                {{ optional($app->status_updated_at)->format('d M Y') ?? 'Not updated' }}
+                                            </strong>
+                                        </div>
+
+                                        <div class="col-md-4 mb-2">
+                                            <small class="text-muted d-block">Updated By</small>
+                                            <strong>
+                                                {{ optional($app->updatedBy)->company_name ?? 'System' }}
+                                            </strong>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <hr>
                             <!-- SUMMARY -->
                             <h6 class="font-weight-bold">Professional Summary</h6>
                             <p>{{ $profile->professional_summary ?? 'No summary added.' }}</p>
@@ -306,6 +400,38 @@
                             @else
                                 <p class="text-muted">No education added.</p>
                             @endif
+                            <hr>
+                            <div class="card border-0 shadow-sm mb-3">
+                                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0 font-weight-bold">
+                                        Recruiter Notes
+                                    </h6>
+                                    <small class="text-muted">
+                                        Private (Only visible to admin)
+                                    </small>
+                                </div>
+
+                                <div class="card-body">
+
+                                    <form action="{{ route('admin.application.note', $app->id) }}" method="POST">
+                                        @csrf
+
+                                        <div class="form-group">
+                                            <textarea name="admin_note" rows="4" class="form-control form-control-sm"
+                                                placeholder="Write internal notes about this candidate...">{{ $app->admin_note }}</textarea>
+                                        </div>
+
+                                        <div class="text-right">
+                                            <button class="btn btn-primary btn-sm px-4">
+                                                <i class="fa fa-save mr-1"></i>
+                                                Save Note
+                                            </button>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
 
                         </div>
 

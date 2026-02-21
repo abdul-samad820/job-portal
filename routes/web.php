@@ -49,7 +49,6 @@ Route::middleware(['admin'])->prefix('admin')->name('admin.')->controller(AdminC
     Route::post('/notifications/read', 'readNotifications')
     ->name('notifications.read');
        
-     
 // Job Category Routes
 
 Route::controller(JobCategoryController::class)->group(function(){
@@ -84,6 +83,13 @@ Route::controller(JobController::class)->group(function(){
      Route::delete('/job_delete/{id}','job_delete')->name('job_delete');
 
 });
+
+});
+Route::middleware(['admin'])->prefix('admin')->group(function () {
+
+    Route::post('/application/{id}/note', 
+        [JobApplicationController::class, 'updateNote']
+    )->name('admin.application.note');
 
 });
 

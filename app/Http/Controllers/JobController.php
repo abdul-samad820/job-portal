@@ -258,18 +258,15 @@ if ($request->hasFile('job_image')) {
     'job_image' => 'sometimes|nullable|image|mimes:jpg,jpeg,png|max:2048',
 ]);
 
-    if ($request->hasFile('job_image')) {
+   if ($request->hasFile('job_image')) {
 
     if ($job->job_image) {
-       Storage::disk('public')->delete($job->job_image);
-$data['job_image'] = $path;
+        Storage::disk('public')->delete($job->job_image);
     }
-
-    $path = $request->file('job_image')
-                    ->store('jobs', 'public');
-
-   $data['job_image'] = $path;
+    $path = $request->file('job_image')->store('jobs', 'public');
+    $data['job_image'] = $path;
 }
+
         $job->update($data);
  
         return redirect()->route('admin.job')->with('success', 'Job updated successfully!');

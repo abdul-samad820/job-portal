@@ -1,80 +1,14 @@
 @extends('layouts.app')
-
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/style2.css') }}">
+@endpush
 @section('content')
-    <style>
-        .coverflow-container {
-            perspective: 900px;
-            overflow: hidden;
-            width: 100%;
-            position: relative;
-            padding: 60px 0;
-        }
-
-        .coverflow-track {
-            display: flex;
-            justify-content: center;
-            transition: transform .4s ease;
-            transform-style: preserve-3d;
-        }
-
-        .coverflow-item {
-            width: 180px;
-            /* a bit bigger */
-            margin: 0 25px;
-            /* MORE SPACE BETWEEN CARDS */
-            text-align: center;
-            transition: transform .4s ease, opacity .4s ease;
-        }
-
-        .coverflow-item.active {
-            transform: scale(1.25) translateZ(70px);
-        }
-
-        .coverflow-item.left {
-            transform: rotateY(30deg) scale(.9);
-            opacity: .6;
-        }
-
-        .coverflow-item.right {
-            transform: rotateY(-30deg) scale(.9);
-            opacity: .6;
-        }
-
-        .coverflow-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 34px;
-            /* bigger arrows */
-            cursor: pointer;
-            z-index: 10;
-            color: #444;
-            padding: 10px;
-        }
-
-        .arrow-left {
-            left: -10px;
-        }
-
-        /* PULL INSIDE */
-        .arrow-right {
-            right: -10px;
-        }
-    </style>
-
-    <!-- HERO SECTION -->
     <div class="position-relative" style="height:100vh; min-height:500px; width:100%; overflow:hidden;">
-        <!-- Fullscreen Responsive Image -->
         <img src="{{ asset('admins/dist/img/group_image.jpg') }}" class="position-absolute w-100 h-100"
             style="object-fit: cover; object-position:center; top:0; left:0;">
-
-        <!-- Light Overlay -->
         <div class="position-absolute w-100 h-100" style="top:0; left:0; background:rgba(255,255,255,0.45);"></div>
-
-        <!-- HERO TEXT -->
-        {{-- <div class="position-absolute w-100 text-center px-3" style="top:50%; left:0; transform:translateY(-50%); z-index:5;"> --}}
         <div class="hero-text position-absolute w-100 text-center px-3">
-            <h1 class="font-weight-bold" style="font-size: clamp(32px, 5vw, 62px); line-height:1.2;">
+            <h1 class="font-weight-bold hero-title">
                 Find your job without <br> any hassle.
             </h1>
 
@@ -84,10 +18,6 @@
 
         </div>
     </div>
-
-    <!-- ============================ -->
-    <!-- MOST DEMANDING CATEGORIES    -->
-    <!-- ============================ -->
 
     <div class="container mt-5">
 
@@ -127,9 +57,6 @@
 
             </div>
         </div>
-        <!-- ============================ -->
-        <!-- NEW JOB LISTING              -->
-        <!-- ============================ -->
 
         <div class="d-flex justify-content-between align-items-center mb-4">
 
@@ -190,9 +117,7 @@
                 </div>
             @endforeach
         </div>
-
     </div>
-
 
     <div class="py-5" style="background:#f8fbff;">
         <div class="container">
@@ -202,7 +127,6 @@
 
             <div class="row">
 
-                <!-- CARD -->
                 <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
                     <div class="testimonial-card">
                         <img src="{{ asset('admins/dist/img/girl-image.jpg') }}">
@@ -242,16 +166,11 @@
             </div>
         </div>
     </div>
-
-    <!-- ========== Fade-Up Animation (JS inline) ========== -->
 @endsection
 
 @push('scripts')
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-
-            /* ========== COVERFLOW ========== */
-
             const track = document.getElementById("coverflowTrack");
             const items = document.querySelectorAll(".coverflow-item");
 

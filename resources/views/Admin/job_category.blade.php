@@ -87,11 +87,11 @@
 
         </div>
         {{-- TABLE SECTION --}}
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-0">
+        <div class="card shadow-sm border-0  rounded">
+            <div class="card-body">
 
                 <div class="table-responsive">
-                    <table class="table table-hover table-sm mb-0">
+                    <table class="table table-hover align-middle">
 
                         <thead class="thead-light">
                             <tr>

@@ -49,13 +49,13 @@ protected static function boot()
     static::deleting(function ($job) {
 
         if ($job->job_image &&
-            Storage::disk('public')->exists('jobs/' . $job->job_image)) {
+            Storage::disk('public')->exists($job->job_image)) {
 
-            Storage::disk('public')
-                ->delete('jobs/' . $job->job_image);
+            Storage::disk('public')->delete($job->job_image);
         }
     });
 }
+
 }
 
 

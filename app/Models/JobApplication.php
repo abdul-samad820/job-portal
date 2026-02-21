@@ -8,8 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class JobApplication extends Model
 {
      protected $fillable = [
-        'job_id','user_id','status','resume','cover_letter',
-    ];
+    'job_id',
+    'user_id',
+    'status',
+    'resume',
+    'cover_letter',
+    'expected_salary',
+    'notice_period',
+    'admin_note',
+    'status_updated_at',
+    'updated_by_admin_id'
+];
 
     public function job()
 { 
@@ -20,6 +29,11 @@ public function user()
     return $this->belongsTo(User::class);
 }
 
+public function updatedBy()
+{
+    return $this->belongsTo(Admin::class, 'updated_by_admin_id');
+} 
+
 protected static function boot()
 {
     parent::boot();
@@ -27,23 +41,10 @@ protected static function boot()
     static::deleting(function ($application) {
 
         if ($application->resume &&
-            Storage::disk('public')->exists('resumes/' . $application->resume)) {
+            Storage::disk('public')->exists($application->resume)) {
 
-            Storage::disk('public')
-                ->delete('resumes/' . $application->resume);
+            Storage::disk('public')->delete($application->resume);
         }
     });
 }
-protected static function booted()
-{
-    static::deleting(function ($application) {
-
-        \DB::table('notifications')
-            ->where('type', \App\Notifications\NewJobApplicationNotification::class)
-            ->whereJsonContains('data->application_id', $application->id)
-            ->delete();
-
-    });
-}
-
 }
