@@ -10,7 +10,7 @@
             <div class="card stat-pill">
                 <div class="d-flex justify-content-between align-items-center p-3">
                     <div>
-                        <div class="stat-value mb-1">{{ $totalJobs }}</div>
+                        <div class="stat-value mb-1">{{ optional($topJob)->title ?? 'No Data Available' }}</div>
                         <div class="stat-label">Total Jobs</div>
                     </div>
                     <div class="stat-round-icon">
@@ -421,7 +421,7 @@
 
                 <div class="card-body pt-0">
 
-                    @foreach ($recentJobs as $job)
+                    @forelse ($recentJobs as $job)
                         <div class="d-flex align-items-center p-3 mb-2 bg-light rounded job-box"
                             style="transition: 0.2s; border-left: 4px solid transparent;">
                             <div class="job-logo mr-3">
@@ -429,9 +429,6 @@
                                     width="50" height="50" style="border-radius:8px; object-fit:cover;">
                             </div>
                             <div class="flex-grow-1">
-
-
-
                                 <div class="font-weight-bold text-dark" style="font-size: 14px;">
                                     {{ $job->title }}
                                 </div>
@@ -446,120 +443,120 @@
                                     <i class="fas fa-chevron-right"></i></a>
                             </div>
                         </div>
-                        @empty
-                            <div class="col-12 text-center text-muted">
-                                No recent job applications found.
-                            </div>
-                        @endforeach
+                    @empty
+                        <div class="col-12 text-center text-muted">
+                            No recent job applications found.
+                        </div>
+                    @endforelse
 
-                    </div>
                 </div>
             </div>
-
         </div>
 
-    @endsection
-    @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    </div>
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
+@endsection
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 
-                var ctx = document.getElementById('applicationStatusChart');
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
 
-                if (ctx) {
+            var ctx = document.getElementById('applicationStatusChart');
 
-                    var dataValues = [
-                        {{ $pendingCount ?? 0 }},
-                        {{ $shortlistedCount ?? 0 }},
-                        {{ $hiredCount ?? 0 }},
-                        {{ $rejectedCount ?? 0 }}
-                    ];
+            if (ctx) {
 
-                    var totalApplications = dataValues.reduce((a, b) => a + b, 0);
-                    var isEmpty = totalApplications === 0;
+                var dataValues = [
+                    {{ $pendingCount ?? 0 }},
+                    {{ $shortlistedCount ?? 0 }},
+                    {{ $hiredCount ?? 0 }},
+                    {{ $rejectedCount ?? 0 }}
+                ];
 
-                    if (isEmpty) {
-                        dataValues = [1];
-                    }
+                var totalApplications = dataValues.reduce((a, b) => a + b, 0);
+                var isEmpty = totalApplications === 0;
 
-                    new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            datasets: [{
-                                data: dataValues,
-                                backgroundColor: isEmpty ? ['#e9ecef'] : ['#f6c23e', '#36b9cc',
-                                    '#1cc88a', '#e74a3b'
-                                ],
-                                borderWidth: 0
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            cutoutPercentage: 78,
-                            legend: {
-                                display: false
-                            },
-                            tooltips: {
-                                enabled: false
-                            },
-                            animation: {
-                                animateRotate: true,
-                                duration: 1200
-                            }
-                        }
-                    });
-
-                    /* ===== Center Counter Animation ===== */
-
-                    var counter = document.getElementById("totalCounter");
-
-                    if (counter) {
-                        var target = totalApplications;
-                        var count = 0;
-                        var step = Math.ceil(target / 30);
-
-                        var update = setInterval(function() {
-                            count += step;
-
-                            if (count >= target) {
-                                counter.innerText = target;
-                                clearInterval(update);
-                            } else {
-                                counter.innerText = count;
-                            }
-
-                        }, 20);
-                    }
+                if (isEmpty) {
+                    dataValues = [1];
                 }
 
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [{
+                            data: dataValues,
+                            backgroundColor: isEmpty ? ['#e9ecef'] : ['#f6c23e', '#36b9cc',
+                                '#1cc88a', '#e74a3b'
+                            ],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutoutPercentage: 78,
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            enabled: false
+                        },
+                        animation: {
+                            animateRotate: true,
+                            duration: 1200
+                        }
+                    }
+                });
 
-                var activePercent = {{ $activePercentage ?? 0 }};
-                var bar = document.getElementById("activeProgressBar");
-                var text = document.getElementById("activePercentText");
+                /* ===== Center Counter Animation ===== */
 
-                if (bar && text) {
+                var counter = document.getElementById("totalCounter");
 
-                    setTimeout(function() {
-                        bar.style.width = activePercent + "%";
-                    }, 300);
-
+                if (counter) {
+                    var target = totalApplications;
                     var count = 0;
+                    var step = Math.ceil(target / 30);
 
-                    var interval = setInterval(function() {
-                        count++;
+                    var update = setInterval(function() {
+                        count += step;
 
-                        if (count >= activePercent) {
-                            text.innerText = activePercent;
-                            clearInterval(interval);
+                        if (count >= target) {
+                            counter.innerText = target;
+                            clearInterval(update);
                         } else {
-                            text.innerText = count;
+                            counter.innerText = count;
                         }
 
                     }, 20);
                 }
+            }
 
-            });
-        </script>
-    @endpush
+
+            var activePercent = {{ $activePercentage ?? 0 }};
+            var bar = document.getElementById("activeProgressBar");
+            var text = document.getElementById("activePercentText");
+
+            if (bar && text) {
+
+                setTimeout(function() {
+                    bar.style.width = activePercent + "%";
+                }, 300);
+
+                var count = 0;
+
+                var interval = setInterval(function() {
+                    count++;
+
+                    if (count >= activePercent) {
+                        text.innerText = activePercent;
+                        clearInterval(interval);
+                    } else {
+                        text.innerText = count;
+                    }
+
+                }, 20);
+            }
+
+        });
+    </script>
+@endpush

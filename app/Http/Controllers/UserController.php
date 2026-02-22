@@ -68,7 +68,7 @@ public function user_dashboard() {
         foreach ($userSkills as $skill) {
                 $query->orWhere('required_skills', 'LIKE', '%' . $skill . '%');
 }
-})->whereNotIn('id', JobApplication::where('user_id', $userId)->pluck('job_id'))>count();
+})->whereNotIn('id', JobApplication::where('user_id', $userId)->pluck('job_id'))->count();
 }
 
     //  USER PROFILE COMPLETION

@@ -16,7 +16,7 @@ class CreateAdminRequest extends FormRequest
     {
         return [
             'company_name' => 'required|string|max:255',
-            'contact_number' => 'nullable|digits_between:10,12',
+           'contact_number' => 'nullable|digits_between:10,12|unique:admins,contact_number',
             'location' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:1080',
             'email' => 'required|email|unique:admins,email',
@@ -27,10 +27,11 @@ class CreateAdminRequest extends FormRequest
     public function messages(): array
     {
         return [
-               'company_name.required' => 'Company name is required.',
+            'company_name.required' => 'Company name is required.',
             'email.unique' => 'An admin with this email already exists.',
             'password.confirmed' => 'Passwords do not match.',
             'password.min' => 'Password must be at least 8 characters.',
+            'contact_number.unique' => 'This contact number is already registered.',
         ];
     }
 }
