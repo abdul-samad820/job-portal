@@ -284,21 +284,21 @@
                 @endforelse
 
                 <!-- Pagination -->
-             <div class="row mt-5">
-    <div class="col-12">
+                <div class="row mt-5">
+                    <div class="col-12">
 
-        <div class="d-flex justify-content-center">
-            
-            <div class="card shadow-sm border-0 px-3 py-2">
-                
-                {{ $jobs->links('pagination::bootstrap-4') }}
-            
-            </div>
+                        <div class="d-flex justify-content-center">
 
-        </div>
+                            <div class="card shadow-sm border-0 px-3 py-2">
 
-    </div>
-</div>
+                                {{ $jobs->links('pagination::bootstrap-4') }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
 
 
             </div>

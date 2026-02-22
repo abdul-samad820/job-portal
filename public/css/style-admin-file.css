@@ -2,7 +2,7 @@
    DESIGN TOKENS (DASHBOARD)
 ===================================== */
 
-:root {
+:root { 
     --text-primary: #1a1f36;
     --text-secondary: #6b7280;
     --accent: #2f80ed;
@@ -14,9 +14,16 @@
     --fs-lg: 26px;
     --fs-md: 18px;
     --fs-sm: 13px;
+     --fs-base: 15px;
 }
 .stat-hover {
     transition: all 0.3s ease;
+}
+
+body{
+     font-family: "Montserrat", sans-serif;
+    font-size: var(--fs-base);
+    line-height: 1.65;
 }
 
 .stat-hover:hover {

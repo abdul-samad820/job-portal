@@ -354,94 +354,95 @@
     </div>
 
     {{-- SAVED + RECENT JOBS SECTION --}}
-<div class="row mt-4">
-    <div class="col-12">
-        <div class="card shadow-sm border-0 rounded-lg">
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0 rounded-lg">
 
-            <div class="card-header bg-white border-0 py-3">
-                <h6 class="mb-0 font-weight-bold text-dark">
-                    Recent Applied Jobs
-                </h6>
-            </div>
+                <div class="card-header bg-white border-0 py-3">
+                    <h6 class="mb-0 font-weight-bold text-dark">
+                        Recent Applied Jobs
+                    </h6>
+                </div>
 
-            <div class="card-body">
-                <div class="row">
+                <div class="card-body">
+                    <div class="row">
 
-                    @forelse ($recentAppliedJobs as $recentjob)
-                        @php $job = $recentjob->job; @endphp
+                        @forelse ($recentAppliedJobs as $recentjob)
+                            @php $job = $recentjob->job; @endphp
 
-                        <div class="col-md-3 mb-4">
-                            <div class="card job-card-pro border-0 shadow-sm h-100">
-                                <div class="card-body d-flex flex-column">
+                            <div class="col-md-3 mb-4">
+                                <div class="card job-card-pro border-0 shadow-sm h-100">
+                                    <div class="card-body d-flex flex-column">
 
-                                    {{-- Top Section --}}
-                                    <div class="d-flex align-items-center mb-3">
+                                        {{-- Top Section --}}
+                                        <div class="d-flex align-items-center mb-3">
 
-                                        <div class="mr-3">
-                                            <img src="{{ $job->admin && $job->admin->profile_image
-                                                ? asset('storage/admins/' . $job->admin->profile_image)
-                                                : asset('default/company.png') }}"
-                                                width="50" height="50"
-                                                style="border-radius:12px; object-fit:cover;">
-                                        </div>
-
-                                        <div>
-                                            <div class="font-weight-bold" style="font-size:14px;">
-                                                {{ $job->title }}
+                                            <div class="mr-3">
+                                                <img src="{{ $job->admin && $job->admin->profile_image
+                                                    ? asset('storage/admins/' . $job->admin->profile_image)
+                                                    : asset('default/company.png') }}"
+                                                    width="50" height="50"
+                                                    style="border-radius:12px; object-fit:cover;">
                                             </div>
 
-                                            <div class="text-muted" style="font-size:12px;">
-                                                {{ ucfirst($job->type) }} • {{ $job->location }}
+                                            <div>
+                                                <div class="font-weight-bold" style="font-size:14px;">
+                                                    {{ $job->title }}
+                                                </div>
+
+                                                <div class="text-muted" style="font-size:12px;">
+                                                    {{ ucfirst($job->type) }} • {{ $job->location }}
+                                                </div>
                                             </div>
+
+                                        </div>
+
+                                        {{-- Salary --}}
+                                        <div class="text-success font-weight-bold mb-2" style="font-size:13px;">
+                                            ₹ {{ $job->salary ?? 'Not Disclosed' }} LPA
+                                        </div>
+
+                                        {{-- Status --}}
+                                        @php
+                                            $statusClass =
+                                                [
+                                                    'pending' => 'badge-warning',
+                                                    'shortlisted' => 'badge-info',
+                                                    'hired' => 'badge-success',
+                                                    'rejected' => 'badge-danger',
+                                                ][$recentjob->status] ?? 'badge-secondary';
+                                        @endphp
+
+                                        <div class="mb-3">
+                                            <span class="badge {{ $statusClass }} status-badge">
+                                                {{ ucfirst($recentjob->status) }}
+                                            </span>
+                                        </div>
+
+                                        {{-- Push footer to bottom --}}
+                                        <div class="mt-auto text-right">
+                                            <a href="{{ route('user.job_applied') }}"
+                                                class="text-primary job-footer-link">
+                                                View Details
+                                                <i class="fas fa-arrow-right ml-1"></i>
+                                            </a>
                                         </div>
 
                                     </div>
-
-                                    {{-- Salary --}}
-                                    <div class="text-success font-weight-bold mb-2" style="font-size:13px;">
-                                        ₹ {{ $job->salary ?? 'Not Disclosed' }} LPA
-                                    </div>
-
-                                    {{-- Status --}}
-                                    @php
-                                        $statusClass = [
-                                            'pending' => 'badge-warning',
-                                            'shortlisted' => 'badge-info',
-                                            'hired' => 'badge-success',
-                                            'rejected' => 'badge-danger',
-                                        ][$recentjob->status] ?? 'badge-secondary';
-                                    @endphp
-
-                                    <div class="mb-3">
-                                        <span class="badge {{ $statusClass }} status-badge">
-                                            {{ ucfirst($recentjob->status) }}
-                                        </span>
-                                    </div>
-
-                                    {{-- Push footer to bottom --}}
-                                    <div class="mt-auto text-right">
-                                        <a href="{{ route('user.job_applied') }}" 
-                                           class="text-primary job-footer-link">
-                                            View Details 
-                                            <i class="fas fa-arrow-right ml-1"></i>
-                                        </a>
-                                    </div>
-
                                 </div>
                             </div>
-                        </div>
 
-                    @empty
-                        <div class="col-12 text-center text-muted">
-                            No recent job applications found.
-                        </div>
-                    @endforelse
+                        @empty
+                            <div class="col-12 text-center text-muted">
+                                No recent job applications found.
+                            </div>
+                        @endforelse
 
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 @push('scripts')
     <script>

@@ -16,30 +16,25 @@ Route::get('/', function () {
 })->name('user.home');
 
 // ===================== SUPER ADMIN ROUTES =====================
-Route::prefix('superadmin')
-    ->name('superadmin.')
-    ->middleware(['auth:superadmin'])  
-    ->group(function () {
+Route::prefix('superadmin')->name('superadmin.')->middleware(['auth:superadmin','role.timeout'])  
+  ->group(function () {
 
     Route::get('/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/admins', [SuperAdminController::class, 'adminList'])->name('admins');
     Route::get('/add-admin', [SuperAdminController::class, 'createForm'])->name('create.form');
     Route::post('/add-admin', [SuperAdminController::class, 'createAdmin'])->name('create');
-
     Route::post('/logout',[SuperAdminController::class, 'logout'])
         ->name('logout');
 });
 
-  Route::view('/superadmin/login','SuperAdmin.login')->name('superadmin.login.view');
-
+   Route::view('/superadmin/login','SuperAdmin.login')->name('superadmin.login.view');
    Route::post('/superadmin/login', [SuperAdminController::class, 'login'])
     ->name('superadmin.login');
  
 
 // ===================== ADMIN ROUTES =====================
 
-Route::middleware(['admin'])->prefix('admin')->name('admin.')->controller(AdminController::class)
-->group(function () {
+Route::middleware(['admin' ,'role.timeout'])->prefix('admin')->name('admin.')->controller  (AdminController::class)->group(function () {
 
     Route::get('/', 'dashboard')->name('dashboard');
     Route::get('/profile', 'admin_profile')->name('profile');
@@ -85,12 +80,10 @@ Route::controller(JobController::class)->group(function(){
 });
 
 });
-Route::middleware(['admin'])->prefix('admin')->group(function () {
+Route::middleware(['admin' , 'role.timeout'])->prefix('admin')->group(function () {
 
     Route::post('/application/{id}/note', 
-        [JobApplicationController::class, 'updateNote']
-    )->name('admin.application.note');
-
+        [JobApplicationController::class, 'updateNote'])->name('admin.application.note');
 });
 
 Route::controller(AdminController::class)->group(function () {
@@ -107,8 +100,7 @@ Route::controller(AdminController::class)->group(function () {
 
 // ===================== USER ROUTES =====================
 
-
-Route::middleware(['user'])->controller(UserController::class)->prefix('user')->name('user.')->group(function () {
+Route::middleware(['user' ,'role.timeout'])->controller(UserController::class)->prefix('user')->name('user.')->group(function () {
  
      Route::get('/dashboard', 'user_dashboard')->name('dashboard');
      Route::post('/logout', 'userlogout')->name('logout');
@@ -118,42 +110,32 @@ Route::middleware(['user'])->controller(UserController::class)->prefix('user')->
      Route::post('/user_profile_update','update_user_profile')->name('update_profile');
      Route::get('/user_account_settings','account_setting')->name('account_setting');
      Route::post('/user_account_settings/{id}', 'account_setting_update')
-    ->name('account_setting_update');
-    
-   
+     ->name('account_setting_update');
      Route::get('/saved-jobs', 'saved_jobs')->name('saved.jobs');
-
      Route::post('/notifications/read', 'readNotifications')
-    ->name('notifications.read');
+     ->name('notifications.read');
+
     });
 
 
-    Route::middleware(['user'])->group(function () {
-
-    Route::post('/saved-jobs/{job}', 
-        [UserController::class, 'saveJob']
-    )->name('saved.store');
-
-    Route::delete('/saved-jobs/{job}', 
-        [UserController::class, 'unsaveJob']
-    )->name('saved.destroy');
+Route::middleware(['user','role.timeout'])->group(function () {
+    Route::post('/saved-jobs/{job}', [UserController::class, 'saveJob'])->name('saved.store');
+    Route::delete('/saved-jobs/{job}', [UserController::class, 'unsaveJob'])->name('saved.destroy');
 
 });
 
 // This stays outside because it's a different controller
-      Route::middleware(['user'])->group(function () {
+Route::middleware(['user','role.timeout'])->group(function () {
 
     Route::post('/user_apply_job-application/{id}', 
-        [JobApplicationController::class, 'apply_job_application']
-    )->name('apply_job-application');
+    [JobApplicationController::class, 'apply_job_application'])->name('apply_job-application');
 
 });
 
-      Route::get('/jobapplication', [JobApplicationController::class, 'admin_applications'])
+    Route::get('/jobapplication', [JobApplicationController::class, 'admin_applications'])
       ->name('job_application');
 
-      Route::get('/user/job-filter', [JobController::class, 'user_job_filter'])
-    ->name('user.jobs.filter');
+    Route::get('/user/job-filter', [JobController::class, 'user_job_filter'])->name('user.jobs.filter');
 
 
 //  Public User Routes (No Auth Needed) 
@@ -178,9 +160,7 @@ Route::controller(JobApplicationController::class)->group(function () {
 }); 
 
 Route::post('/notifications/read', function () {
-    Auth::guard('user')->user()
-        ->unreadNotifications
-        ->markAsRead();
+    Auth::guard('user')->user()->unreadNotifications->markAsRead();
     return back();
 })->name('notifications.read');
 
@@ -190,5 +170,4 @@ Route::post('/admin/notifications/read', function () {
 })->name('admin.notifications.read');
 
 Route::get('/admin/application/{id}/download-resume',
-    [JobApplicationController::class, 'downloadResume'])
-    ->name('admin.resume.download');
+   [JobApplicationController::class, 'downloadResume'])->name('admin.resume.download');

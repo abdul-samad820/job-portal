@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Application Status Update</title>
 </head>
+
 <body style="font-family: Arial, sans-serif;">
 
     <h2>Hello {{ $user->name }},</h2>
@@ -11,12 +13,12 @@
 
     <h3>{{ $job->title }}</h3>
 
-    <p>Status: 
-        <strong style="color:
-            @if($status == 'hired') green
+    <p>Status:
+        <strong
+            style="color:
+            @if ($status == 'hired') green
             @elseif($status == 'shortlisted') orange
-            @else red
-            @endif
+            @else red @endif
         ">
             {{ ucfirst($status) }}
         </strong>
@@ -29,4 +31,5 @@
     <p>Regards,<br>Job Hub Team</p>
 
 </body>
+
 </html>

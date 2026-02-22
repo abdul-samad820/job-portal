@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', ' Super Admin Portal')</title>
-      <link rel="icon" type="image/png" href="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
- <style>
+    <style>
         .super-badge {
             padding: 8px 18px;
             font-size: 15px;
@@ -116,13 +116,15 @@
 
                 <!-- BRAND -->
                 <div class="jobi-brand text-center mb-3">
-                    <img src="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}" class="brand-img mb-2" style="height:55px;">
+                    <img src="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}" class="brand-img mb-2"
+                        style="height:55px;">
                     <small class="brand-subtext">JOB HUB — Super Admin</small>
                 </div>
 
                 <!-- PROFILE -->
                 <div class="jobi-profile text-center mb-3">
-                    <img src="{{ asset('admins/dist/img/user2-160x160.jpg') }}" class="profile-img mb-2" style="border-radius:50%; height:80px;">
+                    <img src="{{ asset('admins/dist/img/user2-160x160.jpg') }}" class="profile-img mb-2"
+                        style="border-radius:50%; height:80px;">
                     {{-- <h6 class="font-weight-bold mb-1">{{ auth('admin')->user()->company_name }}</h6>
                     <small>{{ auth('admin')->user()->email }}</small> --}}
                 </div>
@@ -132,14 +134,16 @@
                     <ul class="nav flex-column jobi-menu">
 
                         <li class="nav-item mb-2">
-                            <a href="{{ route('superadmin.dashboard') }}" class="nav-link jobi-link {{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
+                            <a href="{{ route('superadmin.dashboard') }}"
+                                class="nav-link jobi-link {{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
                                 <i class="fas fa-chart-line"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
 
                         <li class="nav-item mb-2">
-                            <a href="{{ route('superadmin.admins') }}" class="nav-link jobi-link {{ request()->routeIs('superadmin.admins') ? 'active' : '' }}">
+                            <a href="{{ route('superadmin.admins') }}"
+                                class="nav-link jobi-link {{ request()->routeIs('superadmin.admins') ? 'active' : '' }}">
                                 <i class="fas fa-users-cog"></i>
                                 <p>Manage Admins</p>
                             </a>
@@ -223,7 +227,7 @@
         </footer>
 
     </div>
- <script src="{{ asset('admins/plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('admins/plugins/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('admins/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 
     <script>
@@ -252,5 +256,5 @@
 
     @stack('scripts')
 </body>
-   
+
 </html>

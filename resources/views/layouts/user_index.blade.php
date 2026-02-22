@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,7 +21,7 @@
 
     <!-- AdminLTE Theme -->
     <link rel="stylesheet" href="{{ asset('admins/dist/css/adminlte.min.css') }}">
-   <link rel="stylesheet" href="{{ asset('css/style-user-file.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style-user-file.css') }}">
     @stack('styles')
 </head>
 

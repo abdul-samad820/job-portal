@@ -124,6 +124,17 @@
                 <i class="fas fa-user-plus me-2 fs-1"></i>
                 User Registration
             </h2>
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('user.register') }}" method="POST">
                 @csrf
 
@@ -134,7 +145,8 @@
                         <label class="form-label">Full Name</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            <input type="text" name="name" class="form-control" placeholder="Enter your name">
+                            <input type="text" name="name" value="{{ old('name') }}"
+                                class="form-control  @error('name') is-invalid @enderror" placeholder="Enter your name">
                         </div>
                     </div>
 
@@ -143,7 +155,9 @@
                         <label class="form-label">Email</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                            <input type="email" name="email" class="form-control" placeholder="Enter email">
+                            <input type="email" name="email"
+                                value="{{ old('email') }}"class="form-control @error('email') is-invalid @enderror"
+                                placeholder="Enter email">
                         </div>
                     </div>
 
@@ -152,7 +166,8 @@
                         <label class="form-label">Address</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                            <input type="text" name="address" class="form-control" placeholder="Enter address">
+                            <input type="text" name="address" value="{{ old('address') }}" class="form-control"
+                                placeholder="Enter address">
                         </div>
                     </div>
 
@@ -161,7 +176,9 @@
                         <label class="form-label">Phone Number</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                            <input type="text" name="phone" class="form-control" placeholder="Enter phone number">
+                            <input type="text" name="phone" value="{{ old('phone') }}"
+                                class="form-control @error('phone') is-invalid @enderror"
+                                placeholder="Enter phone number">
                         </div>
                     </div>
 
@@ -170,7 +187,9 @@
                         <label class="form-label">Password</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                            <input type="password" name="password" class="form-control" placeholder="Enter password">
+                            <input type="password" name="password"
+                                class="form-control @error('password') is-invalid @enderror"
+                                placeholder="Enter password">
                         </div>
                     </div>
 

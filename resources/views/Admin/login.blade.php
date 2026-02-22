@@ -24,6 +24,7 @@
             align-items: center;
             justify-content: center;
         }
+
         .auth-container {
             display: flex;
             height: 100%;
@@ -32,6 +33,7 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
             overflow: hidden;
         }
+
         .left-panel {
             padding: 3rem;
             background: #fff;
@@ -40,6 +42,7 @@
             justify-content: center;
             /* vertically center form */
         }
+
         /* Right Image */
         .auth-image {
             background-size: cover;

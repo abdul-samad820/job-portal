@@ -2,7 +2,11 @@ html,
 body {
     overflow-x: hidden;
     height: 100%;
+     font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
 }
+
 footer.main-footer {
     flex-shrink: 0;
     background: #fff;

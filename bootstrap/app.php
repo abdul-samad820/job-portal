@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\Admin_mid::class,
             'user'  => \App\Http\Middleware\User_mid::class,
             'superadmin' => \App\Http\Middleware\SuperAdminOnly::class,
+             'role.timeout' => \App\Http\Middleware\RoleSessionTimeout::class,
         ]);
     })
 

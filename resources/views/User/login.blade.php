@@ -146,13 +146,15 @@
                 <label>Email Address</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text"><i class="fa fa-envelope"></i></span>
-                    <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                    <input type="email" name="email" value="{{ old('email') }}"
+                        class="form-control @error('email') is-invalid @enderror" placeholder="Enter your email">
                 </div>
 
                 <label>Password</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                    <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                    <input type="password" name="password" class="form-control @error('email') is-invalid @enderror"
+                        placeholder="Enter password">
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
