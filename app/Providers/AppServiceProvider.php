@@ -3,9 +3,10 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-  use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\View;
 use App\Models\Job;
 use App\Models\JobCategory;
+use App\Models\Faq;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,19 +40,25 @@ public function boot()
         }
     });
 
-    View::composer('*', function ($view) {
-
+    // View::composer('*', function ($view) {
+   View::composer(['home'], function ($view) {
         
-        if (!$view->offsetExists('recentJobs')) {
-            $view->with(
-                'recentJobs',
-                Job::orderBy('id', 'desc')->take(5)->get()
-            );
-        }
+        // recent jobs
+        $view->with(
+            'recentJobs',
+            Job::latest()->take(5)->get()
+        );
 
+        // categories
         $view->with(
             'all_categories',
             JobCategory::withCount('jobs')->get()
+        );
+
+        // FAQs (NEW)
+        $view->with(
+            'faqs',
+            Faq::where('status', 1)->latest()->get()
         );
     });
 }

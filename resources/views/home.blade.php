@@ -1,238 +1,387 @@
 @extends('layouts.app')
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/style2.css') }}">
+<link rel="stylesheet" href="{{ asset('css/style2.css') }}">
 @endpush
 @section('content')
-    <div class="position-relative" style="height:100vh; min-height:500px; width:100%; overflow:hidden;">
-        <img src="{{ asset('admins/dist/img/group_image.jpg') }}" class="position-absolute w-100 h-100"
-            style="object-fit: cover; object-position:center; top:0; left:0;">
-        <div class="position-absolute w-100 h-100" style="top:0; left:0; background:rgba(255,255,255,0.45);"></div>
-        <div class="hero-text position-absolute w-100 text-center px-3">
-            <h1 class="font-weight-bold hero-title">
-                Find your job without <br> any hassle.
-            </h1>
+<div class="position-relative" style="height:100vh; min-height:500px; width:100%; overflow:hidden;">
+    <img src="{{ asset('admins/dist/img/group_image.jpg') }}" class="position-absolute w-100 h-100" style="object-fit: cover; object-position:center; top:0; left:0;">
+    <div class="position-absolute w-100 h-100" style="top:0; left:0; background:rgba(255,255,255,0.45);"></div>
+    <div class="hero-text position-absolute w-100 text-center px-3">
+        <h1 class="font-weight-bold hero-title">
+            Find your job without <br> any hassle.
+        </h1>
 
-            <p class="text-muted mt-3" style="font-size:16px;">
-                Jobs & Job search. Find jobs in global companies. Executive jobs & work.
-            </p>
+        <p class="text-muted mt-3" style="font-size:16px;">
+            Jobs & Job search. Find jobs in global companies. Executive jobs & work.
+        </p>
 
-        </div>
     </div>
+</div>
 
-    <div class="container mt-5">
+<div class="container mt-5">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="font-weight-bold border-bottom border-primary pb-2 d-inline-block">
-                Most Demanding Categories
-            </h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="font-weight-bold border-bottom border-primary pb-2 d-inline-block">
+            Most Demanding Categories
+        </h2>
 
-        </div>
-        <div style="margin-top:50px;"></div>
+    </div>
+    <div style="margin-top:50px;"></div>
 
-        <div class="coverflow-container">
+    <div class="coverflow-container">
 
-            <span class="coverflow-arrow arrow-left">&lsaquo;</span>
-            <span class="coverflow-arrow arrow-right">&rsaquo;</span>
+        <span class="coverflow-arrow arrow-left">&lsaquo;</span>
+        <span class="coverflow-arrow arrow-right">&rsaquo;</span>
 
-            <div id="coverflowTrack" class="coverflow-track">
+        <div id="coverflowTrack" class="coverflow-track">
 
-                @foreach ($all_categories as $cat)
-                    <div class="coverflow-item">
-
-
-                        <div class="p-2 text-center">
-                            <img src="{{ $cat->category_image ? Storage::url($cat->category_image) : asset('default/category.png') }}"
-                                style="width:55px; height:55px; object-fit:cover; border-radius:6px;" alt="Category Image">
-
-                            <h6 class="mt-2 font-weight-bold" style="font-size:14px;">
-                                {{ $cat->name }}
-                            </h6>
-
-                            <small class="text-muted">
-                                {{ $cat->jobs_count }} Jobs
-                            </small>
-                        </div>
-                    </div>
-                @endforeach
-
-            </div>
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mb-4">
-
-            <h2 class="font-weight-bold border-bottom border-primary pb-2 d-inline-block">
-                New Job Listing
-            </h2>
-
-            <a href="{{ route('user.jobs') }}" class="btn-hire font-weight-bold text-nowrap">
-                Explore all jobs →
-            </a>
-
-        </div>
+            @foreach ($all_categories as $cat)
+            <div class="coverflow-item">
 
 
-        <div class="job-list-wrapper">
-            @foreach ($recentJobs as $job)
-                <div class="job-card">
+                <div class="p-2 text-center">
+                    <img src="{{ $cat->category_image ? Storage::url($cat->category_image) : asset('default/category.png') }}" style="width:55px; height:55px; object-fit:cover; border-radius:6px;" alt="Category Image">
 
-                    <div class="row align-items-center">
+                    <h6 class="mt-2 font-weight-bold" style="font-size:14px;">
+                        {{ $cat->name }}
+                    </h6>
 
-                        <!-- Logo + Title -->
-                        <div class="col-lg-5 col-md-6 col-12 d-flex align-items-center mb-3 mb-lg-0">
-                            <img src="{{ $job->job_image ? Storage::url($job->job_image) : asset('default/logo.png') }}"
-                                class="job-img">
-
-                            <div class="ml-3">
-                                <h6 class="job-title mb-1">{{ $job->title }}</h6>
-                                <span class="job-badge">{{ $job->type }}</span>
-                            </div>
-                        </div>
-
-                        <!-- Location -->
-                        <div class="col-lg-3 col-md-6 col-6 text-md-center mb-2 mb-md-0">
-                            <div class="job-meta">
-                                {{ $job->created_at->format('d M Y') }}
-                            </div>
-                            <div class="job-location">
-                                {{ $job->location }}
-                            </div>
-                        </div>
-
-                        <!-- Category -->
-                        <div class="col-lg-2 col-md-6 col-6 text-md-center">
-                            <span class="job-category">
-                                {{ $job->category->name ?? 'No Category' }}
-                            </span>
-                        </div>
-
-                        <!-- Button -->
-                        <div class="col-lg-2 col-md-12 text-lg-right text-md-center mt-3 mt-lg-0">
-                            <a href="{{ route('apply_form_job_application', ['id' => $job->id]) }}"
-                                class="btn-apply-modern">
-                                Apply Now
-                            </a>
-                        </div>
-
-                    </div>
+                    <small class="text-muted">
+                        {{ $cat->jobs_count }} Jobs
+                    </small>
                 </div>
+            </div>
             @endforeach
+
         </div>
     </div>
 
-    <div class="py-5" style="background:#f8fbff;">
-        <div class="container">
-            <h2 class="font-weight-bold border-bottom border-primary pb-2 d-inline-block">
-                Trusted by leading startups
-            </h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-            <div class="row">
+        <h2 class="font-weight-bold border-bottom border-primary pb-2 d-inline-block">
+            New Job Listing
+        </h2>
 
-                <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
-                    <div class="testimonial-card">
-                        <img src="{{ asset('admins/dist/img/girl-image.jpg') }}">
-                        <h6>Gabbie</h6>
-                        <small>Designer</small>
-                        <p>Great platform for hiring.</p>
+        <a href="{{ route('user.jobs') }}" class="btn-hire font-weight-bold text-nowrap">
+            Explore all jobs →
+        </a>
+
+    </div>
+
+
+    <div class="job-list-wrapper">
+        @foreach ($recentJobs as $job)
+        <div class="job-card">
+
+            <div class="row align-items-center">
+
+                <!-- Logo + Title -->
+                <div class="col-lg-5 col-md-6 col-12 d-flex align-items-center mb-3 mb-lg-0">
+                    <img src="{{ $job->job_image ? Storage::url($job->job_image) : asset('default/logo.png') }}" class="job-img">
+
+                    <div class="ml-3">
+                        <h6 class="job-title mb-1">{{ $job->title }}</h6>
+                        <span class="job-badge">{{ $job->type }}</span>
                     </div>
                 </div>
 
-                <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
-                    <div class="testimonial-card">
-                        <img src="{{ asset('admins/dist/img/user4-128x128.jpg') }}">
-                        <h6>Sarah</h6>
-                        <small>Team Lead</small>
-                        <p>Improved our workflow.</p>
+                <!-- Location -->
+                <div class="col-lg-3 col-md-6 col-6 text-md-center mb-2 mb-md-0">
+                    <div class="job-meta">
+                        {{ $job->created_at->format('d M Y') }}
+                    </div>
+                    <div class="job-location">
+                        {{ $job->location }}
                     </div>
                 </div>
 
-                <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
-                    <div class="testimonial-card">
-                        <img src="{{ asset('admins/dist/img/user2-160x160.jpg') }}">
-                        <h6>James</h6>
-                        <small>Manager</small>
-                        <p>Highly recommended tool.</p>
-                    </div>
+                <!-- Category -->
+                <div class="col-lg-2 col-md-6 col-6 text-md-center">
+                    <span class="job-category">
+                        {{ $job->category->name ?? 'No Category' }}
+                    </span>
                 </div>
 
-                <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
-                    <div class="testimonial-card">
-                        <img src="{{ asset('admins/dist/img/user1-128x128.jpg') }}">
-                        <h6>Alex</h6>
-                        <small>HR</small>
-                        <p>We use it daily.</p>
-                    </div>
+                <!-- Button -->
+                <div class="col-lg-2 col-md-12 text-lg-right text-md-center mt-3 mt-lg-0">
+                    <a href="{{ route('apply_form_job_application', ['id' => $job->id]) }}" class="btn-apply-modern">
+                        Apply Now
+                    </a>
                 </div>
 
             </div>
         </div>
+        @endforeach
     </div>
+</div>
+
+<div class="hero-section py-5">
+    <div class="container">
+
+        <div class="hero-box">
+
+            <div class="row align-items-center">
+
+                <!-- LEFT IMAGE -->
+                <div class="col-md-6">
+                    <img src="{{ asset('admins/dist/img/photo.jpg') }}" class="img-fluid hero-img">
+                </div>
+
+                <!-- RIGHT CONTENT -->
+                <div class="col-md-6 hero-content">
+                    <h2>Get the job of your dreams quickly.</h2>
+
+                    <p>
+                        Discover thousands of jobs and connect with top companies easily.
+                    </p>
+
+                    <a href="{{route('user.jobs')}}" class="hero-btn">Find your job</a>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- COUNTERS -->
+        <div class="row text-center mt-5">
+
+            <div class="col-md-4">
+                <h2 class="counter" data-target="7000000">0</h2>
+                <p>Completed Jobs</p>
+            </div>
+
+            <div class="col-md-4">
+                <h2 class="counter" data-target="30000">0</h2>
+                <p>Worldwide Clients</p>
+            </div>
+
+            <div class="col-md-4">
+                <h2 class="counter" data-target="13000000000">0</h2>
+                <p>Dollar Payout</p>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="faq-section py-5">
+    <div class="container">
+        <h2 class="font-weight-bold border-bottom border-primary pb-2 d-inline-block mb-4">
+            Questions & Answers
+        </h2>
+        <div class="faq-wrapper mx-auto">
+            <div id="faqAccordion">
+                @foreach($faqs as $key => $faq)
+                <div class="faq-item">
+                    <div class="faq-question {{ $key != 0 ? 'collapsed' : '' }}" data-toggle="collapse" data-target="#faq{{ $key }}" aria-expanded="{{ $key == 0 ? 'true' : 'false' }}">
+                        {{ $faq->question }}
+                        <span class="faq-icon">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                    </div>
+
+                    <div id="faq{{ $key }}" class="collapse {{ $key == 0 ? 'show' : '' }}" data-parent="#faqAccordion">
+
+                        <div class="faq-answer">
+                            {{ $faq->answer }}
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="py-5" style="background:#f8fbff;">
+    <div class="container">
+        <h2 class="font-weight-bold border-bottom border-primary pb-2 d-inline-block">
+            Trusted by leading startups
+        </h2>
+
+        <div class="row">
+
+            <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
+                <div class="testimonial-card">
+                    <img src="{{ asset('admins/dist/img/girl-image.jpg') }}">
+                    <h6>Gabbie</h6>
+                    <small>Designer</small>
+                    <p>Great platform for hiring.</p>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
+                <div class="testimonial-card">
+                    <img src="{{ asset('admins/dist/img/user4-128x128.jpg') }}">
+                    <h6>Sarah</h6>
+                    <small>Team Lead</small>
+                    <p>Improved our workflow.</p>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
+                <div class="testimonial-card">
+                    <img src="{{ asset('admins/dist/img/user2-160x160.jpg') }}">
+                    <h6>James</h6>
+                    <small>Manager</small>
+                    <p>Highly recommended tool.</p>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4" data-animate>
+                <div class="testimonial-card">
+                    <img src="{{ asset('admins/dist/img/user1-128x128.jpg') }}">
+                    <h6>Alex</h6>
+                    <small>HR</small>
+                    <p>We use it daily.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const track = document.getElementById("coverflowTrack");
-            const items = document.querySelectorAll(".coverflow-item");
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const track = document.getElementById("coverflowTrack");
+        const items = document.querySelectorAll(".coverflow-item");
 
-            if (track && items.length > 0) {
+        if (track && items.length > 0) {
 
-                let index = Math.floor(items.length / 2);
+            let index = Math.floor(items.length / 2);
 
-                function updateCoverflow() {
-                    items.forEach((item, i) => {
-                        item.classList.remove("active", "left", "right");
+            function updateCoverflow() {
+                items.forEach((item, i) => {
+                    item.classList.remove("active", "left", "right");
 
-                        if (i === index) item.classList.add("active");
-                        else if (i < index) item.classList.add("left");
-                        else item.classList.add("right");
-                    });
+                    if (i === index) item.classList.add("active");
+                    else if (i < index) item.classList.add("left");
+                    else item.classList.add("right");
+                });
 
-                    const itemWidth = window.innerWidth < 768 ? 150 : 230;
-                    const offset = -(index * itemWidth) + (window.innerWidth / 2 - itemWidth / 2);
-                    track.style.transform = `translateX(${offset}px)`;
-                }
-
-                updateCoverflow();
-
-                const leftBtn = document.querySelector(".arrow-left");
-                const rightBtn = document.querySelector(".arrow-right");
-
-                if (leftBtn) {
-                    leftBtn.onclick = () => {
-                        index = Math.max(0, index - 1);
-                        updateCoverflow();
-                    };
-                }
-
-                if (rightBtn) {
-                    rightBtn.onclick = () => {
-                        index = Math.min(items.length - 1, index + 1);
-                        updateCoverflow();
-                    };
-                }
-
-                setInterval(() => {
-                    index = (index + 1) % items.length;
-                    updateCoverflow();
-                }, 3000);
+                const itemWidth = window.innerWidth < 768 ? 150 : 230;
+                const offset = -(index * itemWidth) + (window.innerWidth / 2 - itemWidth / 2);
+                track.style.transform = `translateX(${offset}px)`;
             }
 
-            /* ========== SCROLL ANIMATION ========== */
+            updateCoverflow();
 
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add("show");
-                    }
-                });
-            }, {
-                threshold: 0.2
+            const leftBtn = document.querySelector(".arrow-left");
+            const rightBtn = document.querySelector(".arrow-right");
+
+            if (leftBtn) {
+                leftBtn.onclick = () => {
+                    index = Math.max(0, index - 1);
+                    updateCoverflow();
+                };
+            }
+
+            if (rightBtn) {
+                rightBtn.onclick = () => {
+                    index = Math.min(items.length - 1, index + 1);
+                    updateCoverflow();
+                };
+            }
+
+            setInterval(() => {
+                index = (index + 1) % items.length;
+                updateCoverflow();
+            }, 3000);
+        }
+
+        /* ========== SCROLL ANIMATION ========== */
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("show");
+                }
             });
-
-            document.querySelectorAll("[data-animate]").forEach(function(el) {
-                observer.observe(el);
-            });
-
+        }, {
+            threshold: 0.2
         });
-    </script>
+
+        document.querySelectorAll("[data-animate]").forEach(function(el) {
+            observer.observe(el);
+        });
+
+    });
+
+    const counters = document.querySelectorAll('.counter');
+
+    counters.forEach(counter => {
+
+        const target = +counter.getAttribute('data-target');
+        let count = 0;
+
+        const speed = target / 100; // speed control
+
+        const updateCounter = () => {
+
+            if (count < target) {
+                count += speed;
+
+                counter.innerText = formatNumber(count);
+
+                requestAnimationFrame(updateCounter); // smooth animation 
+            } else {
+                counter.innerText = formatNumber(target);
+            }
+        };
+
+        updateCounter();
+    });
+
+
+    //  FORMAT FUNCTION (main magic)
+    function formatNumber(num) {
+
+        if (num >= 1000000000) {
+            return (num / 1000000000).toFixed(1) + "B";
+        } else if (num >= 1000000) {
+            return (num / 1000000).toFixed(1) + "M";
+        } else if (num >= 1000) {
+            return (num / 1000).toFixed(1) + "K+";
+        } else {
+            return Math.floor(num);
+        }
+    }
+
+    let started = false;
+
+    window.addEventListener("scroll", function() {
+
+        const section = document.querySelector(".counter");
+
+        if (!started && section.getBoundingClientRect().top < window.innerHeight) {
+            started = true;
+
+            document.querySelectorAll('.counter').forEach(counter => {
+
+                const target = +counter.getAttribute('data-target');
+                let count = 0;
+
+                const speed = target / 100;
+
+                const updateCounter = () => {
+                    if (count < target) {
+                        count += speed;
+                        counter.innerText = formatNumber(count);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.innerText = formatNumber(target);
+                    }
+                };
+
+                updateCounter();
+            });
+
+        }
+
+    });
+
+</script>
 @endpush

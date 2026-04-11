@@ -18,7 +18,7 @@
                             <li class="breadcrumb-item active" aria-current="page">Apply</li>
                         </ol>
                     </nav>
-                </div>
+                </div> 
 
                 <!-- Flash Messages -->
                 @if (session('success'))

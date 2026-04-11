@@ -317,6 +317,13 @@
                         </a>
                     </li>
 
+                    <li class="nav-item mb-2">
+                        <a href="{{ route('faq') }}" class="nav-link jobi-link">
+                          <i class="fas fa-comments"></i>
+                            <p>Question answer</p>
+                        </a>
+                    </li>
+
                 </ul>
             </nav>
         </div>

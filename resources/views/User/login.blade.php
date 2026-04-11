@@ -15,111 +15,179 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <style>
-        body {
-            background: #eef2f7;
-            font-family: "Poppins", sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+   <style>
 
-        .login-container {
-            max-width: 900px;
-            width: 100%;
-            background: #fff;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            display: flex;
-        }
+body {
+    font-family: "Poppins", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-        .left-side {
-            width: 50%;
-            padding: 0;
-            background: none;
-        }
+    /* 🔥 IMAGE MATCHED GRADIENT */
+    background: linear-gradient(135deg, 
+        #1e3c72 0%, 
+        #2a5298 25%, 
+        #6a11cb 50%, 
+        #ff6a00 75%, 
+        #ee0979 100%
+    );
 
-        .left-side img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+    position: relative;
+    overflow: hidden;
+}
 
-        .right-side {
-            width: 50%;
-            padding: 45px 40px;
-        }
+/* 🔥 GLOW EFFECT (ULTRA PREMIUM) */
+body::before {
+    content: "";
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 106, 0, 0.3);
+    filter: blur(150px);
+    top: 10%;
+    left: 10%;
+    z-index: -1;
+}
 
-        .right-side h3 {
-            font-weight: 600;
-            color: #003566;
-            margin-bottom: 20px;
-        }
+body::after {
+    content: "";
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(106, 17, 203, 0.3);
+    filter: blur(150px);
+    bottom: 10%;
+    right: 10%;
+    z-index: -1;
+}
 
-        label {
-            font-size: 13px;
-            margin-bottom: 4px;
-        }
+/* 💎 GLASS CONTAINER */
+.login-container {
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    border-radius: 20px;
+    overflow: hidden;
 
-        .input-group .form-control {
-            height: 44px;
-            border-radius: 10px;
-            font-size: 13px;
-        }
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
 
-        .input-group-text {
-            border-radius: 10px 0 0 10px;
-            background: #f1f3f5;
-        }
+    border: 1px solid rgba(255,255,255,0.2);
 
-        .btn-custom {
-            background: #003566;
-            color: #fff;
-            border-radius: 10px;
-            height: 44px;
-            font-weight: 500;
-            width: 100%;
-        }
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.4),
+        0 0 60px rgba(255,106,0,0.2); /* 🔥 glow */
+}
 
-        .btn-custom:hover {
-            background: #002a4d;
-        }
+/* LEFT IMAGE */
+.left-side {
+    width: 50%;
+}
 
-        .divider {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 12px;
-            color: #777;
-        }
+.left-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-        .social-btn {
-            height: 42px;
-            border-radius: 10px;
-            width: 100%;
-            font-size: 13px;
-        }
+/* RIGHT FORM */
+.right-side {
+    width: 50%;
+    padding: 45px;
+    color: #fff;
+}
 
-        /* RESPONSIVE */
-        @media(max-width: 768px) {
-            .login-container {
-                flex-direction: column;
-            }
+/* TITLE */
+.right-side h3 {
+    font-weight: 600;
+    margin-bottom: 20px;
+}
 
-            .left-side,
-            .right-side {
-                width: 100%;
-            }
+/* INPUT ICON */
+.input-group-text {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+}
 
-            .left-side {
-                height: 260px;
-                /* mobile image height */
-            }
-        }
-    </style>
+/* INPUT */
+.form-control {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    border-radius: 0 10px 10px 0;
+}
+
+.form-control::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+.form-control:focus {
+    background: rgba(255,255,255,0.18);
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+
+/* 🔥 PREMIUM BUTTON */
+.btn-custom {
+    background: linear-gradient(135deg, #ff6a00, #ffb347);
+    border: none;
+    color: #fff;
+    border-radius: 10px;
+    height: 44px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.btn-custom:hover {
+    background: linear-gradient(135deg, #ff512f, #dd2476);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255,106,0,0.6);
+}
+
+/* SOCIAL BUTTONS */
+.social-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    transition: 0.3s;
+}
+
+.social-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* TEXT */
+a, label {
+    color: rgba(255,255,255,0.9);
+}
+
+/* DIVIDER */
+.divider {
+    text-align: center;
+    margin: 20px 0;
+    color: rgba(255,255,255,0.6);
+}
+
+/* MOBILE */
+@media(max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+    }
+
+    .left-side,
+    .right-side {
+        width: 100%;
+    }
+
+    .left-side {
+        height: 250px;
+    }
+}
+
+</style>
 </head>
 
 <body>
@@ -140,21 +208,19 @@
                 @csrf
 
                 @if ($errors->any())
-                    <div class="alert alert-danger small">{{ $errors->first() }}</div>
+                <div class="alert alert-danger small">{{ $errors->first() }}</div>
                 @endif
 
                 <label>Email Address</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text"><i class="fa fa-envelope"></i></span>
-                    <input type="email" name="email" value="{{ old('email') }}"
-                        class="form-control @error('email') is-invalid @enderror" placeholder="Enter your email">
+                    <input type="email" name="email" value="{{ old('email') }}" class="form-control @error('email') is-invalid @enderror" placeholder="Enter your email">
                 </div>
 
                 <label>Password</label>
                 <div class="input-group mb-3">
                     <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                    <input type="password" name="password" class="form-control @error('email') is-invalid @enderror"
-                        placeholder="Enter password">
+                    <input type="password" name="password" class="form-control @error('email') is-invalid @enderror" placeholder="Enter password">
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-3">

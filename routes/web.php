@@ -1,14 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FaqController;
+use App\Http\Controllers\JobApplicationController;
+use App\Http\Controllers\JobCategoryController;
+use App\Http\Controllers\JobController;
+use App\Http\Controllers\JobRoleController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\JobCategoryController;
-use App\Http\Controllers\JobRoleController;
-use App\Http\Controllers\JobController;
-use App\Http\Controllers\JobApplicationController;
-use App\Http\Controllers\EmailController;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 // Default page
 Route::get('/', function () {
@@ -171,3 +172,17 @@ Route::post('/admin/notifications/read', function () {
 
 Route::get('/admin/application/{id}/download-resume',
    [JobApplicationController::class, 'downloadResume'])->name('admin.resume.download');
+
+Route::get('/faq', [FaqController::class, 'faqs'])->name('faq');
+
+Route::post('/faq/create', [FaqController::class, 'faqs_create'])->name('faq.create');
+
+
+ Route::controller(FaqController::class)->group(function(){
+
+    Route::get('/faq','faqs')->name('faq');
+    Route::post('/faq/create','faqs_create')->name('faqs_create');
+    Route::get('/faqs_edit/{id}','faqs_edit')->name('faqs_edit');
+    Route::put('/faqs_update/{id}','faqs_update')->name('faqs_update');
+    Route::delete('/faqs_delete/{id}','faqs_delete')->name('faqs_delete');
+});

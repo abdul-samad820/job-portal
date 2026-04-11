@@ -11,70 +11,130 @@
     <!-- ICONS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <style>
-        * {
-            font-family: "Inter", sans-serif;
-            font-size: 13px;
-        }
+   <style>
 
-        body {
-            background: #ffffff;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+* {
+    font-family: "Poppins", sans-serif;
+}
 
-        .auth-container {
-            display: flex;
-            height: 100%;
-            min-height: 500px;
-            border-radius: 1rem;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-        }
+/* 🔥 PREMIUM DARK CORPORATE BACKGROUND */
+body {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
 
-        .left-panel {
-            padding: 3rem;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            /* vertically center form */
-        }
+/* 🔥 SOFT GLOW (subtle - admin ke liye zyada flashy nahi) */
+body::before {
+    content: "";
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    background: rgba(79, 172, 254, 0.25);
+    filter: blur(120px);
+    top: 10%;
+    left: 10%;
+    z-index: -1;
+}
 
-        /* Right Image */
-        .auth-image {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 100%;
-            width: 100%;
-        }
+/* 💎 GLASS CONTAINER */
+.auth-container {
+    display: flex;
+    min-height: 500px;
+    border-radius: 16px;
+    overflow: hidden;
 
-        .form-control {
-            padding: 0.8rem;
-            border-radius: .6rem;
-        }
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
 
-        .btn-primary {
-            padding: 0.8rem;
-            font-weight: 600;
-            border-radius: .6rem;
-        }
+    border: 1px solid rgba(255,255,255,0.15);
 
-        /* Responsive fix */
-        @media (max-width: 991px) {
-            .auth-container {
-                flex-direction: column;
-                min-height: auto;
-            }
+    box-shadow: 
+        0 10px 40px rgba(0,0,0,0.5),
+        0 0 30px rgba(79,172,254,0.15);
+}
 
-            .auth-image {
-                height: 260px;
-            }
-        }
-    </style>
+/* LEFT PANEL */
+.left-panel {
+    padding: 3rem;
+    color: #fff;
+}
+
+/* TITLE */
+.left-panel h2 {
+    color: #4facfe;
+}
+
+/* INPUT GROUP */
+.input-group-text {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+}
+
+/* INPUT */
+.form-control {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+}
+
+.form-control::placeholder {
+    color: rgba(255,255,255,0.6);
+}
+
+.form-control:focus {
+    background: rgba(255,255,255,0.12);
+    border-color: #4facfe;
+    box-shadow: 0 0 10px rgba(79,172,254,0.4);
+}
+
+/* 🔥 PREMIUM BUTTON */
+.btn-primary {
+    background: linear-gradient(135deg, #4facfe, #00c6ff);
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(79,172,254,0.5);
+}
+
+/* TEXT */
+label, a {
+    color: rgba(255,255,255,0.85);
+}
+
+.text-muted {
+    color: rgba(255,255,255,0.6) !important;
+}
+
+/* RIGHT IMAGE */
+.auth-image {
+    background-size: cover;
+    background-position: center;
+}
+
+/* RESPONSIVE */
+@media (max-width: 991px) {
+    .auth-container {
+        flex-direction: column;
+    }
+
+    .auth-image {
+        height: 250px;
+    }
+}
+
+</style>
 </head>
 
 <body>
@@ -107,7 +167,7 @@
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Email Address</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-white"><i class="fas fa-envelope"></i></span>
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                                     <input type="email" name="email" class="form-control" placeholder="Enter email"
                                         required>
                                 </div>
@@ -117,7 +177,7 @@
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Password</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-white"><i class="fas fa-lock"></i></span>
+                                    <span class="input-group-text "><i class="fas fa-lock"></i></span>
                                     <input type="password" name="password" class="form-control"
                                         placeholder="Enter password" required>
                                 </div>
@@ -148,10 +208,9 @@
 
                     <!-- RIGHT: IMAGE (Equal Height) -->
                     <div class="col-lg-6 p-0">
-                        <div class="auth-image"
-                            style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216');">
-                        </div>
+                        <img src="{{ asset('admins/dist/img/login_image.jpg') }}" class="position-absolute w-50 h-100">
                     </div>
+
 
                 </div>
 

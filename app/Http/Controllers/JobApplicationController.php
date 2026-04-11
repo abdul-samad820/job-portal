@@ -7,7 +7,7 @@ use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use App\Models\User_profile;
+// use App\Models\User_profile;
 use App\Mail\ApplicationStatusMail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SavedJob;

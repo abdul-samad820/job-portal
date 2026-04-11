@@ -125,29 +125,38 @@
                             {{ request('max_salary', 20) }} LPA</small>
 
                         <hr>
-
-                        <!-- Category (duplicate chooser for convenience) -->
+                        <!-- Category -->
                         <h6 class="font-weight-bold">Category</h6>
-                        <select name="category" class="form-control mb-3">
-                            <option value="">Select Category</option>
-                            @foreach ($categories as $cat)
-                                <option value="{{ $cat->id }}"
-                                    {{ request('category') == $cat->id ? 'selected' : 'cat' }}>
-                                    {{ $cat->name }}
-                                </option>
-                            @endforeach
-                        </select>
+
+                        <div class="premium-select mb-3">
+                            <select name="category" class="form-control">
+                                <option value="">Select Category</option>
+
+                                @foreach ($categories as $cat)
+                                    <option value="{{ $cat->id }}"
+                                        {{ request('category') == $cat->id ? 'selected' : '' }}>
+                                        {{ $cat->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
 
                         <!-- Role -->
                         <h6 class="font-weight-bold">Role</h6>
-                        <select name="role" class="form-control mb-3">
-                            <option value="">Select Role</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>
-                                    {{ $role->name }}
-                                </option>
-                            @endforeach
-                        </select>
+
+                        <div class="premium-select mb-3">
+                            <select name="role" class="form-control">
+                                <option value="">Select Role</option>
+
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->id }}"
+                                        {{ request('role') == $role->id ? 'selected' : '' }}>
+                                        {{ $role->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <!-- Keep sort param when filter form submits -->
                         <input type="hidden" name="sort" value="{{ request('sort') }}">
@@ -173,15 +182,28 @@
                         <input type="hidden" name="role" value="{{ request('role') }}">
                         <input type="hidden" name="min_salary" value="{{ request('min_salary') }}">
                         <input type="hidden" name="max_salary" value="{{ request('max_salary') }}">
+                        <div class="premium-select" style="max-width:220px;">
 
-                        <select name="sort" class="form-control" style="max-width:220px;"
-                            onchange="document.getElementById('sortForm').submit();">
-                            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Latest</option>
-                            <option value="salary_low_high" {{ request('sort') == 'salary_low_high' ? 'selected' : '' }}>
-                                Salary (Low → High)</option>
-                            <option value="salary_high_low" {{ request('sort') == 'salary_high_low' ? 'selected' : '' }}>
-                                Salary (High → Low)</option>
-                        </select>
+                            <select name="sort" class="form-control"
+                                onchange="document.getElementById('sortForm').submit();">
+
+                                <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>
+                                    Latest
+                                </option>
+
+                                <option value="salary_low_high"
+                                    {{ request('sort') == 'salary_low_high' ? 'selected' : '' }}>
+                                    Salary (Low → High)
+                                </option>
+
+                                <option value="salary_high_low"
+                                    {{ request('sort') == 'salary_high_low' ? 'selected' : '' }}>
+                                    Salary (High → Low)
+                                </option>
+
+                            </select>
+
+                        </div>
                     </form>
                 </div>
                 @forelse ($jobs as $job)

@@ -3,14 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Admin;
-use App\Models\User;
 use App\Models\Job; 
 use App\Models\JobApplication;
-use Http\Middleware\Admin_mid;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Notifications\LoginSecurityNotification;
 
 class AdminController extends Controller {
@@ -144,5 +140,7 @@ public function readNotifications() {
     auth('admin')->user()->unreadNotifications->markAsRead();
     return back();
 }
+
+
 
 }

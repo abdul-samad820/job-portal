@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
 
 class JobCategoryController extends Controller {
-    use AuthorizesRequests;
+    use AuthorizesRequests; 
 
 public function job_category(Request $request) {
     $search = $request->search;
@@ -27,7 +27,7 @@ public function job_category(Request $request) {
 public function job_category_create(Request $request) {
     $data = $request->validate([
         'name' => 'required|string|max:255',
-        'description' => 'nullable|string|max:500',
+        'description' => 'nullable|string|max:500', 
         'category_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
 ]);
 

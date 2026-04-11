@@ -33,7 +33,7 @@
                         </span>
 
                         <span class="meta-badge text-success font-weight-bold">
-                            {{ $singlejob->salary }} LPA
+                            {{ $singlejob->salary }} LPA 
                         </span>
                     </div>
 
@@ -132,10 +132,9 @@
                             </span>
 
                             <a href="{{ route('apply_form_job_application', ['id' => $singlejob->id]) }}"
-                                class="btn apply-btn btn-block text-secondary shadow-sm">
+                                class="btn-apply-modern">
                                 Apply Now
                             </a>
-
                         </div>
 
                     </div>

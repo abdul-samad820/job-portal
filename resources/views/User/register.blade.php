@@ -10,102 +10,120 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <style>
-        * {
-            font-family: "Inter", sans-serif;
-            font-size: 13px;
-        }
+   <style>
+    * {
+    font-family: "Poppins", sans-serif;
+}
 
-        body {
-            background: #eef2f7;
-            font-family: 'Poppins', sans-serif;
-            padding: 40px 15px;
-        }
+body {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .container-box {
-            max-width: 1100px;
-            background: #fff;
-            display: flex;
-            border-radius: 20px;
-            overflow: hidden;
-            margin: auto;
-            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.12);
-        }
+/* MAIN GLASS CONTAINER */
+.container-box {
+    max-width: 1000px;
+    width: 100%;
+    display: flex;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
 
-        /* LEFT IMAGE SIDE */
-        .left-image {
-            flex: 1;
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 25px;
-        }
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+}
 
-        .left-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            max-height: 550px;
-        }
+/* LEFT SIDE */
+.left-image {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+}
 
-        /* RIGHT FORM SIDE */
-        .right-form {
-            flex: 1;
-            padding: 50px;
-        }
+.left-image img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: contain;
+}
 
-        .form-title {
-            color: #3b82f6;
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 25px;
-        }
+/* RIGHT SIDE */
+.right-form {
+    flex: 1;
+    padding: 50px;
+    color: #fff;
+}
 
-        .input-group-text {
-            background: #eef3f8;
-            border: 1px solid #dde2e7;
-            border-radius: 10px 0 0 10px;
-            min-width: 20px;
+/* TITLE */
+.form-title {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
 
-        }
+/* INPUT GROUP */
+.input-group-text {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+}
 
-        .form-control {
-            height: 48px;
-            background: #f8f9fb;
-            border: 1px solid #dde2e7;
-            border-radius: 0 10px 10px 0;
-        }
+/* INPUT */
+.form-control {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+}
 
-        .form-control:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
-        }
+.form-control::placeholder {
+    color: rgba(255,255,255,0.7);
+}
 
-        .btn-register {
-            background: #3b82f6;
-            border-radius: 10px;
-            height: 50px;
-            width: 100%;
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-        }
+.form-control:focus {
+    border-color: #fff;
+    box-shadow: none;
+    background: rgba(255,255,255,0.15);
+}
 
-        .btn-register:hover {
-            background: #275bb0;
-        }
+/* BUTTON */
+.btn-register {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-weight: 600;
+    height: 50px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
 
-        @media (max-width: 900px) {
-            .container-box {
-                flex-direction: column;
-            }
+.btn-register:hover {
+    background: rgba(255,255,255,0.35);
+}
 
-            .left-image {
-                padding: 15px;
-            }
-        }
-    </style>
+/* CHECKBOX */
+.form-check-label {
+    color: rgba(255,255,255,0.8);
+}
+
+/* LINKS */
+a {
+    color: #fff;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
+    .container-box {
+        flex-direction: column;
+    }
+}
+   </style>
 </head>
 
 <body>

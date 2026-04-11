@@ -6,11 +6,11 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-3 mb-3">
+        <div class="col-md-3 mb-3"> 
             <div class="card stat-pill">
                 <div class="d-flex justify-content-between align-items-center p-3">
                     <div>
-                        <div class="stat-value mb-1">{{ optional($topJob)->title ?? 'No Data Available' }}</div>
+                        <div class="stat-value mb-1">{{  $totalJobs  ?? 'No Data Available' }}</div>
                         <div class="stat-label">Total Jobs</div>
                     </div>
                     <div class="stat-round-icon">
@@ -452,7 +452,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
 @endsection
