@@ -1,10 +1,12 @@
 # Job Portal Web Application
 
-![Laravel](https://img.shields.io/badge/Laravel-10.x-red)
-![PHP](https://img.shields.io/badge/PHP-8.x-blue)
-![MySQL](https://img.shields.io/badge/Database-MySQL-orange)
-![MVC](https://img.shields.io/badge/Architecture-MVC-green)
+[![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/docs)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Tests](https://img.shields.io/badge/Tests-25%20Passing-success?style=for-the-badge)](tests)
 
+</div>
 
 A fully functional Job Portal Web Application built using Laravel 12, PHP 8, MySQL, Bootstrap 4, and AdminLTE 3.
 This project is designed with professional architecture, role-based access control, security best practices, and modern UI.
@@ -12,7 +14,14 @@ This project is designed with professional architecture, role-based access contr
 ---
 
 ## Project Overveiw
- -- This Job Portal system connects Users (Job Seekers) and Admins (Recruiters) with secure role-based access and professional workflow management. --
+
+**JobConnect** is a production-ready job portal application built with Laravel 12. 
+It supports three distinct user roles — **SuperAdmin**, **Admin (Company)**, 
+and **Job Seeker** — each with their own dashboard, features, and access controls.
+
+Built as a portfolio project demonstrating real-world Laravel development practices 
+including REST APIs, queued notifications, scheduled commands, feature testing, 
+and professional code architecture.
 
 It includes:
 
@@ -28,15 +37,25 @@ Built specifically as a placement-ready full-stack Laravel project.
 ## Role System
 
 -- Admin
+
 - Manage Job Categories
 - Manage Job Roles
 - Post Jobs
 - View Applications
 - Update Application Status (Pending / Shortlisted / Hired / Rejected)
+- Interview Scheduling | Schedule/reschedule/cancel interviews |
 - Dashboard Analytics (Charts & Metrics)
-- Notification System
+- Notification System | Real-time notifications for new applications 
+- Candidate Matching | Skill-based match percentage for applicants |
 
+--Super Admin
+
+- Admin Management | Create, suspend, reactivate, delete admins |
+- Platform Overview | Total jobs, users, admins stats |
+- Access Control | Full platform control |
+  
 -- User
+
 - Register / Login
 - Browse Jobs
 - Apply for Jobs
@@ -46,10 +65,21 @@ Built specifically as a placement-ready full-stack Laravel project.
 - Security Features
 - Middleware-based role protection
 - Policy-based authorization
+- Job Alerts | Get email when matching jobs are posted |
 - Users cannot access others' applications
 - Protected Admin Routes
+- Interview Tracking | View scheduled interviews with countdown 
+- Job Search | Search & filter by location, salary, type, experience |
 - Secure File Upload Handling
+- Application History | Track all applications and their status
 
+--Rest Api
+
+- Token Auth | Laravel Sanctum Bearer tokens 
+- Jobs API | List, filter, search, save jobs 
+- Applications API | Apply, track applications 
+- Profile API | View and update profile 
+  
 ## Core Features
 
 - User Registration & Login
@@ -87,8 +117,28 @@ Built specifically as a placement-ready full-stack Laravel project.
 - Secure Login System
 - Protected Routes
 - Environment-based configuration
-
+- 
 ---
+
+### Backend
+
+- Framework: Laravel 12.x
+- Language: PHP 8.2+
+- Database: MySQL 8.0
+- Authentication: Laravel Guards + Sanctum (API)
+- Authorization: Laravel Policies
+- Mail: SMTP (Mailtrap for development)
+- Queue: Laravel Queue (Database driver)
+- Testing: PHPUnit + Laravel Feature Tests
+- 
+---
+### Frontend
+
+- CSS Framework: Bootstrap 5
+- Admin Panel: Laravel AdminLTE
+- Charts: Chart.js 4.x
+- Icons: Font Awesome
+
 
 ##  Tech Stack
 - **Backend:** Laravel (PHP Framework)
@@ -96,6 +146,15 @@ Built specifically as a placement-ready full-stack Laravel project.
 - **Database:** MySQL
 - **Authentication:** Laravel Auth
 - **Server:** XAMPP / Apache
+
+### DevOps & Tools
+
+- Version Control: Git + GitHub
+- Local Server: XAMPP (Apache + MySQL)
+- IDE: VS Code
+- API Testing: Postman
+- Code Style: Laravel Pint (PSR-12)
+
 
  ## Project Structure
  
@@ -135,21 +194,31 @@ git clone https://github.com/abdul-samad820/job-portal.git
 cd job-portal
 
 2️ Install Dependencies
-composer install
+- composer install
+- npm install && npm run build
 
 3️ Create Environment File
 cp .env.example .env
+- Generate Application Key
+-php artisan key:generate
 
+Step 4 — Configure `.env`
 
 Update database credentials inside .env:
 
-DB_DATABASE=your_database_name
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_DATABASE=job_portal
+DB_USERNAME=root
+DB_PASSWORD=
 
-4️ Generate Application Key
-
-php artisan key:generate
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=your_mailtrap_username
+MAIL_PASSWORD=your_mailtrap_password
+MAIL_FROM_ADDRESS="noreply@jobportal.com"
+MAIL_FROM_NAME="JobConnect"
 
 5️ Run Database Migrations
 
@@ -160,13 +229,59 @@ php artisan migrate
 php artisan storage:link
 
 7️ Start the Development Server
+
+# Terminal 1: Web server
 php artisan serve
 
+# Terminal 2: Queue worker (for emails/notifications)
+php artisan queue:work
 
-Now open in browser:
+# Terminal 3: Scheduler (for job alerts)
+php artisan schedule:work
 
-http://127.0.0.1:8000
+Visit: **http://localhost:8000**
 
+## 🔑 Default Login Credentials
+
+> ⚠️ Change these immediately in production!
+
+| Role | Email | Password |
+|------|-------|----------|
+| SuperAdmin | superadmin@jobportal.com | SuperAdmin@123 |
+| Admin | admin@techcorp.com | Admin@123 |
+| User | user@example.com | User@123 |
+
+### Scheduled Commands
+
+# Manual run
+php artisan jobs:send-alerts    # Job alert emails
+php artisan jobs:delete-expired # Delete expired jobs
+
+##  API Documentation
+-- http://localhost:8000/api/v1
+
+## Authentication
+All protected routes require Bearer token:
+
+##  Testing
+
+-- Run All Tests
+```bash
+php artisan test
+```
+
+-- Run Specific Test File
+```bash
+php artisan test tests/Feature/UserAuthTest.php
+```
+
+-- Run with Coverage
+```bash
+php artisan test --coverage
+```
+
+-- Test Suites
+ - Tests: 25 passed
 ## Screenshots
 
 <img width="2480" height="4768" alt="homepage" src="https://github.com/user-attachments/assets/e9f32888-5482-4906-87f6-af45e3b57580" />
@@ -186,7 +301,6 @@ http://127.0.0.1:8000
 
 ## Future Improvements
 
-REST API Integration
 Deployment on Cloud Platform
 
 ## Developer
@@ -195,4 +309,10 @@ BCA Final Year Student | Laravel Developer
 
 GitHub: https://github.com/abdul-samad820
 
-___--- If you found this project useful, consider giving it a star!
+<div align="center">
+
+**⭐ If you found this project helpful, consider giving it a star on GitHub!**
+
+*Built with ❤️ using Laravel*
+
+</div>
