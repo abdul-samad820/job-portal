@@ -16,12 +16,10 @@ class RoleSessionTimeout
         if (Auth::guard('superadmin')->check()) {
             $timeout = 600; // 10 minutes
             $guard = 'superadmin';
-        } 
-        elseif (Auth::guard('admin')->check()) {
+        } elseif (Auth::guard('admin')->check()) {
             $timeout = 900; // 15 minutes
             $guard = 'admin';
-        } 
-        elseif (Auth::guard('user')->check()) {
+        } elseif (Auth::guard('user')->check()) {
             $timeout = 1800; // 30 minutes
             $guard = 'user';
         }
@@ -31,7 +29,7 @@ class RoleSessionTimeout
             $lastActivity = session('last_activity');
 
             if ($lastActivity && (time() - $lastActivity > $timeout)) {
-                
+
                 Auth::guard($guard)->logout();
 
                 $request->session()->invalidate();

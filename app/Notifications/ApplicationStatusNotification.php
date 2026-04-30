@@ -2,14 +2,12 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\MailMessage;
 
 class ApplicationStatusNotification extends Notification
 {
     protected $job;
+
     protected $status;
 
     public function __construct($job, $status)
@@ -20,7 +18,7 @@ class ApplicationStatusNotification extends Notification
 
     public function via($notifiable)
     {
-        return ['database']; // future me mail bhi add kar sakte ho
+        return ['database']; 
     }
 
     public function toDatabase($notifiable)
@@ -28,7 +26,7 @@ class ApplicationStatusNotification extends Notification
         return [
             'job_title' => $this->job->title,
             'status' => $this->status,
-            'message' => "Your application for {$this->job->title} is {$this->status}"
+            'message' => "Your application for {$this->job->title} is {$this->status}",
         ];
     }
 }

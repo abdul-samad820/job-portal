@@ -1,14 +1,12 @@
-@extends('layouts.index')
-
+@extends('layouts.Admin_layout')
 @section('title', 'Edit FAQ')
-
 @section('content')
 
 <div class="container-fluid py-4">
 
     {{-- HEADER --}}
     <div class="p-4 rounded shadow-sm mb-4 bg-light border-left border-primary" style="border-width:4px !important;">
-        
+
         <div class="d-md-flex justify-content-between align-items-center">
 
             <div>
@@ -24,10 +22,7 @@
             <nav>
                 <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
                     <li class="breadcrumb-item">
-                        <a href="#">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        FAQs
+                        <a href="{{route('admin.dashboard')}}">Dashboard</a>
                     </li>
                     <li class="breadcrumb-item active font-weight-bold">
                         Edit
@@ -53,16 +48,11 @@
                         Question <span class="text-danger">*</span>
                     </label>
 
-                    <input 
-                        type="text" 
-                        name="question" 
-                        class="form-control"
-                        value="{{ old('question', $faq->question) }}"
-                        required
-                    >
+                    <input type="text" name="question" class="form-control"
+                        value="{{ old('question', $faq->question) }}" required>
 
                     @error('question')
-                        <div class="text-danger mt-1">{{ $message }}</div>
+                    <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
                 </div>
 
@@ -72,15 +62,11 @@
                         Answer <span class="text-danger">*</span>
                     </label>
 
-                    <textarea 
-                        name="answer" 
-                        rows="5"
-                        class="form-control"
-                        required
-                    >{{ old('answer', $faq->answer) }}</textarea>
+                    <textarea name="answer" rows="5" class="form-control"
+                        required>{{ old('answer', $faq->answer) }}</textarea>
 
                     @error('answer')
-                        <div class="text-danger mt-1">{{ $message }}</div>
+                    <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
                 </div>
 

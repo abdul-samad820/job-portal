@@ -2,9 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\JobRole;
 use App\Models\Admin;
-use Illuminate\Auth\Access\Response;
+use App\Models\JobRole;
 
 class JobRolePolicy
 {
@@ -17,7 +16,6 @@ class JobRolePolicy
     {
         return $admin->id === $Role->admin_id;
     }
-
 
     public function create(Admin $admin): bool
     {

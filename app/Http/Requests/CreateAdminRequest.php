@@ -16,7 +16,7 @@ class CreateAdminRequest extends FormRequest
     {
         return [
             'company_name' => 'required|string|max:255',
-           'contact_number' => 'nullable|digits_between:10,12|unique:admins,contact_number',
+            'contact_number' => 'nullable|digits_between:10,12|unique:admins,contact_number',
             'location' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:1080',
             'email' => 'required|email|unique:admins,email',

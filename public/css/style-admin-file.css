@@ -1,43 +1,429 @@
-/* =====================================
-   DESIGN TOKENS (DASHBOARD)
-===================================== */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700;800&display=swap");
 
-:root { 
+:root {
+    --fs-2xs: 0.6rem; /*  9px — micro label              */
+    --fs-xs: 0.733rem; /* 11px — badge, tag, eyebrow      */
+    --fs-sm: 0.867rem; /* 13px — meta, helper, table cell */
+    --fs-base: 1rem; /* 15px — body text                */
+    --fs-md: 1.2rem; /* 18px — card subtitle            */
+    --fs-lg: 1.467rem; /* 22px — section heading          */
+    --fs-xl: 1.867rem; /* 28px — stat number              */
+    --fs-2xl: 2.133rem; /* 32px — hero / chart total       */
+
+    /* Weights */
+    --w-regular: 400;
+    --w-medium: 500;
+    --w-semibold: 600;
+    --w-bold: 700;
+    --w-extrabold: 800;
+
+    /* Line heights */
+    --lh-tight: 1.15;
+    --lh-snug: 1.35;
+    --lh-normal: 1.65;
+    --lh-loose: 1.8;
+
+    /* Letter spacing */
+    --ls-tight: -0.03em;
+    --ls-snug: -0.015em;
+    --ls-normal: 0em;
+    --ls-wide: 0.04em;
+    --ls-wider: 0.08em;
+    --ls-widest: 0.14em;
+
+    /* Colors */
     --text-primary: #1a1f36;
-    --text-secondary: #6b7280;
-    --accent: #2f80ed;
+    --text-secondary: #4a5568;
+    --text-muted: #77838f;
+    --text-disabled: #b0b8c4;
+    --accent: #2563eb;
+    --accent-dark: #1e40af;
+    --accent-rgb: 37, 99, 235;
     --success: #16a34a;
     --warning: #d97706;
-    --danger: #dc3545;
+    --danger: #dc2626;
+    --info: #0ea5e9;
 
-    --fs-xl: 32px;
-    --fs-lg: 26px;
-    --fs-md: 18px;
-    --fs-sm: 13px;
-     --fs-base: 15px;
-}
-.stat-hover {
-    transition: all 0.3s ease;
+    /* Shadows */
+    --shadow-sm: 0 2px 10px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 6px 24px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.1);
 }
 
-body{
-     font-family: "Montserrat", sans-serif;
+/* ================================================================
+   BASE
+================================================================ */
+html {
+    font-size: 15px;
+}
+
+body {
+    font-family: "Inter", system-ui, sans-serif;
     font-size: var(--fs-base);
-    line-height: 1.65;
+    font-weight: var(--w-regular);
+    line-height: var(--lh-normal);
+    color: var(--text-primary);
+    background-color: #f4f6f9;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
+
+/* ── Headings ───────────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Montserrat", system-ui, sans-serif;
+    font-weight: var(--w-bold);
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-snug);
+    color: var(--text-primary);
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+/* [6] FIX: Fluid sizing — no more hardcoded 32px on mobile */
+h1 {
+    font-size: clamp(1.5rem, 3vw, 2.133rem);
+    font-weight: var(--w-extrabold);
+    letter-spacing: var(--ls-tight);
+}
+h2 {
+    font-size: clamp(1.3rem, 2.5vw, 1.867rem);
+    letter-spacing: var(--ls-tight);
+}
+h3 {
+    font-size: clamp(1.1rem, 2vw, 1.467rem);
+}
+h4 {
+    font-size: clamp(1rem, 1.8vw, 1.2rem);
+}
+h5 {
+    font-size: var(--fs-base);
+    font-weight: var(--w-semibold);
+}
+h6 {
+    font-size: var(--fs-sm);
+    font-weight: var(--w-bold);
+    letter-spacing: var(--ls-wide);
+}
+
+/* ── Paragraph ──────────────────────────────────────────────── */
+p {
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+p:last-child {
+    margin-bottom: 0;
+}
+
+small,
+.small {
+    font-size: var(--fs-sm) !important;
+    color: var(--text-muted);
+}
+
+/* ── Links ──────────────────────────────────────────────────── */
+a {
+    font-weight: var(--w-medium);
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+a:hover {
+    color: var(--accent-dark);
+    text-decoration: none;
+}
+
+.fw-light {
+    font-weight: 300 !important;
+}
+.fw-regular {
+    font-weight: 400 !important;
+}
+.fw-medium {
+    font-weight: 500 !important;
+}
+.fw-semibold {
+    font-weight: 600 !important;
+}
+.fw-bold {
+    font-weight: 700 !important;
+}
+.fw-extrabold {
+    font-weight: 800 !important;
+}
+
+.me-1 {
+    margin-right: 0.25rem !important;
+}
+.me-2 {
+    margin-right: 0.5rem !important;
+}
+.me-3 {
+    margin-right: 1rem !important;
+}
+.ms-1 {
+    margin-left: 0.25rem !important;
+}
+.ms-2 {
+    margin-left: 0.5rem !important;
+}
+.ms-3 {
+    margin-left: 1rem !important;
+}
+.gap-2 {
+    gap: 0.5rem !important;
+}
+.gap-3 {
+    gap: 1rem !important;
+}
+.rounded-3 {
+    border-radius: 0.75rem !important;
+}
+.rounded-4 {
+    border-radius: 1rem !important;
+}
+
+/* ================================================================
+   BUTTONS
+================================================================ */
+.btn {
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-sm) !important;
+    font-weight: var(--w-semibold) !important;
+    letter-spacing: var(--ls-wide);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+.btn-sm {
+    font-size: var(--fs-xs) !important;
+    padding: 5px 12px;
+}
+.btn-lg {
+    font-size: var(--fs-base) !important;
+    padding: 11px 26px;
+}
+
+.btn-light {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    color: var(--text-secondary);
+    border-radius: 10px;
+}
+.btn-light:hover {
+    background: #eff6ff;
+    border-color: rgba(var(--accent-rgb), 0.25);
+    color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.12);
+}
+
+.badge {
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-2xs) !important;
+    font-weight: var(--w-bold) !important;
+    letter-spacing: var(--ls-wider);
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+    vertical-align: middle;
+}
+.badge-pill {
+    border-radius: 50px;
+    padding: 4px 12px !important;
+}
+
+.badge-primary {
+    background: rgba(37, 99, 235, 0.1) !important;
+    color: var(--accent) !important;
+}
+.badge-success {
+    background: rgba(22, 163, 74, 0.1) !important;
+    color: var(--success) !important;
+}
+.badge-warning {
+    background: rgba(217, 119, 6, 0.1) !important;
+    color: var(--warning) !important;
+}
+.badge-danger {
+    background: rgba(220, 38, 38, 0.1) !important;
+    color: var(--danger) !important;
+}
+.badge-info {
+    background: rgba(14, 165, 233, 0.1) !important;
+    color: var(--info) !important;
+}
+.badge-secondary {
+    background: rgba(100, 116, 139, 0.1) !important;
+    color: #64748b !important;
+}
+.badge-dark {
+    background: rgba(15, 23, 42, 0.1) !important;
+    color: var(--text-primary) !important;
+}
+.badge-light {
+    background: #f1f5f9 !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid #e2e8f0;
+}
+
+/* ================================================================
+   CARDS
+================================================================ */
+.card {
+    border-radius: 14px !important;
+    border: 0 !important;
+    box-shadow: var(--shadow-sm);
+}
+.card-header {
+    font-size: var(--fs-sm);
+    font-weight: var(--w-semibold);
+    padding: 14px 18px;
+    background: transparent;
+    border-bottom: 1px solid #f1f5f9;
+}
+.card-body {
+    padding: 18px;
+}
+
+/* ── Stat Pills (top 4 stat cards) ─────────────────────────── */
+.stat-pill {
+    background: #ffffff;
+    border-radius: 16px !important;
+    box-shadow: var(--shadow-sm);
+    border: 0 !important;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+.stat-pill:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Big number in stat card */
+.stat-value {
+    font-family: "Montserrat", sans-serif;
+    font-size: clamp(1.4rem, 2.5vw, var(--fs-xl));
+    font-weight: var(--w-extrabold);
+    color: var(--text-primary);
+    letter-spacing: var(--ls-tight);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Label below number */
+.stat-label {
+    font-size: var(--fs-2xs);
+    font-weight: var(--w-bold);
+    letter-spacing: var(--ls-widest);
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 5px;
+}
+
+/* Icon circle in stat card */
+.stat-round-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: rgba(var(--accent-rgb), 0.08);
+    border: 1px solid rgba(var(--accent-rgb), 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    color: var(--accent);
+    flex-shrink: 0;
+    transition: background 0.2s;
+}
+.stat-pill:hover .stat-round-icon {
+    background: rgba(var(--accent-rgb), 0.15);
+}
+
+/* ── Stat hover (Top Job card) ──────────────────────────────── */
+.stat-hover {
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
 .stat-hover:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
 }
 
+/* ── [5] FIX: text-gradient — was missing, showed plain black ── */
+.text-gradient {
+    font-family: "Montserrat", sans-serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: var(--w-extrabold);
+    letter-spacing: var(--ls-tight);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    background: linear-gradient(135deg, var(--accent), #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* "Top Performing Job" label */
+.text-uppercase.text-muted.fw-semibold.small,
+.text-uppercase.text-muted.letter-spacing {
+    font-size: var(--fs-2xs) !important;
+    font-weight: var(--w-bold) !important;
+    letter-spacing: var(--ls-widest) !important;
+}
+
+/* Job title in top card */
+h5.fw-bold.text-dark,
+.fw-bold.text-dark.mb-2 {
+    font-family: "Montserrat", sans-serif;
+    font-size: var(--fs-md) !important;
+    font-weight: var(--w-bold) !important;
+    letter-spacing: var(--ls-snug);
+    color: var(--text-primary) !important;
+    line-height: var(--lh-snug);
+}
+
+/* ── [4] FIX: job-box — only had inline style before ───────── */
+.job-box {
+    border-left: 4px solid transparent;
+    border-radius: 10px;
+    transition:
+        background 0.15s ease,
+        border-left-color 0.15s ease,
+        transform 0.15s ease;
+    cursor: pointer;
+}
+.job-box:hover {
+    background: #eef5ff !important;
+    border-left-color: var(--accent) !important;
+    transform: translateX(4px);
+}
+.job-box .font-weight-bold {
+    font-size: var(--fs-sm);
+    font-weight: var(--w-semibold);
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+.job-box .text-muted {
+    font-size: var(--fs-xs) !important;
+}
+
+/* ── Chart wrapper ──────────────────────────────────────────── */
 .chart-wrapper {
     position: relative;
-    width: 260px;
-    height: 260px;
+    width: 240px;
+    height: 240px;
     margin: auto;
 }
-
 .chart-center,
 .chart-center-content {
     position: absolute;
@@ -45,34 +431,49 @@ body{
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+    pointer-events: none;
 }
 
 .chart-total {
-    font-size: var(--fs-xl);
-    font-weight: 700;
+    font-family: "Montserrat", sans-serif;
+    font-size: clamp(1.6rem, 3vw, var(--fs-2xl));
+    font-weight: var(--w-extrabold);
     color: var(--text-primary);
+    letter-spacing: var(--ls-tight);
     line-height: 1;
+    font-variant-numeric: tabular-nums;
     transition: all 0.4s ease;
 }
-
 .chart-label {
-    font-size: var(--fs-sm);
-    color: var(--text-secondary);
-    letter-spacing: 0.5px;
+    font-size: var(--fs-xs);
+    font-weight: var(--w-semibold);
+    letter-spacing: var(--ls-widest);
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 4px;
+    white-space: nowrap;
 }
 
-/* ================================
-   STATUS CARD
-================================ */
+/* ── Status cards (inside chart section) ───────────────────── */
 .status-card {
     background: linear-gradient(135deg, #ffffff 0%, #f9fafc 100%);
     border: 1px solid #f1f3f5;
-    transition: all 0.3s ease;
+    border-radius: 10px;
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
 }
-
 .status-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+.status-card .font-weight-bold {
+    font-size: var(--fs-sm);
+    font-weight: var(--w-semibold);
+    color: var(--text-primary);
+}
+.status-card .small.text-muted {
+    font-size: var(--fs-xs) !important;
 }
 
 .icon-circle {
@@ -83,182 +484,748 @@ body{
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 13px;
+    font-size: 12px;
+    flex-shrink: 0;
 }
 
-/* ================================
-   PREMIUM PROGRESS BAR
-================================ */
+/* ── Progress bars ──────────────────────────────────────────── */
 .premium-progress {
-    height: 8px;
+    height: 7px;
     border-radius: 50px;
-    background: #f1f3f5;
+    background: #f1f5f9;
     overflow: hidden;
 }
-
 .premium-bar {
     width: 0%;
     height: 100%;
     border-radius: 50px;
-    background: linear-gradient(90deg, var(--accent), #6ea9f5);
-    position: relative;
-    transition: width 1.5s ease-in-out;
+    background: linear-gradient(90deg, var(--accent), #60a5fa);
+    transition: width 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+/* Active ratio text */
+small.font-weight-bold.text-dark {
+    font-size: var(--fs-xs) !important;
+    font-weight: var(--w-bold) !important;
+}
+small.font-weight-bold.text-primary {
+    font-size: var(--fs-xs) !important;
+    font-weight: var(--w-extrabold) !important;
+    font-variant-numeric: tabular-nums;
 }
 
-/* ================================
-   PREMIUM CARD
-================================ */
+/* ── Premium card ───────────────────────────────────────────── */
 .premium-card {
-    border: none;
-    border-radius: 20px;
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
+    border: 0;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
 }
-
 .premium-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
 }
 
-/* ================================
-   BADGES
-================================ */
 .premium-badge-light {
-    background: #f8f9fa;
-    padding: 6px 12px;
+    background: #f1f5f9;
+    padding: 4px 12px;
     border-radius: 50px;
-    font-size: 12px;
+    font-size: var(--fs-xs);
+    font-weight: var(--w-semibold);
+    color: var(--text-primary);
 }
 
-.letter-spacing {
-    letter-spacing: 1px;
-}
-
-/* ================================
-   ALERT BOX
-================================ */
+/* ── Alert boxes ────────────────────────────────────────────── */
 .premium-alert {
-    padding: 14px 18px;
-    border-radius: 14px;
-    background: #f8f9fa;
-    transition: 0.3s ease;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: #f8fafc;
+    transition: transform 0.2s ease;
 }
-
 .premium-alert:hover {
-    transform: translateX(4px);
+    transform: translateX(5px);
 }
-
 .premium-alert.warning {
-    border-left: 4px solid #ffc107;
+    border-left: 4px solid var(--warning);
 }
-
 .premium-alert.danger {
-    border-left: 4px solid #dc3545;
+    border-left: 4px solid var(--danger);
 }
 
-/* ================================
-   ALERT ICONS
-================================ */
 .alert-icon {
-    width: 45px;
-    height: 45px;
-    min-width: 45px; /* prevent flex shrink */
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 11px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
-    font-size: 18px;
+    font-size: 17px;
+    flex-shrink: 0;
 }
-
 .warning-icon {
-    background: #fff3cd;
-    color: #ffc107;
+    background: rgba(217, 119, 6, 0.1);
+    color: var(--warning);
 }
-
 .danger-icon {
-    background: #f8d7da;
-    color: #dc3545;
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--danger);
 }
 
-/* ================================
-   BUTTONS
-================================ */
+.premium-alert .font-weight-bold {
+    font-size: var(--fs-sm);
+    font-weight: var(--w-semibold);
+    color: var(--text-primary);
+}
+.premium-alert .small.text-muted {
+    font-size: var(--fs-xs) !important;
+}
+
 .premium-btn-warning {
-    border: 1px solid #ffc107;
-    color: #ffc107;
+    border: 1.5px solid var(--warning);
+    color: var(--warning);
     border-radius: 50px;
+    font-size: var(--fs-xs) !important;
+    font-weight: var(--w-semibold);
+    padding: 4px 14px;
+    transition: all 0.2s;
+    background: transparent;
 }
-
 .premium-btn-warning:hover {
-    background: #ffc107;
+    background: var(--warning);
     color: #fff;
 }
 
 .premium-btn-danger {
-    border: 1px solid #dc3545;
-    color: #dc3545;
+    border: 1.5px solid var(--danger);
+    color: var(--danger);
     border-radius: 50px;
+    font-size: var(--fs-xs) !important;
+    font-weight: var(--w-semibold);
+    padding: 4px 14px;
+    transition: all 0.2s;
+    background: transparent;
 }
-
 .premium-btn-danger:hover {
-    background: #dc3545;
+    background: var(--danger);
     color: #fff;
 }
-
-/* ================================
-   SUCCESS STATE
-================================ */
 .success-icon {
-    font-size: 40px;
+    font-size: 38px;
     color: var(--success);
 }
 
-/* ================================
-   SMALL UTILITIES
-================================ */
-.total-count {
-    font-size: var(--fs-lg);
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.progress-bar {
-    transition: width 0.8s ease;
-}
-
-.badge-warning {
-    box-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
-}
-
+/* ── Status badges ──────────────────────────────────────────── */
 .status-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    font-size: var(--fs-sm);
-    font-weight: 500;
+    gap: 5px;
+    padding: 5px 12px;
+    font-size: var(--fs-2xs) !important;
+    font-weight: var(--w-bold) !important;
+    letter-spacing: var(--ls-wider);
+    text-transform: uppercase;
     border-radius: 50px;
-    letter-spacing: 0.3px;
-    transition: 0.3s ease;
+    transition: transform 0.2s ease;
+    white-space: nowrap;
 }
-
 .status-badge i {
-    font-size: 14px;
+    font-size: 12px;
+}
+.status-badge:hover {
+    transform: translateY(-1px);
 }
 
 .status-badge.hired {
-    background: rgba(22, 163, 74, 0.12);
+    background: rgba(22, 163, 74, 0.1);
     color: var(--success);
-    border: 1px solid rgba(22, 163, 74, 0.25);
+    border: 1px solid rgba(22, 163, 74, 0.2);
 }
-
 .status-badge.shortlisted {
-    background: rgba(217, 119, 6, 0.12);
+    background: rgba(14, 165, 233, 0.1);
+    color: var(--info);
+    border: 1px solid rgba(14, 165, 233, 0.2);
+}
+.status-badge.pending {
+    background: rgba(217, 119, 6, 0.1);
     color: var(--warning);
-    border: 1px solid rgba(217, 119, 6, 0.25);
+    border: 1px solid rgba(217, 119, 6, 0.2);
+}
+.status-badge.rejected {
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
-/* Hover effect */
-.status-badge:hover {
-    transform: translateY(-1px);
+/* ================================================================
+   TABLES
+================================================================ */
+.table {
+    font-size: var(--fs-sm);
+    color: var(--text-primary);
+}
+.table th {
+    font-family: "Montserrat", sans-serif;
+    font-size: var(--fs-2xs) !important;
+    font-weight: var(--w-bold) !important;
+    letter-spacing: var(--ls-widest) !important;
+    text-transform: uppercase !important;
+    color: var(--text-muted) !important;
+    padding: 12px 16px;
+    border-bottom: 2px solid #f1f3f5;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.table td {
+    font-size: var(--fs-sm);
+    padding: 13px 16px;
+    color: var(--text-secondary);
+    border-top: 1px solid #f8fafc;
+    vertical-align: middle;
+}
+.table-hover tbody tr:hover td {
+    background: #f8faff;
+}
+.thead-light th {
+    background: #f8f9fc !important;
+    border-bottom: 0 !important;
+}
+.table td.num,
+.table th.num {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+/* ================================================================
+   FORMS
+================================================================ */
+label {
+    font-size: var(--fs-sm);
+    font-weight: var(--w-semibold);
+    color: var(--text-primary);
+    letter-spacing: var(--ls-wide);
+    margin-bottom: 5px;
+}
+.form-control {
+    font-family: "Inter", sans-serif;
+    font-size: var(--fs-sm) !important;
+    color: var(--text-primary);
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 9px 13px;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+.form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
+    outline: none;
+}
+.form-control::placeholder {
+    color: #b0b8c4;
+    font-weight: var(--w-regular);
+}
+
+/* ================================================================
+   BREADCRUMB + PAGINATION
+================================================================ */
+.breadcrumb {
+    font-size: var(--fs-xs) !important;
+    font-weight: var(--w-medium);
+    background: #ffffff;
+    border-radius: 8px !important;
+    box-shadow: var(--shadow-sm);
+    padding: 8px 16px;
+}
+.breadcrumb-item a {
+    color: var(--accent);
+    font-weight: var(--w-semibold);
+}
+.breadcrumb-item.active {
+    font-weight: var(--w-bold);
+    color: var(--text-primary);
+}
+
+.page-link {
+    font-size: var(--fs-xs) !important;
+    font-weight: var(--w-semibold);
+    color: var(--accent);
+    border-radius: 8px !important;
+    margin: 0 2px;
+    border: 1px solid #e9ecef;
+    padding: 6px 12px;
+}
+.page-item.active .page-link {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+/* ================================================================
+   [7] FIX: AdminLTE Sidebar/Navbar — was completely missing
+================================================================ */
+.main-sidebar {
+    background: #ffffff !important;
+    border-right: 1px solid #edf0f5;
+    box-shadow: 2px 0 12px rgba(15, 23, 42, 0.04);
+    
+}
+
+
+.brand-link {
+    padding: 12px 14px !important;
+    border-bottom: 1px solid #f1f5f9;
+}
+.brand-link .brand-text {
+    font-family: "Montserrat", sans-serif !important;
+    font-size: var(--fs-sm) !important;
+    font-weight: var(--w-extrabold) !important;
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    color: var(--text-primary) !important;
+}
+
+.nav-sidebar .nav-link {
+    padding: 9px 14px !important;
+    border-radius: 8px;
+    font-size: var(--fs-sm) !important;
+    font-weight: var(--w-medium);
+    color: #4a5568 !important;
+    transition: all 0.2s ease;
+    margin-bottom: 2px;
+}
+.nav-sidebar .nav-link p {
+    font-size: var(--fs-sm) !important;
+    margin: 0;
+    color: inherit;
+    line-height: 1;
+}
+.nav-sidebar .nav-icon {
+    width: 18px;
+    font-size: 14px;
+    color: var(--text-muted);
+    text-align: center;
+    transition: color 0.2s;
+}
+.nav-sidebar .nav-link.active {
+    background: rgba(var(--accent-rgb), 0.08) !important;
+    color: var(--accent) !important;
+    font-weight: var(--w-semibold) !important;
+}
+.nav-sidebar .nav-link.active .nav-icon {
+    color: var(--accent) !important;
+}
+.nav-sidebar .nav-link:hover {
+    background: #f0f6ff !important;
+    color: var(--accent) !important;
+}
+.nav-sidebar .nav-link:hover .nav-icon {
+    color: var(--accent);
+}
+
+.main-header.navbar {
+    box-shadow: 0 1px 10px rgba(15, 23, 42, 0.06);
+}
+.main-header .nav-link {
+    font-size: var(--fs-sm) !important;
+    font-weight: var(--w-medium);
+    color: var(--text-secondary) !important;
+}
+
+.content-header h1,
+.content-header h3 {
+    font-family: "Montserrat", sans-serif;
+    font-size: var(--fs-base) !important;
+    font-weight: var(--w-bold) !important;
+    color: var(--text-primary);
+}
+
+.dropdown-item {
+    font-size: var(--fs-sm);
+    font-weight: var(--w-medium);
+    color: var(--text-secondary);
+    padding: 8px 14px;
+    border-radius: 8px;
+    transition: all 0.15s;
+}
+.dropdown-item:hover {
+    background: #f0f6ff;
+    color: var(--accent);
+}
+
+footer.main-footer {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    background: #fff;
+    border-top: 1px solid #edf0f5;
+}
+footer.main-footer a {
+    color: var(--accent);
+    font-weight: var(--w-semibold);
+}
+
+/* ================================================================
+   UTILITIES
+================================================================ */
+.letter-spacing {
+    letter-spacing: var(--ls-widest);
+}
+.tabular-nums {
+    font-variant-numeric: tabular-nums;
+}
+.label-caps {
+    font-size: var(--fs-2xs);
+    font-weight: var(--w-bold);
+    letter-spacing: var(--ls-widest);
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+.total-count {
+    font-family: "Montserrat", sans-serif;
+    font-size: clamp(1.3rem, 2.5vw, var(--fs-lg));
+    font-weight: var(--w-extrabold);
+    color: var(--text-primary);
+    letter-spacing: var(--ls-tight);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f3f5;
+}
+::-webkit-scrollbar-thumb {
+    background: #c8d0da;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #adb5bd;
+}
+
+/* ── html / body overflow fix ───────────────────────────────── */
+html,
+body {
+    overflow-x: hidden;
+    height: 100%;
+}
+
+.wrapper {
+    min-height: 100vh;
+}
+
+/* ── Sidebar: Jobi-specific layout ─────────────────────────── */
+
+/* Sidebar wrapper flex column */
+.jobi-sidebar .sidebar {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ── Brand ──────────────────────────────────────────────────── */
+.jobi-brand {
+    padding: 20px 0 12px;
+}
+
+.jobi-brand img {
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+}
+
+/* Subtitle below logo */
+.brand-subtext {
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #9aa4b2;
+    margin-top: 4px;
+    text-align: center;
+}
+
+/* Hide in collapsed mode */
+.sidebar-collapse .brand-subtext {
+    display: none !important;
+}
+.sidebar-collapse .jobi-brand img {
+    width: 36px !important;
+    height: 36px !important;
+}
+
+/* ── Profile block ──────────────────────────────────────────── */
+.jobi-profile {
+    width: 100%;
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.profile-img {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e8f1ff;
+}
+
+.jobi-profile h6 {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 6px;
+    margin-bottom: 2px;
+    letter-spacing: 0;
+}
+
+.jobi-profile small {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+/* Collapse: hide text, shrink image */
+.sidebar-collapse .jobi-profile h6,
+.sidebar-collapse .jobi-profile small {
+    display: none !important;
+}
+.sidebar-collapse .profile-img {
+    width: 36px !important;
+    height: 36px !important;
+}
+
+/* Prevent sidebar expand on hover in mini mode */
+.sidebar-mini.sidebar-collapse .main-sidebar:hover {
+    width: 75px !important;
+}
+.sidebar-mini.sidebar-collapse .main-sidebar:hover .nav-link p {
+    display: none !important;
+}
+
+/* ── Jobi Menu ──────────────────────────────────────────────── */
+.jobi-menu {
+    width: 100%;
+    padding: 8px 10px;
+}
+
+.jobi-menu .nav-link {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: var(--fs-sm);
+    font-weight: var(--w-medium);
+    color: #4a5568;
+    transition: all 0.2s ease;
+    margin-bottom: 2px;
+    text-decoration: none;
+}
+
+/* Icon */
+.jobi-menu .nav-link i {
+    width: 22px;
+    font-size: 16px;
+    margin-right: 10px;
+    color: var(--text-muted);
+    text-align: center;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+/* Text */
+.jobi-menu .nav-link p {
+    margin: 0;
+    white-space: nowrap;
+    font-size: var(--fs-sm);
+    line-height: 1;
+}
+
+/* Active state */
+.jobi-menu .nav-link.active {
+    background: var(--accent) !important;
+    color: #fff !important;
+    font-weight: var(--w-semibold) !important;
+    border-radius: 10px;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+
+.jobi-menu .nav-link.active i {
+    color: #fff !important;
+}
+
+/* Hover state */
+.jobi-menu .nav-link:hover {
+    background: rgba(var(--accent-rgb), 0.08) !important;
+    color: var(--accent) !important;
+}
+
+.jobi-menu .nav-link:hover i {
+    color: var(--accent);
+}
+
+/* Collapsed: hide text, left-align icon */
+.sidebar-collapse .jobi-menu .nav-link p {
+    display: none !important;
+}
+.sidebar-collapse .jobi-menu .nav-link {
+    justify-content: flex-start !important;
+    padding-left: 16px !important;
+}
+.sidebar-collapse .jobi-menu .nav-link i {
+    margin-right: 0 !important;
+}
+
+/* ── Page pill (header right badge) ────────────────────────── */
+.page-pill {
+    font-family: "Montserrat", sans-serif;
+    font-size: var(--fs-xs);
+    font-weight: var(--w-bold);
+    letter-spacing: 0.06em;
+    padding: 6px 20px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ── Navbar search ──────────────────────────────────────────── */
+.navbar .form-control-navbar {
+    border-radius: 999px;
+    background: #f1f5f9;
+    border: none;
+    font-size: var(--fs-sm);
+    min-width: 220px;
+}
+
+.navbar .btn-navbar {
+    border-radius: 999px;
+}
+
+/* ── Recent jobs card ───────────────────────────────────────── */
+.recent-jobs-card {
+    border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* ── Job listing items ──────────────────────────────────────── */
+.job-title {
+    font-weight: var(--w-semibold);
+    font-size: var(--fs-sm);
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.job-sub {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.job-item {
+    width: 100%;
+}
+
+.job-info {
+    max-width: 63%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.job-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+/* ── Muted utility ──────────────────────────────────────────── */
+.muted {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+}
+
+/* ── Hover background (table rows etc) ─────────────────────── */
+.hover-bg:hover {
+    background: #f8fafc;
+    cursor: pointer;
+}
+
+/* ── Status: Active / Inactive ──────────────────────────────── */
+/* (Different from hired/shortlisted — used for job/admin status) */
+.status-active {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    font-size: var(--fs-2xs);
+    font-weight: var(--w-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 50px;
+    background: rgba(22, 163, 74, 0.1);
+    color: var(--success);
+    border: 1px solid rgba(22, 163, 74, 0.2);
+}
+
+.status-inactive {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    font-size: var(--fs-2xs);
+    font-weight: var(--w-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 50px;
+    background: rgba(100, 116, 139, 0.1);
+    color: #64748b;
+    border: 1px solid rgba(100, 116, 139, 0.2);
+}
+
+/* ── Button group toggle (graph filter) ─────────────────────── */
+.btn-group-toggle .btn {
+    border-radius: 20px !important;
+    padding: 5px 16px;
+    font-size: var(--fs-xs) !important;
+    font-weight: var(--w-medium) !important;
+    color: var(--text-secondary);
+    border-color: #d6d8db;
+    transition: all 0.2s ease;
+}
+
+.btn-group-toggle .btn.active {
+    background: var(--accent) !important;
+    color: #fff !important;
+    border-color: var(--accent) !important;
+    font-weight: var(--w-semibold) !important;
+}
+
+.btn-group-toggle .btn:hover {
+    background: #eef7ff;
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ── Media query: sidebar responsive ───────────────────────── */
+@media (max-width: 767.98px) {
+    .main-sidebar {
+        width: 160px !important;
+    }
+    .sidebar-collapse .main-sidebar {
+        width: 70px !important;
+    }
 }

@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('job_roles', function (Blueprint $table) {
-            // admin_id add karo (foreign key ke saath)
             $table->foreignId('admin_id')->nullable()->constrained('admins')->onDelete('cascade');
         });
     }

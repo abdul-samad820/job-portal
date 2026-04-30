@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::table('admins', function (Blueprint $table) {
             Schema::table('admins', function (Blueprint $table) {
-        $table->text('expertise')->nullable();
-    });
+                $table->text('expertise')->nullable();
+            });
         });
     }
 
@@ -23,9 +23,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-     Schema::table('admins', function (Blueprint $table) {
-        $table->dropColumn('expertise');
-    });
+        Schema::table('admins', function (Blueprint $table) {
+            $table->dropColumn('expertise');
+        });
 
     }
 };

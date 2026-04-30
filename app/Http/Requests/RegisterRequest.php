@@ -19,29 +19,29 @@ class RegisterRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-   public function rules()
-{
-    return [
-         'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|min:8|confirmed',
-        'phone' => 'required|digits:10',
-        'address' => 'nullable|string|max:255',
-    ];
-}
+    public function rules()
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|confirmed',
+            'phone' => 'required|digits:10',
+            'address' => 'nullable|string|max:255',
+        ];
+    }
 
-public function messages()
-{
-    return [
-       'name.required' => 'Please enter your full name.',
-        'email.required' => 'Email is required.',
-        'email.email' => 'Please enter a valid email address.',
-        'email.unique' => 'This email is already registered. Please login instead.',
-        'password.required' => 'Please enter a password.',
-        'password.min' => 'Password must be at least 8 characters.',
-        'password.confirmed' => 'Passwords do not match.',
-        'phone.required' => 'Phone number is required.',
-        'phone.digits' => 'Phone number must be 10 digits.',
-    ];
-}
+    public function messages()
+    {
+        return [
+            'name.required' => 'Please enter your full name.',
+            'email.required' => 'Email is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.unique' => 'This email is already registered. Please login instead.',
+            'password.required' => 'Please enter a password.',
+            'password.min' => 'Password must be at least 8 characters.',
+            'password.confirmed' => 'Passwords do not match.',
+            'phone.required' => 'Phone number is required.',
+            'phone.digits' => 'Phone number must be 10 digits.',
+        ];
+    }
 }

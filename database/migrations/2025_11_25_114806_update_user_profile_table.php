@@ -11,9 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('user_addprofile', function (Blueprint $table) {
-            
-        });
+        Schema::table('user_addprofile', function (Blueprint $table) {});
     }
 
     /**

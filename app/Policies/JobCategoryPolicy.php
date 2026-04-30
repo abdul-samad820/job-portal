@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\Admin;
 use App\Models\JobCategory;
- 
+
 class JobCategoryPolicy
 {
     public function view(Admin $admin, JobCategory $category): bool

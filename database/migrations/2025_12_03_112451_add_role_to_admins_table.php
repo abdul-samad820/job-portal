@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-          Schema::table('admins', function (Blueprint $table) {
-        $table->string('role')->default('admin');
-    });
+        Schema::table('admins', function (Blueprint $table) {
+            $table->string('role')->default('admin');
+        });
     }
 
     /**

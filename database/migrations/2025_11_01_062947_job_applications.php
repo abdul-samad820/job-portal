@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('job_applications', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-    $table->foreignId('job_id')->constrained('jobs')->onDelete('cascade');
-    $table->text('cover_letter')->nullable();
-    $table->string('resume')->nullable(); // uploaded resume
-    $table->enum('status', ['pending', 'shortlisted', 'rejected', 'hired'])->default('pending');
-    $table->timestamps();
-});
-  
+        Schema::create('job_applications', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('job_id')->constrained('jobs')->onDelete('cascade');
+            $table->text('cover_letter')->nullable();
+            $table->string('resume')->nullable(); // uploaded resume
+            $table->enum('status', ['pending', 'shortlisted', 'rejected', 'hired'])->default('pending');
+            $table->timestamps();
+        });
+
     }
 
     /**
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-      Schema::dropIfExists('job_applications');
+        Schema::dropIfExists('job_applications');
     }
 };

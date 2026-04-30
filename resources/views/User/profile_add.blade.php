@@ -1,4 +1,4 @@
-@extends('layouts.user_index')
+@extends('layouts.User_layout')
 @section('title', 'Add Profile')
 
 @section('content')
@@ -41,7 +41,8 @@
                         @endphp
 
                         {{-- Current Image Preview --}}
-                        <img src="{{ $userImg }}" class="rounded-circle shadow-sm mr-3" width="80" height="80" style="object-fit:cover;">
+                        <img src="{{ $userImg }}" class="rounded-circle shadow-sm mr-3" width="80" height="80"
+                            style="object-fit:cover;">
 
                         {{-- Upload Field --}}
                         <div class="flex-grow-1">
@@ -61,7 +62,9 @@
                         <strong>Professional Summary</strong>
                     </div>
                     <div class="card-body">
-                        <textarea name="professional_summary" rows="6" class="form-control @error('professional_summary') is-invalid @enderror" placeholder="Briefly describe your professional background, strengths and goals..."> {{ old('professional_summary', $profile->professional_summary) }}</textarea>
+                        <textarea name="professional_summary" rows="6"
+                            class="form-control @error('professional_summary') is-invalid @enderror"
+                            placeholder="Briefly describe your professional background, strengths and goals..."> {{ old('professional_summary', $profile->professional_summary) }}</textarea>
 
 
                         @error('professional_summary')
@@ -78,7 +81,9 @@
                         <strong>Core Skills (comma separated)</strong>
                     </div>
                     <div class="card-body">
-                        <input type="text" name="core_skills" value="{{ old('core_skills', $profile->core_skills) }}" class="form-control @error('core_skills') is-invalid @enderror" placeholder="e.g. PHP, Laravel, SQL, REST APIs">
+                        <input type="text" name="core_skills" value="{{ old('core_skills', $profile->core_skills) }}"
+                            class="form-control @error('core_skills') is-invalid @enderror"
+                            placeholder="e.g. PHP, Laravel, SQL, REST APIs">
                         @error('core_skills')
                         <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
@@ -87,31 +92,43 @@
                         </small>
                     </div>
                 </div>
+
+                @php
+                $experienceData = $profile->experience ?? [];
+                @endphp
+
                 <div class="card mb-3">
                     <div class="card-header">
                         <strong>Experience</strong>
                     </div>
 
-                    <div class="card-body">
+                    @forelse ($experienceData as $index => $exp)
+                    <div class="border p-3 mb-3 bg-light rounded">
+                        <input type="text" name="experience[{{ $index }}][company]" value="{{ $exp['company'] ?? '' }}"
+                            class="form-control mb-2" placeholder="Company">
 
-                        <label class="form-label small mb-2">
-                            Write your experience line by line:
-                        </label>
+                        <input type="text" name="experience[{{ $index }}][role]" value="{{ $exp['role'] ?? '' }}"
+                            class="form-control mb-2" placeholder="Role">
 
-                        <textarea name="experience" rows="5" class="form-control @error('experience') is-invalid @enderror" placeholder="Example:2 Years Experience Worked at XYZ Company as a Laravel DeveloperHandled Backend APIs Managed Admin Dashboard">{{ old('experience', $profile->experience) }}</textarea>
+                        <input type="text" name="experience[{{ $index }}][duration]"
+                            value="{{ $exp['duration'] ?? '' }}" class="form-control mb-2" placeholder="Duration">
 
-                        @error('experience')
-                        <div class="invalid-feedback d-block">{{ $message }}</div>
-                        @enderror
-
-                        <small class="text-muted mt-2 d-block">
-                            Line 1 → Total experience
-                            Line 2+ → Your work details (companies, roles, duties)
-                        </small>
-
+                        <textarea name="experience[{{ $index }}][description]" class="form-control"
+                            placeholder="Description">{{ $exp['description'] ?? '' }}</textarea>
                     </div>
-                </div>
+                    @empty
+                    <div class="border p-3 mb-3 bg-light rounded">
+                        <input type="text" name="experience[0][company]" class="form-control mb-2"
+                            placeholder="Company">
+                        <input type="text" name="experience[0][role]" class="form-control mb-2" placeholder="Role">
+                        <input type="text" name="experience[0][duration]" class="form-control mb-2"
+                            placeholder="Duration">
+                        <textarea name="experience[0][description]" class="form-control"
+                            placeholder="Description"></textarea>
+                    </div>
+                    @endforelse
 
+                </div>
 
                 <div class="card mb-3 rounded shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center">
@@ -124,7 +141,7 @@
                     <div class="card-body" id="education-list">
 
                         @php
-                        $educationData = $profile->education ? json_decode($profile->education, true) : [];
+                        $educationData = $profile->education ?? [];
                         @endphp
 
                         @forelse ($educationData as $index => $edu)
@@ -133,17 +150,20 @@
 
                                 <div class="col-md-5 mb-2">
                                     <label class="small font-weight-bold">Degree / Course</label>
-                                    <input type="text" class="form-control" name="education[{{ $index }}][degree]" value="{{ $edu['degree'] ?? '' }}" placeholder="e.g. B.Sc / B.Tech / MBA">
+                                    <input type="text" class="form-control" name="education[{{ $index }}][degree]"
+                                        value="{{ $edu['degree'] ?? '' }}" placeholder="e.g. B.Sc / B.Tech / MBA">
                                 </div>
 
                                 <div class="col-md-4 mb-2">
                                     <label class="small font-weight-bold">Institute</label>
-                                    <input type="text" class="form-control" name="education[{{ $index }}][institute]" value="{{ $edu['institute'] ?? '' }}" placeholder="Institute name">
+                                    <input type="text" class="form-control" name="education[{{ $index }}][institute]"
+                                        value="{{ $edu['institute'] ?? '' }}" placeholder="Institute name">
                                 </div>
 
                                 <div class="col-md-3 mb-2">
                                     <label class="small font-weight-bold">Year</label>
-                                    <input type="text" class="form-control" name="education[{{ $index }}][year]" value="{{ $edu['year'] ?? '' }}" placeholder="e.g., 2020">
+                                    <input type="text" class="form-control" name="education[{{ $index }}][year]"
+                                        value="{{ $edu['year'] ?? '' }}" placeholder="e.g., 2020">
                                 </div>
 
                             </div>
@@ -161,17 +181,20 @@
 
                                 <div class="col-md-5 mb-2">
                                     <label class="small font-weight-bold">Degree / Course</label>
-                                    <input type="text" name="education[0][degree]" class="form-control" placeholder="e.g. B.Sc / B.Tech / MBA">
+                                    <input type="text" name="education[0][degree]" class="form-control"
+                                        placeholder="e.g. B.Sc / B.Tech / MBA">
                                 </div>
 
                                 <div class="col-md-4 mb-2">
                                     <label class="small font-weight-bold">Institute</label>
-                                    <input type="text" name="education[0][institute]" class="form-control" placeholder="Institute name">
+                                    <input type="text" name="education[0][institute]" class="form-control"
+                                        placeholder="Institute name">
                                 </div>
 
                                 <div class="col-md-3 mb-2">
                                     <label class="small font-weight-bold">Year</label>
-                                    <input type="text" name="education[0][year]" class="form-control" placeholder="e.g., 2020">
+                                    <input type="text" name="education[0][year]" class="form-control"
+                                        placeholder="e.g., 2020">
                                 </div>
 
                             </div>
@@ -198,6 +221,7 @@
         </div>
     </div>
 </div>
+@endsection
 
 @push('scripts')
 <script>
@@ -279,6 +303,3 @@
 
 </script>
 @endpush
-
-
-@endsection

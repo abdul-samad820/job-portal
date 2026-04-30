@@ -8,7 +8,8 @@ class SavedJob extends Model
 {
     protected $fillable = ['user_id', 'job_id'];
 
-    public function job(){
+    public function job()
+    {
         return $this->belongsTo(Job::class);
     }
 }

@@ -1,186 +1,184 @@
-@extends('layouts.index')
+@extends('layouts.Admin_layout')
 @section('title', 'Job Roles')
-
 @section('content')
-    <div class="container-fluid py-4">
-        <div class="row">
-            <div class="col-12">
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
 
-                <!-- Header Section -->
-                <div class="p-4 rounded shadow-sm mb-4 bg-light border-left border-primary"
-                    style="border-width:4px !important;">
+            <!-- Header Section -->
+            <div class="p-4 rounded shadow-sm mb-4 bg-light border-left border-primary"
+                style="border-width:4px !important;">
 
-                    <!-- Row 1 : Title + Breadcrumb -->
-                    <div class="d-md-flex justify-content-between align-items-center">
+                <!-- Row 1 : Title + Breadcrumb -->
+                <div class="d-md-flex justify-content-between align-items-center">
 
-                        <div class="mb-3 mb-md-0">
-                            <h4 class="font-weight-bold text-dark mb-1">
-                                <i class="fa fa-briefcase text-primary mr-2"></i>
-                                Job Roles
-                            </h4>
-                            <small class="text-muted">
-                                Manage all job roles used across the job postings.
-                            </small>
-                        </div>
+                    <div class="mb-3 mb-md-0">
+                        <h4 class="font-weight-bold text-dark mb-1">
+                            <i class="fa fa-briefcase text-primary mr-2"></i>
+                            Job Roles
+                        </h4>
+                        <small class="text-muted">
+                            Manage all job roles used across the job postings.
+                        </small>
+                    </div>
 
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                                </li>
-                                <li class="breadcrumb-item active font-weight-bold">
-                                    Roles
-                                </li>
-                            </ol>
-                        </nav>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
+                            <li class="breadcrumb-item">
+                                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+                            </li>
+                            <li class="breadcrumb-item active font-weight-bold">
+                                Roles
+                            </li>
+                        </ol>
+                    </nav>
+
+                </div>
+
+                <!-- Row 2 : Search + Add -->
+                <div class="mt-3">
+
+                    <!-- Desktop Layout -->
+                    <div class="d-none d-md-flex justify-content-between align-items-center">
+
+                        <form method="GET" action="{{ route('admin.job_role') }}" class="form-inline">
+
+                            <input type="search" name="search" class="form-control mr-2" placeholder="Search role..."
+                                value="{{ request('search') }}" style="max-width:280px;">
+
+                            <button class="btn btn-outline-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+
+                        </form>
+
+                        <a href="{{ route('admin.job_role_add') }}" class="btn btn-primary rounded-pill px-4">
+                            <i class="fa fa-plus mr-2"></i>
+                            Add Role
+                        </a>
 
                     </div>
 
-                    <!-- Row 2 : Search + Add -->
-                    <div class="mt-3">
+                    <!-- Mobile Layout -->
+                    <div class="d-block d-md-none">
 
-                        <!-- Desktop Layout -->
-                        <div class="d-none d-md-flex justify-content-between align-items-center">
+                        <form method="GET" action="{{ route('admin.job_role') }}">
 
-                            <form method="GET" action="{{ route('admin.job_role') }}" class="form-inline">
+                            <div class="input-group mb-3">
+                                <input type="search" name="search" class="form-control" placeholder="Search role..."
+                                    value="{{ request('search') }}">
 
-                                <input type="search" name="search" class="form-control mr-2" placeholder="Search role..."
-                                    value="{{ request('search') }}" style="max-width:280px;">
-
-                                <button class="btn btn-outline-primary">
-                                    <i class="fa fa-search"></i>
-                                </button>
-
-                            </form>
-
-                            <a href="{{ route('admin.job_role_add') }}" class="btn btn-primary rounded-pill px-4">
-                                <i class="fa fa-plus mr-2"></i>
-                                Add Role
-                            </a>
-
-                        </div>
-
-                        <!-- Mobile Layout -->
-                        <div class="d-block d-md-none">
-
-                            <form method="GET" action="{{ route('admin.job_role') }}">
-
-                                <div class="input-group mb-3">
-                                    <input type="search" name="search" class="form-control" placeholder="Search role..."
-                                        value="{{ request('search') }}">
-
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-primary">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </div>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-primary">
+                                        <i class="fa fa-search"></i>
+                                    </button>
                                 </div>
+                            </div>
 
-                            </form>
+                        </form>
 
-                            <a href="{{ route('admin.job_role_add') }}" class="btn btn-primary rounded-pill btn-block">
-                                <i class="fa fa-plus mr-2"></i>
-                                Add Role
-                            </a>
-
-                        </div>
-                    </div>
-                </div>
-                <!-- Main Table Card -->
-                <div class="card shadow-sm border-0 rounded">
-                    <div class="card-body">
-
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th style="width:70px;">#</th>
-                                        <th>Role Name</th>
-                                        <th>Description</th>
-                                        <th class="text-center" style="width:180px;">Actions</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @forelse ($roles as $index => $role)
-                                        <tr>
-
-                                            <!-- Pagination Friendly Index -->
-                                            <td>
-                                                {{ $roles->firstItem() + $index }}
-                                            </td>
-
-                                            <!-- Role Name -->
-                                            <td class="font-weight-bold text-dark">
-                                                {{ $role->name }}
-                                            </td>
-
-                                            <!-- Limited Description -->
-                                            <td class="text-muted">
-                                                {{ \Illuminate\Support\Str::limit($role->description, 60) }}
-                                            </td>
-
-                                            <!-- Actions -->
-                                            <td class="text-center">
-                                                <div class="d-flex justify-content-center flex-wrap">
-
-                                                    <a href="{{ route('admin.job_role_edit', $role->id) }}"
-                                                        class="btn btn-sm btn-outline-primary mr-1 mb-1">
-                                                        <i class="fa fa-edit"></i>
-                                                    </a>
-
-                                                    <form action="{{ route('admin.job_role_delete', $role->id) }}"
-                                                        method="POST" class="mb-1">
-                                                        @csrf
-                                                        @method('DELETE')
-
-                                                        <button type="submit"
-                                                            class="btn btn-sm btn-outline-danger delete-btn">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </form>
-
-                                                </div>
-                                            </td>
-
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="4" class="text-center text-muted py-4">
-                                                No job roles found.
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-
-                            </table>
-                        </div>
-
-                        <!-- Pagination -->
-                        <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
-
-                            <span class="text-muted small">
-                                Showing {{ $roles->firstItem() ?? 0 }} –
-                                {{ $roles->lastItem() ?? 0 }}
-                                of {{ $roles->total() }} entries
-                            </span>
-
-                            {{ $roles->links('pagination::bootstrap-4') }}
-
-                        </div>
+                        <a href="{{ route('admin.job_role_add') }}" class="btn btn-primary rounded-pill btn-block">
+                            <i class="fa fa-plus mr-2"></i>
+                            Add Role
+                        </a>
 
                     </div>
                 </div>
-
             </div>
+            <!-- Main Table Card -->
+            <div class="card shadow-sm border-0 rounded">
+                <div class="card-body">
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+
+                            <thead class="thead-light">
+                                <tr>
+                                    <th style="width:70px;">#</th>
+                                    <th>Role Name</th>
+                                    <th>Description</th>
+                                    <th class="text-center" style="width:180px;">Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @forelse ($roles as $index => $role)
+                                <tr>
+
+                                    <!-- Pagination Friendly Index -->
+                                    <td>
+                                        {{ $roles->firstItem() + $index }}
+                                    </td>
+
+                                    <!-- Role Name -->
+                                    <td class="font-weight-bold text-dark">
+                                        {{ $role->name }}
+                                    </td>
+
+                                    <!-- Limited Description -->
+                                    <td class="text-muted">
+                                        {{ \Illuminate\Support\Str::limit($role->description, 60) }}
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center flex-wrap">
+
+                                            <a href="{{ route('admin.job_role_edit', $role->id) }}"
+                                                class="btn btn-sm btn-outline-primary mr-1 mb-1">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+
+                                            <form action="{{ route('admin.job_role_delete', $role->id) }}" method="POST"
+                                                class="mb-1">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit" class="btn btn-sm btn-outline-danger delete-btn">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                        No job roles found.
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">
+
+                        <span class="text-muted small">
+                            Showing {{ $roles->firstItem() ?? 0 }} –
+                            {{ $roles->lastItem() ?? 0 }}
+                            of {{ $roles->total() }} entries
+                        </span>
+
+                        {{ $roles->links('pagination::bootstrap-4') }}
+
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     </div>
+</div>
 @endsection
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -199,5 +197,5 @@
                 });
             });
         });
-    </script>
+</script>
 @endpush

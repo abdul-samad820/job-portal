@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::table('job_applications', function (Blueprint $table) {
+        Schema::table('job_applications', function (Blueprint $table) {
 
-    $table->string('expected_salary')->nullable();
-    $table->string('notice_period')->nullable();
-    $table->text('admin_note')->nullable();
-    $table->timestamp('status_updated_at')->nullable();
-    $table->foreignId('updated_by_admin_id')->nullable()
-          ->constrained('admins')->nullOnDelete();
-});
+            $table->string('expected_salary')->nullable();
+            $table->string('notice_period')->nullable();
+            $table->text('admin_note')->nullable();
+            $table->timestamp('status_updated_at')->nullable();
+            $table->foreignId('updated_by_admin_id')->nullable()
+                ->constrained('admins')->nullOnDelete();
+        });
     }
 
     /**

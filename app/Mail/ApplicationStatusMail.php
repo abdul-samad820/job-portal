@@ -2,16 +2,18 @@
 
 namespace App\Mail;
 
+use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Bus\Queueable;
 
 class ApplicationStatusMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $user;
+
     public $job;
+
     public $status;
 
     public function __construct($user, $job, $status)
@@ -24,6 +26,6 @@ class ApplicationStatusMail extends Mailable
     public function build()
     {
         return $this->subject('Application Status Update')
-                    ->view('emails.application_status');
+            ->view('emails.application_status');
     }
 }

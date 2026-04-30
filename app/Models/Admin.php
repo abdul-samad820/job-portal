@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
+use App\Notifications\AdminResetPasswordNotification;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
-class Admin extends Authenticatable
+class Admin extends Authenticatable implements CanResetPassword
 {
-    use Notifiable;
-
-    public $timestamps = false;
+    use CanResetPasswordTrait, HasFactory  , Notifiable;
 
     protected $guard = 'admin';
 
@@ -23,14 +25,21 @@ class Admin extends Authenticatable
         'location',
         'expertise',
         'profile_image',
-        'role'
+        'role',
+        'is_active',
     ];
 
     protected function casts(): array
     {
         return [
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new AdminResetPasswordNotification($token));
     }
 
     // Relationship
@@ -47,10 +56,10 @@ class Admin extends Authenticatable
         static::deleting(function ($admin) {
 
             if ($admin->profile_image &&
-                Storage::disk('public')->exists('admins/' . $admin->profile_image)) {
+                Storage::disk('public')->exists('admins/'.$admin->profile_image)) {
 
                 Storage::disk('public')
-                    ->delete('admins/' . $admin->profile_image);
+                    ->delete('admins/'.$admin->profile_image);
             }
         });
     }

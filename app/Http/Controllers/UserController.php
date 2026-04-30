@@ -1,280 +1,338 @@
 <?php
+
 namespace App\Http\Controllers;
-use App\Models\User; 
-use App\Models\Admin; 
-use App\Models\JobRole; 
-use App\Models\JobCategory; 
+
+use App\Http\Requests\RegisterRequest;
 use App\Models\Job;
-use App\Models\SavedJob;
 use App\Models\JobApplication;
-use App\Models\User_profile;
+use App\Models\JobCategory;
+use App\Models\JobRole;
+use App\Models\SavedJob;
+use App\Models\User;
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
-class UserController extends Controller {
+class UserController extends Controller
+{
+    public function userregister(RegisterRequest $request)
+    {
+        $credentials = $request->validate();
+        $credentials['password'] = Hash::make($credentials['password']);
 
-   public function userregister(RegisterRequest $request){
-   $credentials = $request->validated();
-   $credentials['password'] = Hash::make($credentials['password']);
-   User::create($credentials);
-   return redirect()->route('user.login')
-   ->with('success', 'User Registration successful!');
-}
+        $user = User::create($credentials);
 
-public function userlogin(Request $request) {
-    $data = $request->validate([
-    'email'    => 'required|email',
-    'password' => 'required',
-]);
+        // Automatic verification email send
+        $user->sendEmailVerificationNotification();
 
-    if (Auth::guard('user')->attempt($data)) {
-        $request->session()->regenerate();
-        return redirect()->route('user.dashboard')
-        ->with('login_success', 'Welcome back, ' . auth('user')->user()->name . ' 👋');
+        Auth::guard('user')->login($user);
+
+        // Verification page 
+        return redirect()->route('verification.notice')
+            ->with('info', 'Account created! Please verify your email to continue.');
     }
 
-    return back()->withErrors([
-        'email' => 'Invalid email or password.'
-    ])->withInput();
-}
+    public function userlogin(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-public function userlogout(Request $request) {
-     Auth::guard('user')->logout();  
-     $request->session()->invalidate();  
-     $request->session()->regenerateToken();  
-     return redirect()->route('user.login');
-     }
+        // Rate limit check
+        $key = 'login_attempts_'.$request->ip();
 
-public function user_dashboard() {
-    $userId = auth('user')->id();
-    $user = Auth::guard('user')->user();
-    $totalJobs = Job::count();
-    $appliedJobsCount = JobApplication::where('user_id', $userId)->count();
-    $newJobsCount = Job::where('created_at', '>=', now()->subDay())
-    ->whereNotIn('id', JobApplication::where('user_id', $userId)->pluck('job_id'))
-    ->count();
-    $recentAppliedJobs = JobApplication::with(['job.admin'])->where('user_id', $userId)->latest()
-    ->take(4)->get();
-    $profile = User_profile::where('user_id', $userId)->first();
-    $recommendedJobsCount = 0;
+        if (Auth::guard('user')->attempt($data)) {
+            // Login success — attempts reset
+            $request->session()->regenerate();
 
-    if ($profile && !empty($profile->core_skills)) {
-        $userSkills = array_map('trim', explode(',', $profile->core_skills));
-        $recommendedJobsCount = Job::whereDate('last_date', '>=', now())
-        ->where(function ($query) use ($userSkills) {
-        foreach ($userSkills as $skill) {
-                $query->orWhere('required_skills', 'LIKE', '%' . $skill . '%');
-}
-})->whereNotIn('id', JobApplication::where('user_id', $userId)->pluck('job_id'))->count();
-}
-
-    //  USER PROFILE COMPLETION
-$profileCompletion = 0;
-$profile = User_profile::where('user_id', $userId)->first();
-if ($profile) {
-
-    // Profile Image
-    if (!empty($profile->profile_image)) {
-        $profileCompletion += 15;
-}
-    // Professional Summary
-    if (!empty($profile->professional_summary)) {
-        $profileCompletion += 20;
-}
-    // Core Skills
-    if (!empty($profile->core_skills)) {
-        $profileCompletion += 20;
-}
-    // Education
-    if (!empty($profile->education)) {
-        $profileCompletion += 20;
-}
-    // Experience
-    if (!empty($profile->experience)) {
-        $profileCompletion += 15;
-}
-}
-
-// Phone & Address from users table
-if (!empty($user->phone) && !empty($user->address)) {
-    $profileCompletion += 10;
-}
-
-$savedJobsCount = SavedJob::where('user_id', $userId)->count();
-$savedJobs = SavedJob::with('job')->where('user_id', $userId)->latest()->take(3)->get();
-$pendingCount = JobApplication::where('user_id', $userId)->where('status', 'pending')->count();
-$shortlistedCount = JobApplication::where('user_id', $userId)->where('status', 'shortlisted')
-->count();
-$hiredCount = JobApplication::where('user_id', $userId)->where('status', 'hired')->count();
-$rejectedCount = JobApplication::where('user_id', $userId)->where('status', 'rejected')->count();
-   return view('User.user_dashboard', compact(
-    'totalJobs', 
-    'appliedJobsCount', 
-    'newJobsCount',
-    'recentAppliedJobs',
-    'recommendedJobsCount',
-    'profileCompletion',
-    'savedJobsCount',
-    'savedJobs',
-    'pendingCount',
-    'shortlistedCount',
-    'hiredCount',
-    'rejectedCount'
-));
-}
-
-public function saved_jobs() {
-    $userId = Auth::guard('user')->id();
-    $savedJobs = SavedJob::with('job')->where('user_id', $userId)->get();
-    return view('User.user_saved_jobs', compact('savedJobs'));
-}
-
-public function user_jobs(Request $request){
-    $userId = Auth::guard('user')->id();
-    $query = Job::with(['category', 'role', 'admin']);
-    $savedJobIds = SavedJob::where('user_id', $userId)->pluck('job_id')->toArray();
-    $appliedJobIds = JobApplication::where('user_id', $userId)->pluck('job_id')->toArray();
-
-    //  Filters
-    if ($request->filled('search')) {
-        $query->where(function ($q) use ($request) {
-        $q->where('title', 'LIKE', '%' . $request->search . '%')
-        ->orWhere('description', 'LIKE', '%' . $request->search . '%');
-});
-}
-
-    if ($request->filled('category')) {
-        $query->where('category_id', $request->category);
+            return redirect()->route('user.dashboard')
+                ->with('login_success', 'Welcome back, '.auth('user')->user()->name.' 👋');
         }
-    if ($request->filled('role')) {
-        $query->where('role_id', $request->role);
+
+        return back()->withErrors([
+            'email' => 'Invalid email or password. '.
+                       'Too many failed attempts will temporarily lock your account.',
+        ])->withInput();
     }
-    if ($request->filled('location')) {
-        $query->where('location', 'LIKE', '%' . $request->location . '%');
-}
-    if ($request->filled('min_salary')) {
-        $query->where('salary', '>=', $request->min_salary);
+
+    public function userlogout(Request $request)
+    {
+        Auth::guard('user')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('user.login');
+    }
+
+    public function user_dashboard()
+    {
+        $userId = auth('user')->id();
+        $user = Auth::guard('user')->user();
+        $totalJobs = Job::count();
+        $appliedJobsCount = JobApplication::where('user_id', $userId)->count();
+        $newJobsCount = Job::where('created_at', '>=', now()->subDay())
+            ->whereNotIn('id', JobApplication::where('user_id', $userId)->pluck('job_id'))
+            ->count();
+        $recentAppliedJobs = JobApplication::with(['job.admin'])->where('user_id', $userId)->latest()
+            ->take(4)->get();
+        $profile = UserProfile::where('user_id', $userId)->first();
+        $recommendedJobsCount = 0;
+
+        if ($profile && ! empty($profile->core_skills)) {
+            $userSkills = array_map('trim', explode(',', $profile->core_skills));
+            $recommendedJobsCount = Job::whereDate('last_date', '>=', now())
+                ->where(function ($query) use ($userSkills) {
+                    foreach ($userSkills as $skill) {
+                        $query->orWhere('required_skills', 'LIKE', '%'.$skill.'%');
+                    }
+                })->whereNotIn('id', JobApplication::where('user_id', $userId)->pluck('job_id'))->count();
         }
-    if ($request->filled('max_salary')) {
-        $query->where('salary', '<=', $request->max_salary);
+
+        //  USER PROFILE COMPLETION
+        $profileCompletion = 0;
+        $profile = UserProfile::where('user_id', $userId)->first();
+        if ($profile) {
+
+            // Profile Image
+            if (! empty($profile->profile_image)) {
+                $profileCompletion += 15;
+            }
+            // Professional Summary
+            if (! empty($profile->professional_summary)) {
+                $profileCompletion += 20;
+            }
+            // Core Skills
+            if (! empty($profile->core_skills)) {
+                $profileCompletion += 20;
+            }
+            // Education
+            if (! empty($profile->education)) {
+                $profileCompletion += 20;
+            }
+            // Experience
+            if (! empty($profile->experience)) {
+                $profileCompletion += 15;
+            }
         }
 
-    $jobs = $query->orderBy('id', 'desc')->paginate(5);
-    $categories = JobCategory::all();
-    $roles = JobRole::all();
-    $totalUsers = User::count();
-    return view('User.user_job_show', compact(
-        'jobs',
-        'categories',
-        'roles',
-        'totalUsers',
-        'savedJobIds',   
-        'appliedJobIds' 
-));
-}
+        // Phone & Address from users table
+        if (! empty($user->phone) && ! empty($user->address)) {
+            $profileCompletion += 10;
+        }
 
-public function user_job_single($id){
-    $userId = Auth::guard('user')->id(); 
-    $singlejob = Job::with(['category', 'role'])->findOrFail($id);
-    $jobs = Job::where('category_id', $singlejob->category_id)
-    ->where('id', '!=', $singlejob->id)->take(6)->get();
-    return view('User.user_job_single', compact('singlejob', 'jobs'));
-}
- 
-public function job_applied() {
-    $userId = Auth::guard('user')->id();
-    $applications = JobApplication::with('job')->where('user_id', $userId)->latest()
-    ->paginate(5);   
-    return view('user.user_applied_jobs', compact('applications'));
-}
+        $savedJobsCount = SavedJob::where('user_id', $userId)->count();
+        $savedJobs = SavedJob::with('job')->where('user_id', $userId)->latest()->take(3)->get();
+        $pendingCount = JobApplication::where('user_id', $userId)->where('status', 'pending')->count();
+        $shortlistedCount = JobApplication::where('user_id', $userId)->where('status', 'shortlisted')
+            ->count();
+        $hiredCount = JobApplication::where('user_id', $userId)->where('status', 'hired')->count();
+        $rejectedCount = JobApplication::where('user_id', $userId)->where('status', 'rejected')->count();
 
-public function User_profile() {
-    $user = Auth::guard('user')->user();
-    $profile = User_profile::where('user_id', $user->id)->first();
-    return view('User.profile', compact('user', 'profile'));
-}
- 
-public function add_user_profile() {
-    $userId = Auth::guard('user')->id();
-    $profile = User_profile::firstOrCreate(['user_id' => $userId]);
-    $educationData = $profile->education ? json_decode($profile->education, true) : [];
-    return view('User.profile_add', compact('profile', 'educationData'));
-}
+        return view('User.user_dashboard', compact(
+            'totalJobs',
+            'appliedJobsCount',
+            'newJobsCount',
+            'recentAppliedJobs',
+            'recommendedJobsCount',
+            'profileCompletion',
+            'savedJobsCount',
+            'savedJobs',
+            'pendingCount',
+            'shortlistedCount',
+            'hiredCount',
+            'rejectedCount'
+        ));
+    }
 
-public function update_user_profile(Request $request) {
-    $userId = Auth::guard('user')->id();
-    $profile = User_profile::firstOrCreate(['user_id' => $userId]);
-    $data = $request->validate ([
-        'profile_image'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'professional_summary' => 'nullable|string|max:2000',
-        'core_skills'          => 'nullable|string|max:500',
-        'education'            => 'nullable|array',
-        'education.*.degree'   => 'nullable|string|max:255',
-        'education.*.institute'=> 'nullable|string|max:255',
-        'education.*.year'     => 'nullable|string|max:20',
-        'experience'           => 'nullable|string|max:1255',
-]);
+    public function saved_jobs()
+    {
+        $userId = Auth::guard('user')->id();
+        $savedJobs = SavedJob::with(['job.admin', 'job.category', 'job.role'])
+            ->where('user_id', $userId)
+            ->latest()
+            ->get();
 
-    //  Handle Profile Image (Storage System)
-    if ($request->hasFile('profile_image')) {
-        // Delete old image
-        if ($profile->profile_image) {
-            Storage::disk('public')
-            ->delete('user_profile/' . $profile->profile_image);
-}
-        // Store new image
-        $path = $request->file('profile_image')->store('user_profile', 'public');
-        $data['profile_image'] = basename($path);
-}
-    // Education JSON
-    if ($request->has('education') && is_array($request->education)) {
-        $data['education'] = json_encode($request->education);
-}
-    $profile->update($data);
-    return redirect()->route('user.profile')
-    ->with('success', 'Profile updated successfully!');
-}
+        return view('User.user_saved_jobs', compact('savedJobs'));
+    }
 
-public function account_setting() {
-     $userId = Auth::guard('user')->id();
-     $user_data = Auth::guard('user')->user();
-     return view('User.user_account_setting', compact('user_data'));
-}
+    public function user_jobs(Request $request)
+    {
+        $userId = Auth::guard('user')->id();
+        $query = Job::with(['category', 'role', 'admin']);
+        $savedJobIds = SavedJob::where('user_id', $userId)->pluck('job_id')->toArray();
+        $appliedJobIds = JobApplication::where('user_id', $userId)->pluck('job_id')->toArray();
 
-public function account_setting_update(Request $request, $id) {
-    $user_data = User::findOrFail($id);
-    $data = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $id,
-        'password' => 'nullable|min:8',
-        'phone' => 'required|digits:10',
-        'address' => 'nullable|string|max:255',
-]);
+        //  Filters
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'LIKE', '%'.$request->search.'%')
+                    ->orWhere('description', 'LIKE', '%'.$request->search.'%');
+            });
+        }
 
-    if (!empty($data['password'])) {
-        $data['password'] = bcrypt($data['password']);
-} else {
-        unset($data['password']);
-}
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+        if ($request->filled('role')) {
+            $query->where('role_id', $request->role);
+        }
+        if ($request->filled('location')) {
+            $query->where('location', 'LIKE', '%'.$request->location.'%');
+        }
+        if ($request->filled('min_salary')) {
+            $query->where('salary', '>=', $request->min_salary);
+        }
+        if ($request->filled('max_salary')) {
+            $query->where('salary', '<=', $request->max_salary);
+        }
 
-    $user_data->update($data);
-    return back()->with('success', 'Account details updated successfully!');
-}
+        $jobs = $query->orderBy('id', 'desc')->paginate(5);
+        $categories = JobCategory::all();
+        $roles = JobRole::all();
+        $totalUsers = User::count();
 
-public function readNotifications() {
-    auth()->user()->unreadNotifications->markAsRead();
-    return back();
-}
-public function saveJob(Job $job) {
-    auth('user')->user()->savedJobs()->syncWithoutDetaching([$job->id]);
-    return back()->with('success', 'Job saved successfully.');
-}
+        return view('User.user_job_show', compact(
+            'jobs',
+            'categories',
+            'roles',
+            'totalUsers',
+            'savedJobIds',
+            'appliedJobIds'
+        ));
+    }
 
-public function unsaveJob(Job $job) {
-    auth('user')->user()->savedJobs()->detach($job->id);
-    return back()->with('success', 'Job removed from saved.');
-}
+    public function user_job_single($id)
+    {
+        $userId = Auth::guard('user')->id();
+        $singlejob = Job::with(['category', 'role'])->findOrFail($id);
+        $jobs = Job::with(['category', 'role', 'admin'])
+            ->where('category_id', $singlejob->category_id)
+            ->where('id', '!=', $singlejob->id)
+            ->whereDate('last_date', '>=', now())
+            ->take(6)
+            ->get();
+
+        return view('User.user_job_single', compact('singlejob', 'jobs'));
+    }
+
+    public function job_applied()
+    {
+        $userId = Auth::guard('user')->id();
+        $applications = JobApplication::with('job')->where('user_id', $userId)->latest()
+            ->paginate(5);
+
+        return view('user.user_applied_jobs', compact('applications'));
+    }
+
+    public function User_profile()
+    {
+        $user = Auth::guard('user')->user();
+        $profile = UserProfile::where('user_id', $user->id)->first();
+
+        return view('User.profile', compact('user', 'profile'));
+    }
+
+    public function add_user_profile()
+    {
+        $userId = Auth::guard('user')->id();
+        $profile = UserProfile::firstOrCreate(['user_id' => $userId]);
+        $educationData = $profile->education ?? [];
+
+        return view('User.profile_add', compact('profile', 'educationData'));
+    }
+
+    public function update_user_profile(Request $request)
+    {
+        $userId = Auth::guard('user')->id();
+        $profile = UserProfile::firstOrCreate(['user_id' => $userId]);
+        $data = $request->validate([
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'professional_summary' => 'nullable|string|max:2000',
+            'core_skills' => 'nullable|string|max:500',
+            'education' => 'nullable|array',
+            'education.*.degree' => 'nullable|string|max:255',
+            'education.*.institute' => 'nullable|string|max:255',
+            'education.*.year' => 'nullable|string|max:20',
+            'experience' => 'nullable|array',
+            'experience.*.company' => 'nullable|string',
+            'experience.*.role' => 'nullable|string',
+            'experience.*.duration' => 'nullable|string',
+            'experience.*.description' => 'nullable|string',
+        ]);
+
+        //  Handle Profile Image (Storage System)
+        if ($request->hasFile('profile_image')) {
+            // Delete old image
+            if ($profile->profile_image) {
+                Storage::disk('public')
+                    ->delete('user_profile/'.$profile->profile_image);
+            }
+            // Store new image
+            $path = $request->file('profile_image')->store('user_profile', 'public');
+            $data['profile_image'] = basename($path);
+        }
+        // Education JSON
+        if ($request->has('education') && is_array($request->education)) {
+            $data['education'] = $request->education;
+        }
+        $profile->update($data);
+
+        return redirect()->route('user.profile')
+            ->with('success', 'Profile updated successfully!');
+    }
+
+    public function account_setting()
+    {
+        $userId = Auth::guard('user')->id();
+        $user_data = Auth::guard('user')->user();
+
+        return view('User.user_account_setting', compact('user_data'));
+    }
+
+    public function account_setting_update(Request $request)
+    {
+        $user_data = auth('user')->user();
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,'.$user_data->id,
+            'password' => 'nullable|min:8',
+            'phone' => 'required|digits:10',
+            'address' => 'nullable|string|max:255',
+        ]);
+
+        if (! empty($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']);
+        }
+
+        $user_data->update($data);
+
+        return back()->with('success', 'Account details updated successfully!');
+    }
+
+    public function readNotifications()
+    {
+        auth()->user()->unreadNotifications->markAsRead();
+
+        return back();
+    }
+
+    public function saveJob(Job $job)
+    {
+        auth('user')->user()->savedJobs()->syncWithoutDetaching([$job->id]);
+
+        return back()->with('success', 'Job saved successfully.');
+    }
+
+    public function unsaveJob(Job $job)
+    {
+        auth('user')->user()->savedJobs()->detach($job->id);
+
+        return back()->with('success', 'Job removed from saved.');
+    }
 }

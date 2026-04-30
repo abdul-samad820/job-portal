@@ -67,7 +67,6 @@
                 <div class="card shadow-sm border-0 stat-pill">
                     <div class="p-3 d-flex justify-content-between align-items-center">
                         <div>
-                            {{-- <h4 class="mb-0 font-weight-bold">{{ $totalApplications }}</h4> --}}
                             <h4 class="mb-0 font-weight-bold"></h4>
                             <span class="text-muted">Total Applications</span>
                         </div>

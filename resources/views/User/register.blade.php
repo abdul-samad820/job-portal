@@ -1,248 +1,362 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User | Registration</title>
+    <title>Job Portal – Register</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-   <style>
-    * {
-    font-family: "Poppins", sans-serif;
-}
+    <style>
+        * { box-sizing: border-box; font-family: "Poppins", sans-serif; }
 
-body {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    min-height: 90vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
 
-/* MAIN GLASS CONTAINER */
-.container-box {
-    max-width: 1000px;
-    width: 100%;
-    display: flex;
-    border-radius: 20px;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+        body::before {
+            content: "";
+            position: fixed;
+            width: 380px; height: 380px;
+            background: rgba(118,75,162,0.45);
+            filter: blur(130px);
+            top: -60px; right: -60px;
+            z-index: 0; pointer-events: none;
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            width: 300px; height: 300px;
+            background: rgba(102,126,234,0.4);
+            filter: blur(120px);
+            bottom: -40px; left: -40px;
+            z-index: 0; pointer-events: none;
+        }
 
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
-}
+        /* ── GLASS CARD ── */
+        .auth-card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 960px;
+            display: flex;
+            border-radius: 22px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.10);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.22);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+        }
 
-/* LEFT SIDE */
-.left-image {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 25px;
-}
+        /* ── LEFT PANEL ── */
+        .auth-left {
+            width: 38%;
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.06);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 28px;
+            border-right: 1px solid rgba(255,255,255,0.12);
+            text-align: center;
+            color: #fff;
+        }
 
-.left-image img {
-    width: 100%;
-    max-height: 500px;
-    object-fit: contain;
-}
+        .auth-left .brand-icon {
+            width: 72px; height: 72px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
 
-/* RIGHT SIDE */
-.right-form {
-    flex: 1;
-    padding: 50px;
-    color: #fff;
-}
+        .auth-left h4 { font-weight: 700; font-size: 20px; color: #fff; margin-bottom: 10px; }
+        .auth-left p  { font-size: 13px; color: rgba(255,255,255,0.70); line-height: 1.7; }
 
-/* TITLE */
-.form-title {
-    font-size: 30px;
-    font-weight: 700;
-    margin-bottom: 25px;
-}
+        .auth-left .feature-list {
+            list-style: none;
+            padding: 0; margin: 20px 0 0;
+            text-align: left;
+            width: 100%;
+        }
+        .auth-left .feature-list li {
+            font-size: 13px;
+            color: rgba(255,255,255,0.80);
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .auth-left .feature-list li i { color: #ffb347; font-size: 12px; }
 
-/* INPUT GROUP */
-.input-group-text {
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: #fff;
-}
+        /* ── RIGHT PANEL ── */
+        .auth-right {
+            flex: 1;
+            padding: 44px 40px;
+            color: #fff;
+        }
 
-/* INPUT */
-.form-control {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: #fff;
-}
+        .auth-right h3 {
+            font-weight: 700;
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .auth-right .subtitle {
+            font-size: 13px;
+            color: rgba(255,255,255,0.65);
+            margin-bottom: 26px;
+        }
 
-.form-control::placeholder {
-    color: rgba(255,255,255,0.7);
-}
+        /* ── LABELS ── */
+        .field-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.80);
+            margin-bottom: 5px;
+        }
 
-.form-control:focus {
-    border-color: #fff;
-    box-shadow: none;
-    background: rgba(255,255,255,0.15);
-}
+        /* ── INPUT GROUP ── */
+        .input-group-text {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #fff;
+        }
+        .input-group > .input-group-prepend > .input-group-text { border-radius: 10px 0 0 10px; }
+        .input-group > .form-control:last-child                  { border-radius: 0 10px 10px 0; }
+        .input-group > .input-group-append > .input-group-text   { border-radius: 0 10px 10px 0; cursor: pointer; }
+        .input-group-append .input-group-text:hover { background: rgba(255,255,255,0.25); }
 
-/* BUTTON */
-.btn-register {
-    background: rgba(255,255,255,0.2);
-    border: none;
-    backdrop-filter: blur(10px);
-    color: #fff;
-    font-weight: 600;
-    height: 50px;
-    border-radius: 10px;
-    transition: 0.3s;
-}
+        /* ── INPUTS ── */
+        .form-control {
+            height: 42px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: #fff;
+            font-size: 14px;
+        }
+        .form-control::placeholder { color: rgba(255,255,255,0.50); }
+        .form-control:focus {
+            background: rgba(255,255,255,0.18);
+            border-color: rgba(255,255,255,0.6);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
+            color: #fff;
+        }
 
-.btn-register:hover {
-    background: rgba(255,255,255,0.35);
-}
+        /* ── BUTTON ── */
+        .btn-auth {
+            width: 100%;
+            height: 46px;
+            background: linear-gradient(135deg, #ff7a18, #ffb347);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            transition: 0.25s;
+            cursor: pointer;
+        }
+        .btn-auth:hover {
+            background: linear-gradient(135deg, #ff5f00, #ff9500);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(255,122,24,0.45);
+            color: #fff;
+        }
 
-/* CHECKBOX */
-.form-check-label {
-    color: rgba(255,255,255,0.8);
-}
+        /* ── MISC ── */
+        .check-group { display: flex; align-items: flex-start; gap: 8px; }
+        .check-group input[type="checkbox"] { width: 15px; height: 15px; accent-color: #ffb347; cursor: pointer; margin-top: 2px; }
+        .check-group label { margin: 0; font-size: 13px; color: rgba(255,255,255,0.80); cursor: pointer; }
+        a { color: rgba(255,255,255,0.90); }
+        a:hover { color: #fff; text-decoration: none; }
+        .link-accent { color: #ffb347; font-weight: 600; }
+        .link-accent:hover { color: #ffd280; }
 
-/* LINKS */
-a {
-    color: #fff;
-}
-
-/* MOBILE */
-@media (max-width: 900px) {
-    .container-box {
-        flex-direction: column;
-    }
-}
-   </style>
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .auth-left { display: none; }
+            .auth-right { padding: 36px 28px; }
+        }
+        @media (max-width: 767px) {
+            body { align-items: flex-start; padding: 12px; }
+            .auth-card { flex-direction: column; border-radius: 16px; }
+            .auth-right { padding: 28px 20px 32px; }
+            .auth-right h3 { font-size: 20px; }
+        }
+        @media (max-width: 420px) {
+            .auth-right { padding: 22px 14px 26px; }
+        }
+    </style>
 </head>
-
 <body>
 
-    <div class="container-box">
+<div class="auth-card">
 
-        <!-- LEFT IMAGE PANEL -->
-        <div class="left-image">
-            <img src="{{ asset('admins/dist/img/landing_hero.png') }}" alt="Illustration">
-        </div>
-
-        <!-- RIGHT FORM PANEL -->
-        <div class="right-form">
-
-            <h2 class="form-title">
-                <i class="fas fa-user-plus me-2 fs-1"></i>
-                User Registration
-            </h2>
-
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <form action="{{ route('user.register') }}" method="POST">
-                @csrf
-
-                <div class="row">
-
-                    <!-- Column 1 -->
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Full Name</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            <input type="text" name="name" value="{{ old('name') }}"
-                                class="form-control  @error('name') is-invalid @enderror" placeholder="Enter your name">
-                        </div>
-                    </div>
-
-                    <!-- Column 2 -->
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Email</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                            <input type="email" name="email"
-                                value="{{ old('email') }}"class="form-control @error('email') is-invalid @enderror"
-                                placeholder="Enter email">
-                        </div>
-                    </div>
-
-                    <!-- Column 1 -->
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Address</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                            <input type="text" name="address" value="{{ old('address') }}" class="form-control"
-                                placeholder="Enter address">
-                        </div>
-                    </div>
-
-                    <!-- Column 2 -->
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Phone Number</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                            <input type="text" name="phone" value="{{ old('phone') }}"
-                                class="form-control @error('phone') is-invalid @enderror"
-                                placeholder="Enter phone number">
-                        </div>
-                    </div>
-
-                    <!-- Column 1 -->
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Password</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                            <input type="password" name="password"
-                                class="form-control @error('password') is-invalid @enderror"
-                                placeholder="Enter password">
-                        </div>
-                    </div>
-
-                    <!-- Column 2 -->
-                    <div class="col-md-6 mb-4">
-                        <label class="form-label">Confirm Password</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                            <input type="password" name="password_confirmation" class="form-control"
-                                placeholder="Re-enter password">
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="agreeTerms">
-                    <label class="form-check-label" for="agreeTerms">
-                        I agree to the <a href="#" class="text-primary fw-semibold">terms & conditions</a>
-                    </label>
-                </div>
-
-                <button type="submit" class="btn-register">Register Account</button>
-
-            </form>
-
-            <p class="mt-4">
-                Already have an account?
-                <a href="{{ route('user.login') }}" class="fw-bold text-primary">Login here</a>
-            </p>
-
-        </div>
-
+    <!-- LEFT PANEL -->
+    <div class="auth-left">
+        <div class="brand-icon"><i class="fas fa-briefcase"></i></div>
+        <h4>Join JobHub</h4>
+        <p>Connect with top companies and find your dream job in minutes.</p>
+        <ul class="feature-list">
+            <li><i class="fas fa-check-circle"></i> 1,200+ live job listings</li>
+            <li><i class="fas fa-check-circle"></i> 350+ verified companies</li>
+            <li><i class="fas fa-check-circle"></i> Free for job seekers</li>
+            <li><i class="fas fa-check-circle"></i> Quick & easy apply</li>
+        </ul>
     </div>
 
-</body>
+    <!-- RIGHT FORM -->
+    <div class="auth-right">
 
+        <h3><i class="fas fa-user-plus mr-2" style="font-size:20px;"></i>Create Account</h3>
+        <p class="subtitle">Fill in your details to get started</p>
+
+        @if ($errors->any())
+            <div class="alert alert-danger small py-2 mb-3" style="border-radius:10px;">
+                <ul class="mb-0 pl-3">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('user.register') }}" method="POST">
+            @csrf
+
+            <div class="row">
+
+                <div class="col-md-6 mb-3">
+                    <label class="field-label">Full Name</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                        </div>
+                        <input type="text" name="name" value="{{ old('name') }}"
+                            class="form-control @error('name') is-invalid @enderror"
+                            placeholder="Your full name">
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="field-label">Email</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                        </div>
+                        <input type="email" name="email" value="{{ old('email') }}"
+                            class="form-control @error('email') is-invalid @enderror"
+                            placeholder="you@example.com">
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="field-label">Address</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                        </div>
+                        <input type="text" name="address" value="{{ old('address') }}"
+                            class="form-control" placeholder="Your city / address">
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="field-label">Phone Number</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                        </div>
+                        <input type="text" name="phone" value="{{ old('phone') }}"
+                            class="form-control @error('phone') is-invalid @enderror"
+                            placeholder="+91 XXXXX XXXXX">
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="field-label">Password</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        </div>
+                        <input type="password" name="password" id="pw1"
+                            class="form-control @error('password') is-invalid @enderror"
+                            placeholder="Min 8 characters">
+                        <div class="input-group-append">
+                            <span class="input-group-text" onclick="togglePw('pw1','i1')">
+                                <i class="fas fa-eye" id="i1"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="field-label">Confirm Password</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                        </div>
+                        <input type="password" name="password_confirmation" id="pw2"
+                            class="form-control" placeholder="Re-enter password">
+                        <div class="input-group-append">
+                            <span class="input-group-text" onclick="togglePw('pw2','i2')">
+                                <i class="fas fa-eye" id="i2"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="check-group mb-4">
+                <input type="checkbox" id="agreeTerms" required>
+                <label for="agreeTerms">
+                    I agree to the <a href="#" class="link-accent">Terms & Conditions</a>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-auth">Create Account</button>
+
+        </form>
+
+        <p class="text-center mt-3 mb-0 small">
+            Already have an account?
+            <a href="{{ route('user.login') }}" class="link-accent">Sign In</a>
+        </p>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function togglePw(id, iconId) {
+        var input = document.getElementById(id);
+        var icon  = document.getElementById(iconId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('fa-eye','fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('fa-eye-slash','fa-eye');
+        }
+    }
+</script>
+</body>
 </html>

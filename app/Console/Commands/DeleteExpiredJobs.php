@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Job;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class DeleteExpiredJobs extends Command
 {
@@ -16,6 +16,6 @@ class DeleteExpiredJobs extends Command
     {
         $deleted = Job::whereDate('last_date', '<', Carbon::today())->delete();
 
-        $this->info($deleted . ' expired jobs deleted successfully.');
+        $this->info($deleted.' expired jobs deleted successfully.');
     }
 }

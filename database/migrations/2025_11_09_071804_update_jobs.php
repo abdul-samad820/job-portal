@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('jobs', function (Blueprint $table) {
-           
+
             $table->string('salary')->nullable()->change();
-            
-            if (!Schema::hasColumn('jobs', 'role_id')) {
-                $table->foreignId('role_id') ->constrained('job_roles')->onDelete('cascade');
+
+            if (! Schema::hasColumn('jobs', 'role_id')) {
+                $table->foreignId('role_id')->constrained('job_roles')->onDelete('cascade');
             }
         });
     }
@@ -27,13 +27,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('jobs', function (Blueprint $table) {
-           
+
             if (Schema::hasColumn('jobs', 'role_id')) {
                 $table->dropForeign(['role_id']);
                 $table->dropColumn('role_id');
             }
 
-            
         });
     }
 };

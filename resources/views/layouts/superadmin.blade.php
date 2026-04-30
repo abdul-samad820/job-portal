@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', ' Super Admin Portal')</title>
-    <link rel="icon" type="image/png" href="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="icon" type="image/png" href="{{ asset('admins/dist/Job_Hub_Logo_Design.png') }}">
+    <link rel="stylesheet" href="{{ asset('css/style-admin-file.css') }}">
     <style>
         .super-badge {
             padding: 8px 18px;
@@ -116,7 +116,7 @@
 
                 <!-- BRAND -->
                 <div class="jobi-brand text-center mb-3">
-                    <img src="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}" class="brand-img mb-2"
+                    <img src="{{ asset('admins/dist/img/Job_Hub_Logo.png') }}" class="brand-img mb-2"
                         style="height:55px;">
                     <small class="brand-subtext">JOB HUB — Super Admin</small>
                 </div>
@@ -222,7 +222,7 @@
         <footer class="main-footer">
             <strong>&copy; {{ date('Y') }} JOB HUB.</strong> All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 1.0.0
+                <b>Version</b> 1.2
             </div>
         </footer>
 

@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('jobs', function (Blueprint $table) {
-        $table->integer('salary')->nullable()->change();
-    });
+            $table->integer('salary')->nullable()->change();
+        });
+
     }
 
     /**
@@ -22,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('jobs', function (Blueprint $table) {
-        $table->string('salary')->nullable()->change();
-    });
+            $table->string('salary')->nullable()->change();
+        });
     }
 };

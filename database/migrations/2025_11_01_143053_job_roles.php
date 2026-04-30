@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('job_roles', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('category_id')->constrained('job_categories')->onDelete('cascade');
-    $table->string('name'); 
-    $table->text('description')->nullable();
-    $table->timestamps();
-});
+            $table->id();
+            $table->foreignId('category_id')->constrained('job_categories')->onDelete('cascade');
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->timestamps();
+        });
 
     }
 

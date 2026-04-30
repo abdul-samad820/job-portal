@@ -1,4 +1,4 @@
-@extends('layouts.index')
+@extends('layouts.Admin_layout')
 @section('title', 'FAQs')
 @section('content')
 
@@ -116,7 +116,8 @@
                             <td class="text-center">
                                 <div class="d-flex justify-content-center">
 
-                                    <a href="{{ route('faqs_edit', $faq->id) }}" class="btn btn-sm btn-outline-primary mr-1">
+                                    <a href="{{ route('faqs_edit', $faq->id) }}"
+                                        class="btn btn-sm btn-outline-primary mr-1">
                                         <i class="fa fa-edit"></i>
                                     </a>
 

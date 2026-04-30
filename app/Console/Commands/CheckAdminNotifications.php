@@ -2,17 +2,18 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\Admin;
 use App\Models\Job;
 use App\Models\JobApplication;
-use App\Notifications\PendingReminderNotification;
 use App\Notifications\JobExpiryNotification;
+use App\Notifications\PendingReminderNotification;
 use App\Notifications\ProfileIncompleteNotification;
+use Illuminate\Console\Command;
 
 class CheckAdminNotifications extends Command
 {
     protected $signature = 'admin:check-notifications';
+
     protected $description = 'Check and send admin notifications';
 
     public function handle()
@@ -23,7 +24,7 @@ class CheckAdminNotifications extends Command
 
             $jobIds = Job::where('admin_id', $admin->id)->pluck('id');
 
-            // 1️⃣ Pending Applications
+            //Pending Applications
             $pendingCount = JobApplication::whereIn('job_id', $jobIds)
                 ->where('status', 'pending')
                 ->count();
@@ -32,7 +33,7 @@ class CheckAdminNotifications extends Command
                 $admin->notify(new PendingReminderNotification($pendingCount));
             }
 
-            // 2️⃣ Expiring Jobs
+            // Expiring Jobs
             $expiringJobs = Job::where('admin_id', $admin->id)
                 ->whereBetween('last_date', [now(), now()->addDays(2)])
                 ->get();
@@ -41,9 +42,9 @@ class CheckAdminNotifications extends Command
                 $admin->notify(new JobExpiryNotification($job));
             }
 
-            // 3️⃣ Profile Incomplete
+            // Profile Incomplete
             if (empty($admin->expertise) || empty($admin->location)) {
-                $admin->notify(new ProfileIncompleteNotification());
+                $admin->notify(new ProfileIncompleteNotification);
             }
         }
 
