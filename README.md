@@ -4,7 +4,7 @@
 [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-25%20Passing-success?style=for-the-badge)](tests)
+[![Tests](https://img.shields.io/badge/Tests-35%20Passing-success?style=for-the-badge)](tests)
 
 </div>
 
@@ -130,7 +130,7 @@ Built specifically as a placement-ready full-stack Laravel project.
 - Mail: SMTP (Mailtrap for development)
 - Queue: Laravel Queue (Database driver)
 - Testing: PHPUnit + Laravel Feature Tests
-- 
+  
 ---
 ### Frontend
 
@@ -281,21 +281,29 @@ php artisan test --coverage
 ```
 
 -- Test Suites
- - Tests: 25 passed
+ - Tests: 35 passed
 ## Screenshots
 
-<img width="2480" height="4768" alt="homepage" src="https://github.com/user-attachments/assets/e9f32888-5482-4906-87f6-af45e3b57580" />
+<img width="1901" height="6560" alt="127 0 0 1_8000_" src="https://github.com/user-attachments/assets/6138ff24-1719-446d-9edc-db4474a83189" />
+<br><br>
+<img width="1907" height="877" alt="Admin_dashboard" src="https://github.com/user-attachments/assets/b3d9d1f6-893e-40df-9185-fbcf111b93d2" />
+<br><br>
+<img width="1905" height="873" alt="User_dashboard" src="https://github.com/user-attachments/assets/10de1c3f-50e2-4d03-9170-d301f62fd2ea" />
+<br><br>
 
-![admin-dashboard](https://github.com/user-attachments/assets/b44949e4-bcc4-4b60-aa73-fae2a00e0e85)
+<img width="1907" height="876" alt="Admin_dashboard_feature" src="https://github.com/user-attachments/assets/b482aec0-c2b2-47c5-b6b4-394c434cadcc" />
 
-![user-dashboard](https://github.com/user-attachments/assets/9c27f993-8244-4d6e-9c36-2f5a8ece3e85)
+<br><br>
 
-![admin-application-status](https://github.com/user-attachments/assets/cd8a4b53-dae1-4e9c-a12f-cfa88f7b0c72)
+<img width="1905" height="873" alt="User_dashboard_feature" src="https://github.com/user-attachments/assets/d663da93-e0db-4c3d-a6b8-94ed99913896" />
 
-<img width="2480" height="4446" alt="user-job" src="https://github.com/user-attachments/assets/af7a1c7b-348c-4765-bf0e-e0f0af6db523" />
+<br><br>
+<img width="2480" height="4520" alt="127 0 0 1_8000_user_job (1)" src="https://github.com/user-attachments/assets/5629f3dd-4745-4a90-b2f0-0e90d163695c" />
+<br><br>
+<img width="2480" height="3976" alt="127 0 0 1_8000_user_single-job_12" src="https://github.com/user-attachments/assets/e298e4df-1889-4c2f-b1c9-63fa7fe4ab5a" />
+<br><br>
+<img width="2480" height="3072" alt="127 0 0 1_8000_user_form_apply_12" src="https://github.com/user-attachments/assets/ea0ee003-92db-4e07-9cf0-d35c04939f09" />
 
-
-![application-form](https://github.com/user-attachments/assets/9a94e3df-9985-4e88-9ee9-36974b4e1ac7)
 
 
 
