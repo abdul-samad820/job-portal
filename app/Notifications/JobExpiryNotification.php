@@ -24,6 +24,7 @@ class JobExpiryNotification extends Notification
             'title' => 'Job Expiry Alert',
             'message' => "Your job post '{$this->job->title}' expires in 2 days.",
             'job_id' => $this->job->id,
+            'url' => route('admin.job'),
         ];
     }
 }

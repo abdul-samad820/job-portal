@@ -3,36 +3,27 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title')</title>
+    <meta name="description" content="An error occurred on Job Hub. Please try again or return to the homepage.">
+    <link rel="icon" type="image/png" href="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('admins/plugins/fontawesome-free/css/all.min.css') }}">
 
     <!-- AdminLTE -->
     <link rel="stylesheet" href="{{ asset('admins/dist/css/adminlte.min.css') }}">
-
-    <style>
-        body {
-            background: #f4f6f9;
-        }
-
-        .error-wrapper {
-            height: 100vh;
-        }
-
-        .error-card {
-            width: 420px;
-            padding: 40px;
-            border-radius: 12px;
-            background: #fff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/errors.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/utilities.css') }}">
 </head>
 
-<body class="hold-transition">
+<body class="hold-transition error-page">
 
-    <div class="d-flex align-items-center justify-content-center error-wrapper">
+    <div class="d-flex flex-column align-items-center justify-content-center error-wrapper">
+
+        <a href="{{ url('/') }}" class="error-brand mb-4 text-decoration-none">
+            <i class="fas fa-briefcase mr-2"></i>Job Hub
+        </a>
 
         <div class="error-card text-center">
 
@@ -64,5 +55,4 @@
     <script src="{{ asset('admins/dist/js/adminlte.min.js') }}"></script>
 
 </body>
-
 </html>

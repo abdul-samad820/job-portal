@@ -72,13 +72,13 @@ return [
         'users' => [
             'provider' => 'users',         //
             'table' => 'password_reset_tokens',
-            'expire' => 30,                // ← 60 se 30 minutes (security)
+            'expire' => 30,                // reduced from 60 to 30 minutes (security)
             'throttle' => 60,
         ],
         'admins' => [
             'provider' => 'admins',
-            'table' => 'admin_password_reset_tokens',  
-            'expire' => 15,    
+            'table' => 'admin_password_reset_tokens',
+            'expire' => 15,
             'throttle' => 60,
         ],
     ],

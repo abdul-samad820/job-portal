@@ -29,9 +29,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
-
-        $this->app->booted(function () {
-            \Illuminate\Support\Facades\Auth::shouldUse('admin');
-        });
     }
 }

@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
 
             $table->text('professional_summary')->nullable();
-            $table->text('core_skills')->nullable();        
-            $table->text('education')->nullable();          
+            $table->text('core_skills')->nullable();
+            $table->text('education')->nullable();
             $table->text('experience')->nullable();
             $table->timestamps();
 

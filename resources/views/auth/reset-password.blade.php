@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Portal – Reset Password</title>
+    <meta name="description" content="Set a new password for your Job Hub account.">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -197,6 +198,7 @@
             .auth-right { padding: 22px 14px 28px; }
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/utilities.css') }}">
 </head>
 <body>
 
@@ -221,7 +223,12 @@
         <p class="subtitle">Enter and confirm your new password below.</p>
 
         @if ($errors->any())
-            <div class="alert alert-danger small py-2 mb-3" style="border-radius:10px;">{{ $errors->first() }}</div>
+            <div class="alert alert-danger small py-2 mb-3 u-radius-10px">
+                {{ $errors->first() }}
+                @if (str_contains($errors->first(), 'expired') || str_contains($errors->first(), 'invalid'))
+                    <a href="{{ route('password.request') }}" class="d-block mt-1 font-weight-bold">Request a new reset link →</a>
+                @endif
+            </div>
         @endif
 
         <form method="POST" action="{{ route('password.update') }}">
@@ -229,7 +236,7 @@
             <input type="hidden" name="token" value="{{ $token }}">
             <input type="hidden" name="email" value="{{ $email }}">
 
-            <label class="field-label">New Password</label>
+            <label class="field-label" for="pw1">New Password</label>
             <div class="input-group mb-1">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
@@ -245,7 +252,7 @@
             </div>
             <p class="form-text-hint mb-3">Must be 8+ characters with at least one uppercase letter and number.</p>
 
-            <label class="field-label">Confirm Password</label>
+            <label class="field-label" for="pw2">Confirm Password</label>
             <div class="input-group mb-4">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
@@ -287,5 +294,6 @@
         }
     }
 </script>
+    <script src="{{ asset('js/global-loading.js') }}"></script>
 </body>
 </html>

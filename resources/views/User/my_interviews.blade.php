@@ -21,7 +21,7 @@
         </div>
 
         <!-- RIGHT STATS -->
-        <div class="d-flex align-items-center mt-3 mt-md-0" style="gap:10px;">
+        <div class="d-flex align-items-center mt-3 mt-md-0 u-gap-10px">
 
             <div class="pill success">
                 <i class="fas fa-circle mr-1"></i>
@@ -38,7 +38,7 @@
     {{-- ── UPCOMING INTERVIEWS ── --}}
     <div class="mb-5">
         <div class="mi-section-label upcoming">
-            <i class="fas fa-circle" style="font-size:8px;"></i>
+            <i class="fas fa-circle u-fs-0-533rem"></i>
             Upcoming Interviews
         </div>
 
@@ -48,7 +48,7 @@
                 <i class="far fa-calendar-times"></i>
             </div>
             <p>No upcoming interviews scheduled yet.</p>
-            <small class="text-muted" style="font-size:12px;">
+            <small class="text-muted u-fs-0-8rem">
                 Apply for jobs to get interview calls!
             </small>
         </div>
@@ -64,7 +64,7 @@
             <div class="mi-card-body">
 
                 {{-- Top row --}}
-                <div class="d-flex align-items-center flex-wrap mb-2" style="gap:8px;">
+                <div class="d-flex align-items-center flex-wrap mb-2 u-gap-8px">
                     <span class="mi-badge {{ $s }}">
                         <i class="fas fa-{{ $s === 'scheduled' ? 'calendar-check' : ($s === 'rescheduled' ? 'sync-alt' : 'times') }}"></i>
                         {{ ucfirst($s) }}
@@ -132,7 +132,7 @@
     {{-- ── PAST INTERVIEWS ── --}}
     <div>
         <div class="mi-section-label past">
-            <i class="fas fa-history" style="font-size:11px;"></i>
+            <i class="fas fa-history u-fs-var-fs-xs"></i>
             Past Interviews
         </div>
 
@@ -151,12 +151,12 @@
         $timeBox = $s === 'cancelled' ? 'cancelled' : ($s === 'completed' ? 'completed' : 'past');
         $timeText = $s === 'cancelled' ? 'Cancelled' : ($s === 'completed' ? 'Completed' : $interview->interview_date->diffForHumans());
         @endphp
-        <div class="mi-card" style="opacity:.85;">
+        <div class="mi-card u-op-85">
             <div class="mi-card-bar {{ $s }}"></div>
 
             <div class="mi-card-body">
 
-                <div class="d-flex align-items-center flex-wrap mb-2" style="gap:8px;">
+                <div class="d-flex align-items-center flex-wrap mb-2 u-gap-8px">
                     <span class="mi-badge {{ $s }}">
                         <i class="fas fa-{{ $s === 'completed' ? 'check' : ($s === 'cancelled' ? 'times' : 'sync-alt') }}"></i>
                         {{ ucfirst($s) }}

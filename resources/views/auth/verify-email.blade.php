@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Portal – Verify Email</title>
+    <meta name="description" content="Verify your email address to activate your Job Hub account.">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -152,6 +153,7 @@
             .auth-card { padding: 28px 16px; }
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/utilities.css') }}">
 </head>
 <body>
 
@@ -176,9 +178,16 @@
         </div>
     @endif
 
+    <!-- INFO (e.g. "Account created! Please verify your email to continue.") -->
+    @if(session('info'))
+        <div class="alert-success-glass mt-3">
+            <i class="fas fa-info-circle mr-2"></i>{{ session('info') }}
+        </div>
+    @endif
+
     <!-- EMAIL DISPLAY -->
     <div class="email-box">
-        <i class="fas fa-envelope mr-2" style="opacity:0.7;"></i>
+        <i class="fas fa-envelope mr-2 u-op-0-7"></i>
         {{ auth('user')->user()->email }}
     </div>
 
@@ -204,5 +213,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/global-loading.js') }}"></script>
 </body>
 </html>

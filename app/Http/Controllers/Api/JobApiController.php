@@ -61,7 +61,13 @@ class JobApiController extends Controller
             default => $query->orderBy('created_at', 'desc'),
         };
 
-        $jobs = $query->paginate($request->get('per_page', 10));
+        // Cap per_page to prevent a client requesting an unbounded result
+        // set (e.g. ?per_page=100000) and forcing the server to load/
+        // serialize huge numbers of rows in one response.
+        $perPage = min((int) $request->get('per_page', 10), 100);
+        $perPage = max($perPage, 1);
+
+        $jobs = $query->paginate($perPage);
 
         // Response format
         $formattedJobs = collect($jobs->items())->map(fn ($job) => [
@@ -93,7 +99,7 @@ class JobApiController extends Controller
                 'per_page' => $jobs->perPage(),
                 'total' => $jobs->total(),
             ],
-        ]);
+        ])->header('Cache-Control', 'public, max-age=300');
     }
 
     // ─────────────────────────────────────
@@ -101,6 +107,11 @@ class JobApiController extends Controller
     // ─────────────────────────────────────
     public function show(int $id): JsonResponse
     {
+        // Intentionally no last_date filter here — matches web behavior
+        // (UserController::user_job_single() also shows expired jobs via
+        // direct link; only listings filter by last_date). A shared
+        // direct link to an expired job should still resolve, e.g. for
+        // "view the job you applied to" pages.
         $job = Job::with(['category', 'role', 'admin'])->find($id);
 
         if (! $job) {
@@ -158,7 +169,7 @@ class JobApiController extends Controller
             'job_id' => $id,
         ]);
 
-        return $this->success(null, '✅ Job saved successfully!', 201);
+        return $this->success(null, 'Job saved successfully.', 201);
     }
 
     // ─────────────────────────────────────
@@ -174,7 +185,7 @@ class JobApiController extends Controller
             return $this->error('Saved job not found.', 404);
         }
 
-        return $this->success(null, '🗑️ Job removed from saved list.');
+        return $this->success(null, 'Job removed from saved list.');
     }
 
     // ─────────────────────────────────────
@@ -200,7 +211,8 @@ class JobApiController extends Controller
 
         return $this->paginated(
             $savedJobs,
-            'Saved jobs fetched successfully.'
+            'Saved jobs fetched successfully.',
+            $formatted
         );
     }
 }

@@ -6,22 +6,9 @@ use App\Http\Controllers\Api\JobApiController;
 use App\Http\Controllers\Api\ProfileApiController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|─────────────────────────────────────────────────────
-| API Version 1 — Job Portal REST API
-|─────────────────────────────────────────────────────
-|
-| Base URL: /api/v1/
-| Auth: Bearer Token (Sanctum)
-|
-*/
-
 Route::prefix('v1')->name('api.v1.')->group(function () {
 
-    // ══════════════════════════════════════
-    // PUBLIC ROUTES — Token ki zaroorat nahi
-    // ══════════════════════════════════════
-    Route::prefix('auth')->name('auth.')->group(function () {
+    Route::prefix('auth')->name('auth.')->middleware('throttle:5,1')->group(function () {
         Route::post('/register', [AuthApiController::class, 'register'])->name('register');
         Route::post('/login', [AuthApiController::class, 'login'])->name('login');
     });
@@ -30,11 +17,7 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
     Route::get('/jobs', [JobApiController::class, 'index'])->name('jobs.index');
     Route::get('/jobs/{id}', [JobApiController::class, 'show'])->name('jobs.show');
 
-    // ══════════════════════════════════════
-    // PROTECTED ROUTES — Token required
-    // ══════════════════════════════════════
-    Route::middleware('auth:sanctum')->group(function () {
-
+    Route::middleware(['auth:sanctum', 'api.active'])->group(function () {
         // Auth
         Route::post('/auth/logout', [AuthApiController::class, 'logout'])->name('auth.logout');
         Route::get('/auth/me', [AuthApiController::class, 'me'])->name('auth.me');
@@ -42,11 +25,12 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
         // Profile
         Route::get('/profile', [ProfileApiController::class, 'show'])->name('profile.show');
         Route::post('/profile', [ProfileApiController::class, 'update'])->name('profile.update');
+        Route::patch('/profile', [ProfileApiController::class, 'update'])->name('profile.patch');
 
         // Applications
         Route::get('/applications', [ApplicationApiController::class, 'index'])->name('applications.index');
         Route::post('/jobs/{id}/apply', [ApplicationApiController::class, 'apply'])->name('applications.apply');
-        // Route::delete('/applications/{id}', [ApplicationApiController::class, 'withdraw'])->name('applications.withdraw');
+        Route::delete('/applications/{id}', [ApplicationApiController::class, 'withdraw'])->name('applications.withdraw');
 
         // Saved Jobs
         Route::get('/saved-jobs', [JobApiController::class, 'savedJobs'])->name('jobs.saved');

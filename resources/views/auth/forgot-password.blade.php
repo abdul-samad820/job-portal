@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Portal – Forgot Password</title>
+    <meta name="description" content="Reset your Job Hub account password to regain access to your job applications and profile.">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -189,6 +190,7 @@
             .auth-right { padding: 22px 14px 28px; }
         }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/utilities.css') }}">
 </head>
 <body>
 
@@ -211,26 +213,27 @@
 
         <h3>Forgot Password?</h3>
         <p class="subtitle">Enter your email and we'll send you a reset link.</p>
+        <p class="text-gray">The link will be valid for 30 minutes. If it expires, just come back to this page and request a new one.</p>
 
         @if(session('success'))
-            <div class="alert alert-success mb-3" style="border-radius:10px; background:rgba(16,185,129,0.20); border:none; color:#fff;">
+            <div class="alert alert-success mb-3 u-radius-10px-bg-rgba-16-185-12-border-none-color-var-white">
                 <i class="fas fa-check-circle mr-2"></i>{{ session('success') }}
             </div>
         @endif
 
         @if ($errors->any())
-            <div class="alert alert-danger small py-2 mb-3" style="border-radius:10px;">{{ $errors->first() }}</div>
+            <div class="alert alert-danger small py-2 mb-3 u-radius-10px">{{ $errors->first() }}</div>
         @endif
 
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
 
-            <label class="field-label">Email Address</label>
+            <label class="field-label" for="email">Email Address</label>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                 </div>
-                <input type="email" name="email" value="{{ old('email') }}"
+                <input type="email" name="email" id="email" value="{{ old('email') }}"
                     class="form-control @error('email') is-invalid @enderror"
                     placeholder="you@example.com" required autocomplete="email">
             </div>
@@ -250,5 +253,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/global-loading.js') }}"></script>
 </body>
 </html>

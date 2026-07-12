@@ -8,8 +8,8 @@
         @csrf
         {{-- Category Name --}}
         <fieldset class="form-group">
-            <label class="font-weight-bold">Category Name <span class="text-danger">*</span></label>
-            <input type="text" name="name" class="form-control" placeholder="Enter category name"
+            <label class="font-weight-bold" for="name">Category Name <span class="text-danger">*</span></label>
+            <input id="name" type="text" name="name" class="form-control" placeholder="Enter category name"
                 value="{{ old('name') }}" required>
             @error('name')
             <small class="text-danger d-block mt-1">{{ $message }}</small>
@@ -18,8 +18,8 @@
 
         {{-- Category Description --}}
         <fieldset class="form-group">
-            <label class="font-weight-bold">Category Description</label>
-            <input type="text" name="description" class="form-control" placeholder="Enter category description"
+            <label class="font-weight-bold" for="description">Category Description</label>
+            <input id="description" type="text" name="description" class="form-control" placeholder="Enter category description"
                 value="{{ old('description') }}">
             @error('description')
             <small class="text-danger d-block mt-1">{{ $message }}</small>
@@ -28,8 +28,8 @@
 
         {{-- Category Image --}}
         <fieldset class="form-group">
-            <label class="font-weight-bold">Category Image</label>
-            <input type="file" name="category_image" class="form-control-file" accept="image/*">
+            <label class="font-weight-bold" for="category_image">Category Image</label>
+            <input id="category_image" type="file" name="category_image" class="form-control-file" accept="image/*">
             <small class="text-muted d-block mt-1">
                 Upload JPG / PNG (Max size: 2MB)
             </small>

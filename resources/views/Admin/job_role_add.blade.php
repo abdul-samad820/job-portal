@@ -18,8 +18,8 @@
 
         {{-- Role Name --}}
         <fieldset class="mb-3">
-            <label class="form-label fw-semibold">Role Name <span class="text-danger">*</span></label>
-            <input class="form-control" type="text" name="name" placeholder="Enter role name" value="{{ old('name') }}"
+            <label class="form-label font-weight-bold" for="name">Role Name <span class="text-danger">*</span></label>
+            <input class="form-control" id="name" type="text" name="name" placeholder="Enter role name" value="{{ old('name') }}"
                 required>
             @error('name')
             <small class="text-danger">{{ $message }}</small>
@@ -28,9 +28,9 @@
 
         {{-- Category Select --}}
         <fieldset class="mb-3">
-            <label class="font-weight-bold">Select Category <span class="text-danger">*</span></label>
+            <label class="font-weight-bold" for="category_id">Select Category <span class="text-danger">*</span></label>
 
-            <select name="category_id" class="form-control" required>
+            <select id="category_id" name="category_id" class="form-control" required>
                 <option value="">-- Select Category --</option>
 
                 @foreach ($categories as $category)
@@ -50,8 +50,8 @@
 
         {{-- Role Description --}}
         <fieldset class="mb-3">
-            <label class="form-label fw-semibold">Role Description</label>
-            <textarea class="form-control" name="description" placeholder="Enter role description"
+            <label class="form-label font-weight-bold" for="description">Role Description</label>
+            <textarea id="description" class="form-control" name="description" placeholder="Enter role description"
                 rows="3">{{ old('description') }}</textarea>
             @error('description')
             <small class="text-danger">{{ $message }}</small>

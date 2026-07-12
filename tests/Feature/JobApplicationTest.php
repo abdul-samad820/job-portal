@@ -6,17 +6,17 @@ use App\Models\Admin;
 use App\Models\Job;
 use App\Models\JobApplication;
 use App\Models\User;
-use App\Models\UserProfile;          
+use App\Models\UserProfile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Concerns\CreatesFakeUploads;
+use Tests\TestCase;
 
 class JobApplicationTest extends TestCase
 {
-    use RefreshDatabase;
+    use CreatesFakeUploads, RefreshDatabase;
 
     private User $user;
 
@@ -38,25 +38,25 @@ class JobApplicationTest extends TestCase
             'last_date' => now()->addDays(30),
         ]);
 
-       
         UserProfile::create([
             'user_id' => $this->user->id,
             'professional_summary' => 'Experienced Laravel developer',
             'core_skills' => 'PHP, Laravel, MySQL',
-            'education' => [                     
+            'education' => [
                 ['degree' => 'BCA', 'institute' => 'XYZ College', 'year' => '2023'],
             ],
         ]);
     }
 
-   #[Test]
+    #[Test]
     public function user_can_apply_for_a_job(): void
     {
-        $resume = UploadedFile::fake()->create('resume.pdf', 500, 'application/pdf');
+        $resume = $this->fakePdf();
 
         $response = $this->actingAs($this->user, 'user')
             ->post(route('apply_job_application', $this->job->id), [
                 'cover_letter' => 'I am very interested in this position and have 3 years experience.',
+                'resume_source' => 'upload',
                 'resume' => $resume,
             ]);
 
@@ -70,7 +70,7 @@ class JobApplicationTest extends TestCase
         $response->assertSessionHas('success');
     }
 
-   #[Test]
+    #[Test]
     public function user_cannot_apply_twice_for_same_job(): void
     {
         // Use factory instead of manual create
@@ -79,10 +79,11 @@ class JobApplicationTest extends TestCase
             'job_id' => $this->job->id,
         ]);
 
-        $resume = UploadedFile::fake()->create('resume.pdf', 500, 'application/pdf');
+        $resume = $this->fakePdf();
         $response = $this->actingAs($this->user, 'user')
             ->post(route('apply_job_application', $this->job->id), [
                 'cover_letter' => 'Second attempt cover letter text here.',
+                'resume_source' => 'upload',
                 'resume' => $resume,
             ]);
 
@@ -92,17 +93,18 @@ class JobApplicationTest extends TestCase
         $this->assertDatabaseCount('job_applications', 1);
     }
 
-   #[Test]
+    #[Test]
     public function user_cannot_apply_for_expired_job(): void
     {
         $expiredJob = Job::factory()->expired()->create([
             'admin_id' => $this->admin->id,
         ]);
 
-        $resume = UploadedFile::fake()->create('resume.pdf', 500, 'application/pdf');
+        $resume = $this->fakePdf();
         $response = $this->actingAs($this->user, 'user')
             ->post(route('apply_job_application', $expiredJob->id), [
                 'cover_letter' => 'Please consider my application.',
+                'resume_source' => 'upload',
                 'resume' => $resume,
             ]);
 
@@ -114,16 +116,17 @@ class JobApplicationTest extends TestCase
         ]);
     }
 
-   #[Test]
+    #[Test]
     public function user_cannot_apply_without_complete_profile(): void
     {
         // User with NO profile
         $incompleteUser = User::factory()->create();
 
-        $resume = UploadedFile::fake()->create('resume.pdf', 500, 'application/pdf');
+        $resume = $this->fakePdf();
         $response = $this->actingAs($incompleteUser, 'user')
             ->post(route('apply_job_application', $this->job->id), [
                 'cover_letter' => 'I want to apply for this job.',
+                'resume_source' => 'upload',
                 'resume' => $resume,
             ]);
 
@@ -132,7 +135,7 @@ class JobApplicationTest extends TestCase
         $response->assertSessionHas('error');
     }
 
-   #[Test]
+    #[Test]
     public function admin_can_update_application_status(): void
     {
         $application = JobApplication::factory()->create([
@@ -153,7 +156,7 @@ class JobApplicationTest extends TestCase
         $response->assertSessionHas('success');
     }
 
-   #[Test]
+    #[Test]
     public function admin_cannot_update_another_admins_application(): void
     {
         $otherAdmin = Admin::factory()->create();

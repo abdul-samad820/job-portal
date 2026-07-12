@@ -15,6 +15,17 @@ class User_mid
             return redirect()->route('user.login')->with('error', 'Access denied! Please login first.');
         }
 
+        $user = Auth::guard('user')->user();
+
+        if (! $user->is_active) {
+            Auth::guard('user')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('user.login')
+                ->with('error', 'Your account has been suspended. Please contact support.');
+        }
+
         return $next($request);
     }
 }

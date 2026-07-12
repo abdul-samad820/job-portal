@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
 class RegisterRequest extends FormRequest
 {
@@ -24,9 +25,10 @@ class RegisterRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
+            'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
             'phone' => 'required|digits:10',
             'address' => 'nullable|string|max:255',
+            'agree_terms' => 'required|accepted',
         ];
     }
 
@@ -42,6 +44,8 @@ class RegisterRequest extends FormRequest
             'password.confirmed' => 'Passwords do not match.',
             'phone.required' => 'Phone number is required.',
             'phone.digits' => 'Phone number must be 10 digits.',
+            'agree_terms.required' => 'You must agree to the Terms & Conditions to create an account.',
+            'agree_terms.accepted' => 'You must agree to the Terms & Conditions to create an account.',
         ];
     }
 }

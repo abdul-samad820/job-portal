@@ -1,0 +1,825 @@
+body.admin-shell {
+    --sa-sidebar-w: 258px;
+    --sa-sidebar-w-collapsed: 4.6rem;
+    --sa-header-h: 64px;
+    --sa-radius-sm: 8px;
+    --sa-radius-md: 12px;
+    --sa-radius-lg: 16px;
+    --sa-border: #eef1f6;
+    --sa-sidebar-bg: #ffffff;
+    --sa-sidebar-active-bg: rgba(37, 99, 235, 0.09);
+    background: #f6f8fb;
+}
+
+body.admin-shell * {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+body.admin-shell *::-webkit-scrollbar { width: 6px; height: 6px; }
+body.admin-shell *::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+body.admin-shell *::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* Respect reduced-motion preference across the whole panel */
+@media (prefers-reduced-motion: reduce) {
+    body.admin-shell * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+/* ============================================================================
+   1. SIDEBAR
+============================================================================ */
+body.admin-shell .jobi-sidebar.main-sidebar {
+    width: var(--sa-sidebar-w);
+    background: var(--sa-sidebar-bg);
+    border-right: 1px solid var(--sa-border);
+    box-shadow: 1px 0 0 rgba(15, 23, 42, 0.02);
+}
+body.admin-shell.sidebar-mini.sidebar-collapse .jobi-sidebar.main-sidebar {
+    width: var(--sa-sidebar-w-collapsed);
+}
+
+/* Sidebar scrollbar — always visible, soft grey (instead of AdminLTE's default hidden/auto-hide bar) */
+body.admin-shell .jobi-sidebar .sidebar {
+    overflow-y: auto !important;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd2dc transparent;
+}
+body.admin-shell .jobi-sidebar .sidebar::-webkit-scrollbar { width: 6px; }
+body.admin-shell .jobi-sidebar .sidebar::-webkit-scrollbar-track { background: transparent; }
+body.admin-shell .jobi-sidebar .sidebar::-webkit-scrollbar-thumb { background: #cbd2dc; border-radius: 10px; }
+body.admin-shell .jobi-sidebar .sidebar::-webkit-scrollbar-thumb:hover { background: #a8b1bf; }
+/* If OverlayScrollbars (AdminLTE plugin) is the one actually rendering the bar, keep its handle visible too */
+body.admin-shell .jobi-sidebar .os-scrollbar { opacity: 1 !important; }
+body.admin-shell .jobi-sidebar .os-scrollbar-vertical { width: 6px !important; }
+body.admin-shell .jobi-sidebar .os-scrollbar-handle { background: #cbd2dc !important; }
+body.admin-shell .content-wrapper { margin-left: var(--sa-sidebar-w); padding-top: var(--sa-header-h); transition: margin-left 0.25s ease; }
+body.admin-shell.sidebar-mini.sidebar-collapse .content-wrapper { margin-left: var(--sa-sidebar-w-collapsed); }
+body.admin-shell .main-footer { margin-left: var(--sa-sidebar-w); transition: margin-left 0.25s ease; }
+body.admin-shell.sidebar-mini.sidebar-collapse .main-footer { margin-left: var(--sa-sidebar-w-collapsed); }
+
+/* Brand */
+body.admin-shell .jobi-brand {
+   padding: 13px 23px 14px;
+    display: flex;
+    align-items: center;
+    gap: 23px;
+    text-align: left;
+}
+body.admin-shell .jobi-brand img { width: 38px; height: 38px; margin: 0; flex-shrink: 0; }
+body.admin-shell .sa-brand-text { display: flex; flex-direction: column; gap: 3px; overflow: hidden; line-height: 1.1; min-width: 0; flex: 1 1 auto; }
+body.admin-shell .sa-brand-title {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+body.admin-shell .brand-subtext {
+    text-align: left;
+    margin-top: 0;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    color: var(--text-disabled);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+body.admin-shell.sidebar-collapse .sa-brand-text { display: none !important; }
+
+/* Profile card */
+body.admin-shell .jobi-profile {
+   display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    padding: 8px 22px;
+    margin: -2px -1px 0px;
+    background: #f8fafc;
+    border: 2px solid var(--sa-border);
+    border-radius: var(--sa-radius-md);
+}
+body.admin-shell .profile-img { width: 40px; height: 40px; margin: 0; flex-shrink: 0; }
+body.admin-shell .sa-profile-meta { overflow: hidden; display: flex; flex-direction: column; gap: 5px; min-width: 0; flex: 1 1 auto; }
+body.admin-shell .sa-profile-name {
+    font-size: 12.5px; font-weight: 700; color: var(--text-primary); line-height: 1.1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+body.admin-shell .sa-profile-role-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    width: fit-content;
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.1);
+    padding: 2px 8px; border-radius: 999px; line-height: 1.6;
+}
+body.admin-shell.sidebar-collapse .jobi-profile { justify-content: center; padding: 10px; margin: 10px 8px; }
+body.admin-shell.sidebar-collapse .sa-profile-meta { display: none !important; }
+
+/* Section headings inside the menu */
+body.admin-shell .sa-nav-heading {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-disabled);
+    padding: 16px 18px 6px;
+    margin: 0;
+}
+body.admin-shell.sidebar-collapse .sa-nav-heading { display: none; }
+
+/* Menu items */
+body.admin-shell .jobi-menu { padding: 4px 12px 16px; }
+body.admin-shell .jobi-menu .nav-item { margin-bottom: 1px; }
+body.admin-shell .jobi-menu .nav-link {
+    position: relative;
+    padding: 9px 12px;
+    border-radius: var(--sa-radius-sm);
+    font-size: 13.2px;
+    color: var(--text-secondary);
+}
+body.admin-shell .jobi-menu .nav-link i { width: 20px; font-size: 15px; }
+body.admin-shell .jobi-menu .nav-link:hover {
+    background: #f1f5f9 !important;
+    color: var(--text-primary) !important;
+    transform: translateX(1px);
+}
+body.admin-shell .jobi-menu .nav-link:hover i { color: var(--accent); }
+body.admin-shell .jobi-menu .nav-link.active {
+    background: var(--sa-sidebar-active-bg) !important;
+    color: var(--accent) !important;
+    font-weight: 700 !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+}
+body.admin-shell .jobi-menu .nav-link.active i { color: var(--accent) !important; }
+/* Rounded active indicator bar on the left edge */
+body.admin-shell .jobi-menu .nav-link.active::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 20px;
+    border-radius: 0 4px 4px 0;
+    background: var(--accent);
+}
+body.admin-shell.sidebar-collapse .jobi-menu .nav-link.active::before { display: none; }
+
+/* ============================================================================
+   2. HEADER / NAVBAR
+============================================================================ */
+body.admin-shell .main-header.navbar {
+    height: var(--sa-header-h);
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--sa-border) !important;
+    padding: 0 20px;
+    margin-left: var(--sa-sidebar-w);
+    left: 0 !important;
+    right: 0;
+    transition: margin-left 0.25s ease;
+}
+body.admin-shell.sidebar-mini.sidebar-collapse .main-header.navbar { margin-left: var(--sa-sidebar-w-collapsed); }
+body.admin-shell .main-header .navbar-nav { align-items: center; height: var(--sa-header-h); }
+
+body.admin-shell .sa-header-toggle {
+    width: 36px; height: 36px; border-radius: var(--sa-radius-sm);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--text-secondary); transition: background 0.15s ease;
+}
+body.admin-shell .sa-header-toggle:hover { background: #f1f5f9; color: var(--text-primary); }
+
+body.admin-shell .sa-breadcrumb {
+    display: flex; flex-direction: column; margin-left: 14px; line-height: 1.15;
+}
+body.admin-shell .sa-breadcrumb .sa-crumb-trail {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--text-muted);
+}
+body.admin-shell .sa-breadcrumb .sa-crumb-title {
+    font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 15px;
+    color: var(--text-primary);
+}
+
+/* Header search */
+body.admin-shell .sa-header-search {
+    position: relative; max-width: 320px; width: 100%;
+}
+body.admin-shell .sa-header-search input {
+    width: 100%; border: 1px solid var(--sa-border); background: #f8fafc;
+    border-radius: 999px; padding: 8px 14px 8px 38px; font-size: 13px;
+    transition: all 0.18s ease;
+}
+body.admin-shell .sa-header-search input:focus {
+    outline: none; background: #fff; border-color: rgba(var(--accent-rgb), 0.4);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
+}
+body.admin-shell .sa-header-search i {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--text-disabled); font-size: 13px;
+}
+
+/* Notification bell */
+body.admin-shell .sa-icon-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--text-secondary); position: relative; transition: background 0.15s ease;
+}
+body.admin-shell .sa-icon-btn:hover { background: #f1f5f9; color: var(--accent); }
+body.admin-shell .sa-icon-btn .navbar-badge {
+    top: 4px; right: 4px; font-size: 9px; padding: 2px 4px;
+    animation: sa-badge-pulse 2s ease-in-out infinite;
+}
+@keyframes sa-badge-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.35); }
+    50% { box-shadow: 0 0 0 4px rgba(220, 53, 69, 0); }
+}
+body.admin-shell .dropdown-menu {
+    border: 1px solid var(--sa-border);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--sa-radius-md);
+    padding: 6px;
+    animation: sa-dropdown-in 0.14s ease;
+}
+@keyframes sa-dropdown-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+body.admin-shell .dropdown-item { border-radius: 8px; font-size: 13px; padding: 8px 10px; }
+body.admin-shell .dropdown-item:hover { background: #f1f5f9; }
+body.admin-shell .dropdown-header { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
+
+/* Notification dropdown card */
+body.admin-shell .sa-notif-menu {
+    width: 360px;
+    border-radius: var(--sa-radius-md);
+    overflow: hidden;
+}
+body.admin-shell .sa-notif-header {
+    padding: 14px 16px;
+    background: #f8fafc;
+}
+body.admin-shell .sa-notif-header h6 {
+    font-weight: 700; font-size: 14px; color: var(--text-primary, #1a1f36);
+}
+body.admin-shell .sa-notif-list {
+    max-height: 320px;
+    overflow-y: auto;
+}
+body.admin-shell .sa-notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 0;
+    white-space: normal;
+}
+body.admin-shell .sa-notif-icon {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(37, 99, 235, 0.1); color: #2563eb; font-size: 13px;
+}
+body.admin-shell .sa-notif-body { flex: 1; min-width: 0; }
+body.admin-shell .sa-notif-title {
+    display: block; font-weight: 700; font-size: 13px; color: var(--text-primary, #1a1f36);
+}
+body.admin-shell .sa-notif-message {
+    display: block; font-size: 12px; color: var(--text-muted, #6b7280);
+    margin-top: 2px; line-height: 1.4;
+}
+body.admin-shell .sa-notif-time {
+    display: block; font-size: 11px; color: var(--text-disabled, #9ca3af); margin-top: 4px;
+}
+body.admin-shell .sa-notif-empty {
+    text-align: center; padding: 40px 20px; color: var(--text-muted, #6b7280);
+}
+body.admin-shell .sa-notif-empty i {
+    font-size: 26px; color: #16a34a; display: block; margin-bottom: 8px;
+}
+
+/* Contact message "From" avatar — initials circle, color varies per contact
+   using the same blue/green/amber/red palette already used in Reports. */
+body.admin-shell .sa-contact-avatar {
+    position: relative;
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12.5px; font-weight: 700; color: #fff;
+}
+body.admin-shell .sa-contact-avatar-blue  { background: #2563eb; }
+body.admin-shell .sa-contact-avatar-green { background: #16a34a; }
+body.admin-shell .sa-contact-avatar-red   { background: #e74a3b; }
+body.admin-shell .sa-contact-avatar-amber { background: #f6c23e; color: #1a1f36; }
+body.admin-shell .sa-contact-avatar-dot {
+    position: absolute; top: -2px; right: -2px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #e74a3b; border: 2px solid #fff;
+}
+
+/* Profile chip in header */
+body.admin-shell .sa-header-profile {
+    display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px;
+    border-radius: 999px; transition: background 0.15s ease;
+}
+body.admin-shell .sa-header-profile:hover { background: #f1f5f9; }
+body.admin-shell .sa-header-profile .sa-avatar-circle {
+    width: 30px; height: 30px; border-radius: 50%; background: var(--accent);
+    color: #fff; display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px;
+}
+body.admin-shell .sa-header-profile .sa-header-name {
+    font-size: 12.5px; font-weight: 600; color: var(--text-primary); line-height: 1.1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;
+}
+body.admin-shell .sa-header-profile .sa-header-role {
+    font-size: 10px; color: var(--text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; display: block;
+}
+
+/* ============================================================================
+   3. TOOLBAR (filters + search + primary action — used across list pages)
+============================================================================ */
+body.admin-shell .sa-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px; margin-bottom: 16px;
+}
+body.admin-shell .sa-filter-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+body.admin-shell .sa-filter-pills .btn {
+    border-radius: 999px !important; padding: 6px 16px; font-size: 12.5px !important;
+    font-weight: 600 !important; border: 1px solid var(--sa-border);
+}
+body.admin-shell .sa-filter-pills .btn.btn-primary { border-color: var(--accent); }
+body.admin-shell .sa-filter-pills .btn:not(.btn-primary) { background: #fff; color: var(--text-secondary); }
+body.admin-shell .sa-filter-pills .btn:not(.btn-primary):hover { background: #f1f5f9; }
+
+/* ============================================================================
+   4. PAGE HEADER (partials.superadmin-page-header)
+============================================================================ */
+body.admin-shell .sa-page-header {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px; margin-bottom: 24px;
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.07) 0%, #ffffff 60%);
+    padding: 22px 26px 22px 30px; margin-top: 20px;
+    border: 1px solid var(--sa-border); border-radius: var(--sa-radius-lg);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 4px 14px rgba(15, 23, 42, 0.03);
+}
+/* Accent bar down the left edge — small signature touch, ties header to the brand color */
+body.admin-shell .sa-page-header::before {
+    content: ""; position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+}
+body.admin-shell .sa-page-header .sa-page-icon {
+    width: 48px; height: 48px; border-radius: var(--sa-radius-md);
+    background: rgba(var(--accent-rgb), 0.1); color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center; font-size: 19px;
+    flex-shrink: 0;
+}
+body.admin-shell .sa-page-header h1,
+body.admin-shell .sa-page-header .sa-page-title {
+    font-size: 1.35rem; font-weight: 700; margin-bottom: 3px; letter-spacing: -0.01em;
+    color: #1e293b;
+}
+body.admin-shell .sa-page-header small.text-muted {
+    font-size: 0.87rem;
+}
+/* Action button(s) passed via the 'actions' slot (e.g. "Add New Admin") */
+body.admin-shell .sa-page-header .btn-primary {
+    box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.25);
+}
+@media (max-width: 575.98px) {
+    body.admin-shell .sa-page-header > a.btn,
+    body.admin-shell .sa-page-header > div.d-flex.align-items-center:last-child { width: 100%; }
+    body.admin-shell .sa-page-header .btn { width: 100%; justify-content: center; }
+}
+
+/* ============================================================================
+   4b. MODALS (e.g. #createAdminModal)
+============================================================================ */
+body.admin-shell .sa-modal .modal-content {
+    border: none; border-radius: var(--sa-radius-lg);
+    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.18);
+    overflow: hidden;
+}
+body.admin-shell .sa-modal .modal-header {
+    align-items: flex-start; padding: 20px 24px;
+    border-bottom: 1px solid var(--sa-border);
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.06) 0%, #ffffff 70%);
+}
+body.admin-shell .sa-modal .modal-title { font-size: 1.15rem; color: #1e293b; margin-bottom: 2px; }
+body.admin-shell .sa-modal .modal-header .close { padding: 0; margin: 0; line-height: 1; opacity: 0.5; }
+body.admin-shell .sa-modal .modal-header .close:hover { opacity: 0.9; }
+body.admin-shell .sa-modal .modal-body { padding: 24px; }
+body.admin-shell .sa-modal .form-control:focus {
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12); border-color: rgba(var(--accent-rgb), 0.5);
+}
+body.admin-shell .sa-modal .btn-primary { box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.25); }
+@media (max-width: 575.98px) {
+    body.admin-shell .sa-modal .modal-body { padding: 18px; }
+}
+/* Prevent a second (background page) scrollbar from showing while a modal is open */
+body.admin-shell.modal-open {
+    overflow: hidden !important;
+    padding-right: 0 !important;
+}
+body.admin-shell .sa-modal .modal-body {
+    max-height: 70vh;
+}
+
+/* ============================================================================
+   5. CARDS / STAT CARDS
+============================================================================ */
+body.admin-shell .card, body.admin-shell .sa-hoverable { transition: box-shadow 0.2s ease, transform 0.2s ease; }
+body.admin-shell .card.sa-hoverable:hover, body.admin-shell .sa-hoverable:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+/* ============================================================================
+   6. TABLES
+============================================================================ */
+body.admin-shell .table thead.thead-light th {
+    background: #f8fafc; color: var(--text-muted); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;
+    border-bottom: 1px solid var(--sa-border); border-top: none;
+    padding: 12px 16px; white-space: nowrap;
+}
+body.admin-shell .table td { padding: 13px 16px; font-size: 13.2px; vertical-align: middle; border-top: 1px solid #f4f6f9; }
+body.admin-shell .table tbody tr { transition: background 0.12s ease; }
+body.admin-shell .table-hover tbody tr:hover { background: #f8fafc; }
+
+/* Row + select-all checkboxes match the accent color instead of default browser blue */
+body.admin-shell .table input[type="checkbox"],
+body.admin-shell #selectAll { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
+
+/* Bulk-selection bar — shown once a row is checked */
+body.admin-shell .sa-bulk-bar {
+    gap: 10px; margin: 0 16px 16px; padding: 12px 16px;
+    background: rgba(var(--accent-rgb), 0.06);
+    border: 1px solid rgba(var(--accent-rgb), 0.18);
+    border-radius: var(--sa-radius-md);
+}
+body.admin-shell .sa-bulk-count {
+    font-weight: 700; color: #1e293b; margin-right: 4px; font-size: 0.85rem;
+}
+body.admin-shell .sa-bulk-bar .btn { font-weight: 600; }
+
+/* Row action buttons — compact, evenly-sized icon buttons in a single row (no wrap) */
+body.admin-shell .sa-row-actions {
+    display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap;
+}
+body.admin-shell .sa-icon-action {
+    width: 32px; height: 32px; padding: 0; display: inline-flex;
+    align-items: center; justify-content: center; border-radius: var(--sa-radius-sm);
+    font-size: 13px;
+}
+
+/* Empty state */
+body.admin-shell .sa-empty-state { padding: 56px 20px; text-align: center; }
+body.admin-shell .sa-empty-state i {
+    width: 64px; height: 64px; border-radius: 50%; background: #f1f5f9;
+    color: var(--text-disabled); display: inline-flex; align-items: center;
+    justify-content: center; font-size: 24px; margin-bottom: 14px;
+}
+body.admin-shell .sa-empty-state p { color: var(--text-muted); font-size: 13.5px; margin: 0; }
+
+/* Skeleton loading rows (optional utility, add class="sa-skeleton" to a row/box) */
+body.admin-shell .sa-skeleton {
+    background: linear-gradient(90deg, #f1f5f9 25%, #e9edf3 37%, #f1f5f9 63%);
+    background-size: 400% 100%;
+    animation: sa-shimmer 1.4s ease infinite;
+    border-radius: 6px;
+}
+@keyframes sa-shimmer {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+}
+
+/* ============================================================================
+   7. FORMS
+============================================================================ */
+body.admin-shell .form-control,
+body.admin-shell select.form-control,
+body.admin-shell textarea.form-control {
+    border-radius: var(--sa-radius-sm);
+    border: 1.5px solid #e2e8f0;
+    font-size: 13.3px;
+    padding: 9px 13px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+body.admin-shell .form-control:focus {
+    border-color: rgba(var(--accent-rgb), 0.5);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12);
+}
+body.admin-shell label { font-size: 12.8px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+body.admin-shell .input-group-text { background: #f8fafc; border: 1.5px solid #e2e8f0; color: var(--text-muted); }
+
+/* ============================================================================
+   8. BUTTONS
+============================================================================ */
+body.admin-shell .btn-primary {
+    background: var(--accent); border-color: var(--accent);
+}
+body.admin-shell .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); transform: translateY(-1px); }
+body.admin-shell .btn:active { transform: translateY(0); }
+
+/* ============================================================================
+   9. RESPONSIVE
+============================================================================ */
+@media (max-width: 991.98px) {
+    /* Force proper off-canvas behavior on mobile/tablet, no matter which
+       AdminLTE state classes are present. Without this, AdminLTE's own
+       sidebar-mini "icon-only collapsed" mode can win out over our
+       intended full-overlay behavior: the sidebar sits at ~4.6rem width
+       INLINE next to a squeezed content column, instead of either being
+       fully hidden or fully overlaying the screen when opened. Every
+       rule below is !important specifically to beat those AdminLTE
+       defaults regardless of sidebar-collapse / sidebar-mini state. */
+    body.admin-shell .jobi-sidebar.main-sidebar,
+    body.admin-shell.sidebar-mini.sidebar-collapse .jobi-sidebar.main-sidebar,
+    body.admin-shell.sidebar-collapse .jobi-sidebar.main-sidebar {
+        width: 240px !important;
+        max-width: 80vw !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        z-index: 1040 !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.25s ease-in-out !important;
+    }
+    body.admin-shell.sidebar-open .jobi-sidebar.main-sidebar,
+    body.admin-shell.sidebar-open.sidebar-collapse .jobi-sidebar.main-sidebar {
+        transform: translateX(0) !important;
+    }
+
+    /* Content must always be full width on mobile, regardless of
+       collapsed/mini/open state — the sidebar is an overlay now, not a
+       column pushing content over. */
+    body.admin-shell .content-wrapper,
+    body.admin-shell .main-footer,
+    body.admin-shell .main-header.navbar,
+    body.admin-shell.sidebar-mini.sidebar-collapse .content-wrapper,
+    body.admin-shell.sidebar-mini.sidebar-collapse .main-footer {
+        margin-left: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+    }
+    body.admin-shell .sa-header-search { display: none; }
+}
+@media (max-width: 480px) {
+    /* Small phones: fixed px widths eat almost the whole viewport —
+       scale with the screen instead, capped so it never gets silly-wide
+       on slightly bigger phones. */
+    body.admin-shell .jobi-sidebar.main-sidebar {
+        width: min(80vw, 260px) !important;
+    }
+}
+@media (max-width: 575.98px) {
+    body.admin-shell .sa-toolbar { flex-direction: column; align-items: stretch; }
+    body.admin-shell .sa-page-header { padding: 16px 18px; }
+
+    /* Search bar + Search button on list pages (Job Categories, Job Roles, Job Management) —
+       without this, Bootstrap 4's default .form-inline stacking makes the input go
+       full-width and drops the search button onto its own line by itself. */
+    body.admin-shell .sa-toolbar .d-flex.align-items-center { flex-wrap: wrap; width: 100%; row-gap: 8px; }
+    body.admin-shell .sa-toolbar form.form-inline { flex-wrap: wrap; width: 100%; row-gap: 8px; }
+    body.admin-shell .sa-toolbar .form-control.form-control-sm { width: 130px !important; flex: 0 1 auto; }
+    body.admin-shell .sa-toolbar > a.btn,
+    body.admin-shell .sa-toolbar form.form-inline > a.btn {
+        flex: 1 1 100%;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+/* ============================================================================
+   10. AUTH SCREENS (login / 2FA / create-admin) — Bootstrap 4 only, no BS5 CDN
+============================================================================ */
+.sa-auth {
+    min-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f6f8fb;
+    padding: 24px 16px;
+}
+.sa-auth-card {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg, 0 12px 40px rgba(15, 23, 42, 0.1));
+    overflow: hidden;
+    min-height: 520px;
+}
+.sa-auth-form-side {
+    flex: 1 1 55%;
+    padding: 56px 52px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.sa-auth-visual-side {
+    flex: 1 1 45%;
+    background: linear-gradient(155deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+    color: #fff;
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+.sa-auth-visual-side::before {
+    content: "";
+    position: absolute;
+    inset: -40% -20% auto auto;
+    width: 320px; height: 320px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+}
+.sa-auth-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.05rem; position: relative; z-index: 1; }
+.sa-auth-visual-title { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 1.6rem; line-height: 1.3; margin-top: auto; position: relative; z-index: 1; }
+.sa-auth-visual-copy { font-size: 0.85rem; opacity: 0.85; margin-top: 10px; position: relative; z-index: 1; }
+.sa-auth-icon-badge {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: rgba(var(--accent-rgb), 0.08); color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 18px;
+}
+.sa-auth .form-control {
+    border-radius: 10px; border: 1.5px solid #e2e8f0; padding: 11px 14px; font-size: 13.5px;
+}
+.sa-auth .form-control:focus {
+    border-color: rgba(var(--accent-rgb), 0.5);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12);
+}
+.sa-auth .input-group-text { background: #f8fafc; border: 1.5px solid #e2e8f0; border-right: none; color: var(--text-muted); }
+.sa-auth .input-group .form-control { border-left: none; }
+
+/* Icon-in-input pattern — simpler and more robust than Bootstrap's
+   input-group (no dependency on .input-group's flex behavior at all). */
+.sa-input-icon { position: relative; }
+.sa-input-icon > i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-disabled);
+    font-size: 14px;
+    pointer-events: none;
+}
+.sa-input-icon > .form-control { padding-left: 40px; }
+.sa-input-icon > .sa-input-icon-toggle {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: transparent;
+    color: var(--text-disabled);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+.sa-input-icon > .sa-input-icon-toggle:hover { color: var(--accent); background: #f1f5f9; }
+.sa-input-icon > .sa-input-icon-toggle:focus { outline: none; box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15); }
+
+.sa-auth-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.22);
+}
+.sa-auth-submit:hover { box-shadow: 0 8px 20px rgba(var(--accent-rgb), 0.3); }
+
+/* Safety net for pages still using Bootstrap's input-group (e.g. create_admin) */
+body.admin-shell .input-group { display: flex; flex-wrap: nowrap; align-items: stretch; width: 100%; }
+body.admin-shell .input-group-prepend { display: flex; }
+body.admin-shell .input-group > .form-control { flex: 1 1 auto; width: 1%; min-width: 0; }
+.sa-auth .btn-primary {
+    background: var(--accent); border-color: var(--accent); border-radius: 10px;
+    padding: 13px; font-weight: 700; font-size: 14.5px; letter-spacing: 0.01em; transition: all .18s ease;
+}
+.sa-auth .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.25); }
+.sa-auth .code-input { letter-spacing: 0.75rem; font-size: 1.4rem; text-align: center; font-weight: 700; }
+
+@media (max-width: 860px) {
+    .sa-auth-card { flex-direction: column; min-height: auto; }
+    .sa-auth-form-side { padding: 40px 28px; }
+    .sa-auth-visual-side { padding: 32px 28px; order: -1; min-height: 160px; }
+    .sa-auth-visual-title { margin-top: 16px; font-size: 1.2rem; }
+}
+/* ============================================================================
+   11. GROWTH SNAPSHOT CARDS (Applications This Month / Jobs Posted This Month)
+============================================================================ */
+body.admin-shell .sa-growth-card {
+    position: relative; overflow: hidden;
+    background: #ffffff; border: 1px solid var(--sa-border);
+    border-radius: var(--sa-radius-lg); padding: 24px 26px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 4px 14px rgba(15, 23, 42, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+body.admin-shell .sa-growth-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06), 0 10px 28px rgba(15, 23, 42, 0.07);
+}
+/* Colored accent bar along the top edge, ties each card to its icon color */
+body.admin-shell .sa-growth-card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--sa-growth-color, var(--accent)), transparent 140%);
+}
+body.admin-shell .sa-growth-card--applications { --sa-growth-color: #2563eb; }
+body.admin-shell .sa-growth-card--jobs { --sa-growth-color: #7c3aed; }
+
+body.admin-shell .sa-growth-top {
+    display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px;
+}
+body.admin-shell .sa-growth-icon {
+    width: 46px; height: 46px; border-radius: var(--sa-radius-md);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+    color: var(--sa-growth-color, var(--accent));
+}
+body.admin-shell .sa-growth-card--applications .sa-growth-icon { background: rgba(37, 99, 235, 0.12); }
+body.admin-shell .sa-growth-card--jobs .sa-growth-icon { background: rgba(124, 58, 237, 0.12); }
+body.admin-shell .sa-growth-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.01em;
+    padding: 5px 11px; border-radius: 999px; line-height: 1;
+}
+body.admin-shell .sa-growth-badge--up { background: rgba(16, 185, 129, 0.12); color: #059669; }
+body.admin-shell .sa-growth-badge--down { background: rgba(239, 68, 68, 0.12); color: #dc2626; }
+
+body.admin-shell .sa-growth-value {
+    font-size: 2.1rem; font-weight: 800; color: #1e293b; line-height: 1;
+    margin-bottom: 8px; letter-spacing: -0.02em;
+}
+body.admin-shell .sa-growth-label {
+    font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+    color: #94a3b8; margin-bottom: 4px;
+}
+body.admin-shell .sa-growth-compare {
+    font-size: 13px; color: #64748b;
+}
+body.admin-shell .sa-growth-compare strong { color: #475569; font-weight: 600; }
+
+@media (max-width: 575.98px) {
+    body.admin-shell .sa-growth-card { padding: 20px; }
+    body.admin-shell .sa-growth-value { font-size: 1.75rem; }
+}
+
+/* ============================================================================
+   12. SALARY VS MARKET AVERAGE COMPARISON
+============================================================================ */
+body.admin-shell .sa-salary-row {
+    padding: 14px 0; border-bottom: 1px solid var(--sa-border);
+}
+body.admin-shell .sa-salary-row:last-child { border-bottom: none; padding-bottom: 0; }
+body.admin-shell .sa-salary-row:first-child { padding-top: 0; }
+
+body.admin-shell .sa-salary-role {
+    font-size: 14px; font-weight: 700; color: #1e293b;
+}
+body.admin-shell .sa-salary-diff-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.01em;
+    padding: 4px 10px; border-radius: 999px; line-height: 1; white-space: nowrap;
+}
+body.admin-shell .sa-salary-diff-badge--up { background: rgba(16, 185, 129, 0.12); color: #059669; }
+body.admin-shell .sa-salary-diff-badge--down { background: rgba(239, 68, 68, 0.12); color: #dc2626; }
+
+body.admin-shell .sa-salary-bar-line {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+}
+body.admin-shell .sa-salary-bar-line:last-child { margin-bottom: 0; }
+body.admin-shell .sa-salary-bar-tag {
+    flex: 0 0 52px; font-size: 11.5px; font-weight: 600; color: #94a3b8;
+}
+body.admin-shell .sa-salary-bar-track {
+    flex: 1 1 auto; height: 9px; border-radius: 999px; background: #f1f5f9; overflow: hidden;
+}
+body.admin-shell .sa-salary-bar-fill {
+    height: 100%; border-radius: 999px; transition: width 0.5s ease;
+}
+body.admin-shell .sa-salary-bar-fill--you {
+    background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+}
+body.admin-shell .sa-salary-bar-fill--market {
+    background: #cbd5e1;
+}
+body.admin-shell .sa-salary-bar-value {
+    flex: 0 0 auto; font-size: 12.5px; font-weight: 700; color: #334155;
+    min-width: 88px; text-align: right;
+}
+body.admin-shell .sa-salary-no-market {
+    font-size: 12px; color: #94a3b8; font-style: italic; margin-left: 62px;
+}
+
+@media (max-width: 575.98px) {
+    body.admin-shell .sa-salary-bar-tag { flex-basis: 44px; }
+    body.admin-shell .sa-salary-bar-value { min-width: 76px; font-size: 12px; }
+}

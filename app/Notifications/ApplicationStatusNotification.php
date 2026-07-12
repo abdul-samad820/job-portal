@@ -18,7 +18,7 @@ class ApplicationStatusNotification extends Notification
 
     public function via($notifiable)
     {
-        return ['database']; 
+        return ['database'];
     }
 
     public function toDatabase($notifiable)
@@ -27,6 +27,7 @@ class ApplicationStatusNotification extends Notification
             'job_title' => $this->job->title,
             'status' => $this->status,
             'message' => "Your application for {$this->job->title} is {$this->status}",
+            'url' => route('user.job_applied'),
         ];
     }
 }

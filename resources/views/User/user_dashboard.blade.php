@@ -26,74 +26,78 @@
 </div>
 @endif
 
+<div class="sa-page-header">
+    <div>
+        <h1 class="sa-page-title font-weight-bold text-dark mb-0">Welcome back, {{ \Illuminate\Support\Str::limit(explode(' ', $authUser->name ?? 'Candidate')[0], 20) }}</h1>
+        <small class="text-muted">Here's what's happening with your job search today.</small>
+    </div>
+    <a href="{{ route('user.jobs') }}" class="btn btn-primary">
+        <i class="fas fa-search mr-1"></i> Find Jobs
+    </a>
+</div>
+
 <div class="row">
     {{-- New Jobs --}}
-    <div class="col-12 col-sm-6 col-md-3 mb-3">
-        <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm"
-            style="border-radius:20px;">
+    <div class="col-6 col-md-3 mb-3">
+        <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm stat-card sa-hoverable">
 
             <div>
-                <h4 class="mb-1" style="font-weight:600; font-size:24px;">{{ $newJobsCount }}</h4>
-                <small style="color:#73808D;">New Jobs</small>
+                <h4 class="mb-1 stat-card-value">{{ $newJobsCount }}</h4>
+                <small class="stat-card-label">New Jobs</small>
             </div>
 
-            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                style="width:50px; height:50px; background:#D8E8FF;">
-                <i class="fas fa-briefcase" style="color:#10392E; font-size:18px;"></i>
+            <div class="rounded-circle d-flex align-items-center justify-content-center stat-icon-circle">
+                <i class="fas fa-briefcase"></i>
             </div>
         </div>
     </div>
 
     {{-- Applied Jobs --}}
-    <div class="col-12 col-sm-6 col-md-3 mb-3">
-        <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm"
-            style="border-radius:20px;">
+    <div class="col-6 col-md-3 mb-3">
+        <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm stat-card sa-hoverable">
 
             <div>
-                <h4 class="mb-1" style="font-weight:600; font-size:24px;">{{ $appliedJobsCount }}</h4>
-                <small style="color:#73808D;">Applied Jobs</small>
+                <h4 class="mb-1 stat-card-value">{{ $appliedJobsCount }}</h4>
+                <small class="stat-card-label">Applied Jobs</small>
             </div>
 
-            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                style="width:50px; height:50px; background:#D8E8FF;">
-                <i class="fas fa-check-circle" style="color:#10392E; font-size:18px;"></i>
+            <div class="rounded-circle d-flex align-items-center justify-content-center stat-icon-circle">
+                <i class="fas fa-check-circle"></i>
             </div>
         </div>
     </div>
 
     {{-- saved jobs --}}
-    <div class="col-12 col-sm-6 col-md-3 mb-3">
-        <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm"
-            style="border-radius:20px;">
+    <div class="col-6 col-md-3 mb-3">
+        <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm stat-card sa-hoverable">
 
             <div>
-                <h4 class="mb-1" style="font-weight:600; font-size:24px;">{{ $savedJobsCount }}</h4>
-                <small style="color:#73808D;">Jobs Saved</small>
+                <h4 class="mb-1 stat-card-value">{{ $savedJobsCount }}</h4>
+                <small class="stat-card-label">Jobs Saved</small>
             </div>
 
-            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                style="width:50px; height:50px; background:#D8E8FF;">
-                <i class="fas fa-bookmark" style="color:#10392E; font-size:18px;"></i>
+            <div class="rounded-circle d-flex align-items-center justify-content-center stat-icon-circle">
+                <i class="fas fa-bookmark"></i>
             </div>
         </div>
     </div>
 
     {{-- recommended jobs --}}
-    <div class="col-12 col-sm-6 col-md-3 mb-3">
-        <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm"
-            style="border-radius:20px;">
+    <div class="col-6 col-md-3 mb-3">
+        <a href="{{ route('user.jobs', ['recommended' => 1]) }}" class="text-decoration-none">
+        <div class="d-flex justify-content-between align-items-center bg-white p-4 shadow-sm stat-card sa-hoverable">
 
             <div>
-                <h4 class="mb-1" style="font-weight:600; font-size:24px;">{{ $recommendedJobsCount }}</h4>
-                <small style="color:#73808D;">Recommended Jobs</small>
+                <h4 class="mb-1 stat-card-value">{{ $recommendedJobsCount }}</h4>
+                <small class="stat-card-label">Recommended Jobs</small>
             </div>
 
-            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                style="width:50px; height:50px; background:#D8E8FF;">
-                <i class="fas fa-lightbulb" style="color:#10392E; font-size:18px;"></i>
+            <div class="rounded-circle d-flex align-items-center justify-content-center stat-icon-circle">
+                <i class="fas fa-lightbulb"></i>
 
             </div>
         </div>
+        </a>
     </div>
 </div>
 
@@ -101,49 +105,52 @@
 <div class="row mt-4">
 
     <div class="col-12">
-        <div class="bg-white p-3 shadow-sm d-flex align-items-center justify-content-between"
-            style="border-radius:15px;">
+        <div class="bg-white p-3 shadow-sm u-radius-15px profile-strength-card">
 
             @php
             if ($profileCompletion < 40) { $strength='Weak' ; $color='#ef4444' ; } elseif ($profileCompletion < 75) {
-                $strength='Good' ; $color='#f59e0b' ; } else { $strength='Strong' ; $color='#22c55e' ; } @endphp {{--
-                Left Side --}} <div class="d-flex align-items-center">
-                <i class="fas fa-user-check mr-2" style="color: {{ $color }};"></i>
+                $strength='Good' ; $color='#f59e0b' ; } else { $strength='Strong' ; $color='#22c55e' ; } @endphp
 
-                <span class="font-weight-semibold mr-2">
-                    Profile Strength:
-                </span>
+            <div class="d-flex align-items-center justify-content-between flex-wrap profile-strength-row">
 
-                <span id="counter" class="font-weight-bold mr-2" style="color: {{ $color }};">
-                    0%
-                </span>
+                {{-- Left Side --}}
+                <div class="d-flex align-items-center flex-wrap profile-strength-info">
+                    <i class="fas fa-user-check mr-2" style="color: {{ $color }};"></i>
 
-                <span style="color: {{ $color }};">
-                    ({{ $strength }})
-                </span>
-        </div>
+                    <span class="font-weight-semibold mr-2">
+                        Profile Strength:
+                    </span>
 
-        {{-- Right Progress Bar --}}
-        <div style="width:40%;">
-            <div style="height:6px; background:#e5e7eb; border-radius:10px;">
-                <div id="progressBar" style="height:6px;
-                               width:0%;
-                               background: {{ $color }};
-                               border-radius:10px;
-                               transition: width 1.5s ease;">
+                    <span id="counter" class="font-weight-bold mr-2" style="color: {{ $color }};">
+                        0%
+                    </span>
+
+                    <span style="color: {{ $color }};">
+                        ({{ $strength }})
+                    </span>
                 </div>
+
+                {{-- Right Side: Progress Bar + Arrow --}}
+                <div class="d-flex align-items-center profile-strength-bar-wrap">
+                    <div class="u-w-40 profile-strength-progress">
+                        <div class="u-h-6px-bg-e5e7eb-radius-10px">
+                            <div id="progressBar" style="height:6px;
+                                           width:0%;
+                                           background: {{ $color }};
+                                           border-radius:10px;
+                                           transition: width 1.5s ease;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="{{ route('user.add_profile') }}" class="btn btn-light btn-sm rounded-circle shadow-sm d-flex align-items-center justify-content-center u-w-35px-h-35px ml-3 flex-shrink-0">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+
             </div>
         </div>
-
-        <!-- Arrow Button -->
-        <a href="{{ route('user.add_profile') }}"
-            class="btn btn-light btn-sm rounded-circle shadow-sm d-flex align-items-center justify-content-center"
-            style="width:35px; height:35px;">
-            <i class="fas fa-chevron-right"></i>
-        </a>
-
     </div>
-</div>
 </div>
 
 {{-- ================= QUICK ACTIONS ================= --}}
@@ -162,7 +169,7 @@
 
                 <div class="row text-center">
 
-                    <div class="col-md-4 mb-3">
+                    <div class="col-6 col-md-4 mb-3">
                         <a href="{{ route('user.jobs') }}" class="action-box d-block p-3 rounded">
                             <div class="icon-circle bg-primary-light mb-2">
                                 <i class="fas fa-search text-primary"></i>
@@ -172,7 +179,7 @@
                         </a>
                     </div>
 
-                    <div class="col-md-4 mb-3">
+                    <div class="col-6 col-md-4 mb-3">
                         <a href="{{ route('user.profile') }}" class="action-box d-block p-3 rounded">
                             <div class="icon-circle bg-secondary-light mb-2">
                                 <i class="fas fa-user-edit text-secondary"></i>
@@ -182,7 +189,7 @@
                         </a>
                     </div>
 
-                    <div class="col-md-4 mb-3">
+                    <div class="col-6 col-md-4 mb-3">
                         <a href="{{ route('user.saved.jobs') }}" class="action-box d-block p-3 rounded">
                             <div class="icon-circle bg-success-light mb-2">
                                 <i class="fas fa-bookmark text-success"></i>
@@ -214,7 +221,7 @@
         <div class="row">
 
             <!-- LEFT SIDE -->
-            <div class="col-md-7">
+            <div class="col-md-7 order-2 order-md-1 mt-4 mt-md-0">
 
                 <div class="row">
 
@@ -290,7 +297,7 @@
                         </small>
                     </div>
 
-                    <div class="progress" style="height:8px;">
+                    <div class="progress u-h-8px">
                         <div class="progress-bar bg-success" role="progressbar" style="width: {{ $successRate }}%">
                         </div>
                     </div>
@@ -298,7 +305,7 @@
             </div>
 
             <!-- RIGHT SIDE CHART -->
-            <div class="col-md-5">
+            <div class="col-md-5 order-1 order-md-2">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body text-center">
 
@@ -309,16 +316,12 @@
                             Distribution Overview
                         </small>
 
-                        <div class="position-relative mt-3" style="height:230px;">
+                        <div class="position-relative mt-3 u-h-230px">
 
                             <canvas id="statusChart"></canvas>
 
                             <!-- Center Text -->
-                            <div id="chartCenterText" style="position:absolute;
-                            top:50%;
-                            left:50%;
-                            transform:translate(-50%,-50%);
-                            text-align:center;">
+                            <div class="u-pos-absolute-top-50-left-50-tf-translate-50-5-ta-center" id="chartCenterText">
                                 <h4 class="font-weight-bold mb-0 text-primary" id="successText">
                                     0%
                                 </h4>
@@ -362,15 +365,15 @@
                                         <img src="{{ $job->admin && $job->admin->profile_image
                                                     ? asset('storage/admins/' . $job->admin->profile_image)
                                                     : asset('default/company.png') }}" width="50" height="50"
-                                            style="border-radius:12px; object-fit:cover;">
+                                            class="u-radius-12px-fit-cover" alt="{{ $job->title ?? 'Job' }}">
                                     </div>
 
                                     <div>
-                                        <div class="font-weight-bold" style="font-size:14px;">
+                                        <div class="font-weight-bold u-fs-0-933rem">
                                             {{ $job->title }}
                                         </div>
 
-                                        <div class="text-muted" style="font-size:12px;">
+                                        <div class="text-muted u-fs-0-8rem">
                                             {{ ucfirst($job->type) }} • {{ $job->location }}
                                         </div>
                                     </div>
@@ -378,7 +381,7 @@
                                 </div>
 
                                 {{-- Salary --}}
-                                <div class="text-success font-weight-bold mb-2" style="font-size:13px;">
+                                <div class="text-success font-weight-bold mb-2 u-fs-var-fs-sm">
                                     @if($job->min_salary && $job->max_salary)
                                     ₹{{ number_format($job->min_salary / 100000, 1) }}L - ₹{{
                                     number_format($job->max_salary / 100000, 1) }}L
@@ -429,6 +432,110 @@
         </div>
     </div>
 </div>
+
+{{-- UPCOMING INTERVIEWS + SAVED JOBS --}}
+<div class="row mt-4">
+
+    {{-- Upcoming Interviews --}}
+    <div class="col-12 col-lg-6 mb-4 mb-lg-0">
+        <div class="card shadow-sm border-0 rounded-lg h-100">
+
+            <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 font-weight-bold text-dark">
+                    <i class="far fa-calendar-alt text-primary mr-1"></i>
+                    Upcoming Interviews
+                </h6>
+                <a href="{{ route('user.interviews') }}" class="text-primary small font-weight-bold text-decoration-none">
+                    View all
+                </a>
+            </div>
+
+            <div class="card-body">
+                @forelse ($upcomingInterviews as $interview)
+                <div class="d-flex align-items-start justify-content-between {{ !$loop->last ? 'mb-3 pb-3 border-bottom' : '' }}">
+                    <div class="d-flex align-items-start">
+                        <div class="u-w-42px-h-42px rounded-circle bg-light d-flex align-items-center justify-content-center mr-3 flex-shrink-0">
+                            <i class="far fa-calendar-check text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="mb-1 font-weight-bold text-dark">
+                                {{ $interview->application->job->title ?? 'Job' }}
+                            </p>
+                            <small class="text-muted d-block">
+                                <i class="fas fa-building mr-1"></i>
+                                {{ $interview->application->job->admin->company_name ?? 'N/A' }}
+                            </small>
+                            <small class="text-muted d-block">
+                                <i class="far fa-clock mr-1"></i>
+                                {{ $interview->formatted_date_time }}
+                                &middot; {{ ucfirst($interview->mode) }}
+                            </small>
+                        </div>
+                    </div>
+                    <span class="badge badge-{{ $interview->status_color }} align-self-center">
+                        {{ ucfirst($interview->status) }}
+                    </span>
+                </div>
+                @empty
+                <div class="text-center text-muted py-3">
+                    No upcoming interviews scheduled.
+                </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+    {{-- Saved Jobs Preview --}}
+    <div class="col-12 col-lg-6">
+        <div class="card shadow-sm border-0 rounded-lg h-100">
+
+            <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 font-weight-bold text-dark">
+                    <i class="fas fa-bookmark text-primary mr-1"></i>
+                    Saved Jobs
+                </h6>
+                <a href="{{ route('user.saved.jobs') }}" class="text-primary small font-weight-bold text-decoration-none">
+                    View all
+                </a>
+            </div>
+
+            <div class="card-body">
+                @forelse ($savedJobs as $savedJob)
+                @php $job = $savedJob->job; @endphp
+                @if ($job)
+                <a href="{{ route('user.job_single', $job->id) }}"
+                   class="d-flex align-items-center justify-content-between text-decoration-none {{ !$loop->last ? 'mb-3 pb-3 border-bottom' : '' }}">
+                    <div class="d-flex align-items-center">
+                        <div class="u-w-42px-h-42px rounded-circle bg-light d-flex align-items-center justify-content-center mr-3 flex-shrink-0">
+                            <i class="fas fa-briefcase text-primary"></i>
+                        </div>
+                        <div>
+                            <p class="mb-1 font-weight-bold text-dark">
+                                {{ $job->title }}
+                            </p>
+                            <small class="text-muted d-block">
+                                <i class="fas fa-building mr-1"></i>
+                                {{ $job->admin->company_name ?? 'N/A' }}
+                                @if ($job->location)
+                                &middot; <i class="fas fa-map-marker-alt ml-1 mr-1"></i>{{ $job->location }}
+                                @endif
+                            </small>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-muted"></i>
+                </a>
+                @endif
+                @empty
+                <div class="text-center text-muted py-3">
+                    You haven't saved any jobs yet.
+                </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+
+</div>
+
 @endsection
 
 @push('scripts')

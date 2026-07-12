@@ -37,6 +37,7 @@ class NewJobApplicationNotification extends Notification
             'user_id' => $this->user->id,
             'job_title' => $this->job->title,
             'applied_at' => now()->format('d M Y, h:i A'),
+            'url' => route('job_application'),
         ];
     }
 }

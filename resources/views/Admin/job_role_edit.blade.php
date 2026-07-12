@@ -8,8 +8,8 @@
 
         {{-- Role Name --}}
         <fieldset class="mb-3">
-            <label class="font-weight-bold">Role Name <span class="text-danger">*</span></label>
-            <input type="text" name="name" class="form-control" placeholder="Enter role name"
+            <label class="font-weight-bold" for="name">Role Name <span class="text-danger">*</span></label>
+            <input id="name" type="text" name="name" class="form-control" placeholder="Enter role name"
                 value="{{ old('name', $role->name) }}" required>
             @error('name')
             <small class="text-danger">{{ $message }}</small>
@@ -18,8 +18,8 @@
 
         {{-- Category Select --}}
         <fieldset class="mb-3">
-            <label class="font-weight-bold">Select Category <span class="text-danger">*</span></label>
-            <select name="category_id" class="form-control" required>
+            <label class="font-weight-bold" for="category_id">Select Category <span class="text-danger">*</span></label>
+            <select id="category_id" name="category_id" class="form-control" required>
                 <option value="">-- Select Category --</option>
 
                 @foreach ($categories as $category)
@@ -37,8 +37,8 @@
 
         {{-- Role Description --}}
         <fieldset class="mb-3">
-            <label class="font-weight-bold">Role Description</label>
-            <input type="text" name="description" class="form-control" placeholder="Enter role description"
+            <label class="font-weight-bold" for="description">Role Description</label>
+            <input id="description" type="text" name="description" class="form-control" placeholder="Enter role description"
                 value="{{ old('description', $role->description) }}">
             @error('description')
             <small class="text-danger">{{ $message }}</small>

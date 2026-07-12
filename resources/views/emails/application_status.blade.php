@@ -16,8 +16,9 @@
     <p>Status:
         <strong
             style="color:
-            @if ($status == 'hired') green
+           @if ($status == 'hired') green
             @elseif($status == 'shortlisted') orange
+            @elseif($status == 'pending') #6c757d
             @else red @endif
         ">
             {{ ucfirst($status) }}

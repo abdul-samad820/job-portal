@@ -5,9 +5,8 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
-
+use Tests\TestCase;
 
 class UserAuthTest extends TestCase
 {
@@ -16,31 +15,33 @@ class UserAuthTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Notification::fake(); 
+        Notification::fake();
     }
 
- #[Test]
-public function user_can_register_with_valid_data(): void
-{
-    
-    \Illuminate\Support\Facades\Mail::fake();
-    \Illuminate\Support\Facades\Notification::fake();
+    #[Test]
+    public function user_can_register_with_valid_data(): void
+    {
 
-    $response = $this->post(route('user.register'), [
-        'name'                  => 'Samad Khan',
-        'email'                 => 'samad@example.com',
-        'password'              => 'Password@123',
-        'password_confirmation' => 'Password@123',
-    ]);
+        \Illuminate\Support\Facades\Mail::fake();
+        \Illuminate\Support\Facades\Notification::fake();
 
-    $this->assertDatabaseHas('users', [
-       'email' => 'samad@example.com',   
-    ]);
+        $response = $this->post(route('user.register'), [
+            'name' => 'Samad Khan',
+            'email' => 'samad@example.com',
+            'phone' => '9876543210',
+            'password' => 'Password@123',
+            'password_confirmation' => 'Password@123',
+            'agree_terms' => '1',
+        ]);
 
-    $response->assertRedirect();
-}
+        $this->assertDatabaseHas('users', [
+            'email' => 'samad@example.com',
+        ]);
 
-   #[Test]
+        $response->assertRedirect();
+    }
+
+    #[Test]
     public function user_cannot_register_with_duplicate_email(): void
     {
         User::factory()->create(['email' => 'samad@example.com']);
@@ -55,7 +56,7 @@ public function user_can_register_with_valid_data(): void
         $response->assertSessionHasErrors('email');
     }
 
-  #[Test]
+    #[Test]
     public function user_cannot_register_with_weak_password(): void
     {
         $response = $this->post(route('user.register'), [
@@ -68,7 +69,7 @@ public function user_can_register_with_valid_data(): void
         $response->assertSessionHasErrors('password');
     }
 
-  #[Test]
+    #[Test]
     public function user_can_login_with_correct_credentials(): void
     {
         $user = User::factory()->create([
@@ -85,7 +86,7 @@ public function user_can_register_with_valid_data(): void
         $response->assertRedirect(route('user.dashboard'));
     }
 
-  #[Test]
+    #[Test]
     public function user_cannot_login_with_wrong_password(): void
     {
         User::factory()->create([
@@ -102,14 +103,14 @@ public function user_can_register_with_valid_data(): void
         $response->assertSessionHasErrors('email');
     }
 
-  #[Test]
+    #[Test]
     public function user_cannot_access_dashboard_without_login(): void
     {
         $response = $this->get(route('user.dashboard'));
         $response->assertRedirect(route('user.login'));
     }
 
-  #[Test]
+    #[Test]
     public function user_can_logout(): void
     {
         $user = User::factory()->create();

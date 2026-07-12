@@ -18,8 +18,8 @@ class JobAlertMail extends Mailable implements ShouldQueue
      * Create a new message instance.
      */
     public function __construct(
-        public User $user,    
-        public array $jobs,   
+        public User $user,
+        public array $jobs,
         public string $keywords
     ) {}
 

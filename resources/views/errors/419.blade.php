@@ -8,7 +8,7 @@
 @section('message', 'Your session has expired due to inactivity. Please login again.')
 
 @section('extra')
-<a href="{{ route('user.login') }}" class="btn btn-warning btn-block">
+<a href="{{ str_contains(url()->previous(), '/admin') ? route('admin.login') : route('user.login') }}" class="btn btn-warning btn-block">
     <i class="fas fa-sign-in-alt mr-2"></i> Login Again
 </a>
 @endsection

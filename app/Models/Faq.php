@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Faq extends Model
 {
-    protected $fillable = ['question', 'answer', 'status'];
+    protected $fillable = ['admin_id', 'question', 'answer', 'status'];
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
+    }
 }

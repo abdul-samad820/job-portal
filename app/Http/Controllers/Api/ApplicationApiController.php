@@ -6,27 +6,34 @@ use App\Http\Controllers\Controller;
 use App\Models\Job;
 use App\Models\JobApplication;
 use App\Traits\ApiResponse;
+use App\Traits\VerifiesUploadedFileMime;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class ApplicationApiController extends Controller
 {
-    use ApiResponse;
+    use ApiResponse, VerifiesUploadedFileMime;
 
     // ─────────────────────────────────────
     // My Applications
     // ─────────────────────────────────────
     public function index(Request $request): JsonResponse
     {
-        $applications = JobApplication::with(['job.admin'])
-            ->where('user_id', $request->user()->id)
-            ->latest()
-            ->paginate(10);
+        $query = JobApplication::with(['job.admin', 'interview'])
+            ->where('user_id', $request->user()->id);
+
+        // Optional status filter, e.g. GET /applications?status=pending
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $applications = $query->latest()->paginate(10);
 
         $formatted = collect($applications->items())->map(fn ($app) => [
             'id' => $app->id,
             'status' => $app->status,
+            'status_color' => $app->statusColor(),
             'applied_at' => $app->created_at->diffForHumans(),
             'cover_letter' => $app->cover_letter,
             'job' => [
@@ -44,16 +51,7 @@ class ApplicationApiController extends Controller
             ] : null,
         ]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Applications fetched successfully.',
-            'data' => $formatted,
-            'meta' => [
-                'current_page' => $applications->currentPage(),
-                'last_page' => $applications->lastPage(),
-                'total' => $applications->total(),
-            ],
-        ]);
+        return $this->paginated($applications, 'Applications fetched successfully.', $formatted);
     }
 
     // ─────────────────────────────────────
@@ -73,10 +71,12 @@ class ApplicationApiController extends Controller
             return $this->error('Application deadline has passed.', 422);
         }
 
-        // Already applied check
+        // Already applied check — matches the DB-level unique constraint
+        // on (user_id, job_id), which blocks a second row regardless of
+        // status. An "exclude rejected" check here would just crash with
+        // a DB error the moment a rejected user tried to re-apply.
         $alreadyApplied = JobApplication::where('user_id', $user->id)
             ->where('job_id', $id)
-            ->where('status', '!=', 'rejected')
             ->exists();
 
         if ($alreadyApplied) {
@@ -107,18 +107,35 @@ class ApplicationApiController extends Controller
             return $this->error('Validation failed.', 422, $e->errors());
         }
 
-        // Resume store karo
+        // Store resume
         $path = $request->file('resume')->store('resumes', 'public');
 
-        $application = JobApplication::create([
-            'user_id' => $user->id,
-            'job_id' => $id,
-            'cover_letter' => $request->cover_letter,
-            'resume' => $path,
-            'status' => 'pending',
-        ]);
+        if (! $this->verifyStoredMime('public', $path, ['application/pdf'])) {
+            return $this->error('Invalid file type. Please upload a valid PDF.', 422);
+        }
 
-        // Admin ko notify karo
+        // Wrapped in try/catch: the "already applied" check above has a
+        // race-condition window (two near-simultaneous requests can both
+        // pass it). The DB-level unique constraint on (user_id, job_id)
+        // is the real guard — this just turns that constraint violation
+        // into a clean 409 instead of a raw 500.
+        try {
+            $application = JobApplication::create([
+                'user_id' => $user->id,
+                'job_id' => $id,
+                'cover_letter' => $request->cover_letter,
+                'resume' => $path,
+                'status' => 'pending',
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ((int) $e->getCode() === 23000) {
+                return $this->error('You have already applied for this job.', 409);
+            }
+
+            throw $e;
+        }
+
+        // Notify admin
         if ($job->admin) {
             $job->admin->notify(
                 new \App\Notifications\NewJobApplicationNotification($job, $user)
@@ -131,5 +148,33 @@ class ApplicationApiController extends Controller
             'job_title' => $job->title,
         ], 'Application submitted successfully!', 201);
     }
- 
+
+    // ─────────────────────────────────────
+    // Withdraw Application
+    // ─────────────────────────────────────
+    public function withdraw(Request $request, int $id): JsonResponse
+    {
+        $application = JobApplication::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if (! $application) {
+            return $this->error('Application not found.', 404);
+        }
+
+        if ($application->status !== 'pending') {
+            return $this->error(
+                'Only pending applications can be withdrawn. This application is already '.$application->status.'.',
+                422
+            );
+        }
+
+        if ($application->resume) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($application->resume);
+        }
+
+        $application->delete();
+
+        return $this->success(null, 'Application withdrawn successfully.');
+    }
 }

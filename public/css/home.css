@@ -1,0 +1,179 @@
+#home {
+        padding-top: 76px; /* navbar height ke barabar */
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Background image properly set ho */
+    #home .hero-bg-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        z-index: 0;
+    }
+
+    /* Overlay — image ke upar light overlay taaki text readable rahe */
+    #home .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.55); /* white tint — adjust karo as needed */
+        z-index: 1;
+    }
+
+    /* Hero content upar */
+    #home .hero-inner {
+        position: relative;
+        z-index: 2;
+        min-height: calc(100vh - 76px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    /* Hero heading */
+    #home h1 {
+        font-size: clamp(28px, 5vw, 52px);
+        font-weight: 800;
+        line-height: 1.15;
+        color: #0d1b2a;
+        margin-bottom: 16px;
+        font-family: 'Montserrat', sans-serif;
+        letter-spacing: -0.02em;
+    }
+
+    #home h1 span {
+        color: #60a5fa;
+    }
+
+    /* Description */
+    #home .hero-desc {
+        max-width: 620px;
+        font-size: clamp(15px, 2vw, 18px);
+        color: #3a4a5c;
+        line-height: 1.75;
+        margin-bottom: 28px;
+    }
+
+    /* Stat pills */
+    #home .stat-pill {
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid rgba(37, 99, 235, 0.18);
+        backdrop-filter: blur(6px);
+        padding: 8px 18px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1e3a8a;
+    }
+
+    /* CTA Buttons */
+    #home .hero-btns {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 28px;
+    }
+
+    #home .btn-hero-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 28px;
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 15px;
+        text-decoration: none;
+        transition: 0.25s;
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+    }
+
+    #home .btn-hero-primary:hover {
+        background: #1e40af;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 28px rgba(37, 99, 235, 0.45);
+        color: #fff;
+        text-decoration: none;
+    }
+
+    #home .btn-hero-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 28px;
+        border: 2px solid #2563eb;
+        color: #2563eb;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 15px;
+        text-decoration: none;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(4px);
+        transition: 0.25s;
+    }
+
+    #home .btn-hero-outline:hover {
+        background: #2563eb;
+        color: #fff;
+        transform: translateY(-2px);
+        text-decoration: none;
+    }
+
+    /* ── NAVBAR: always solid on mobile, transparent on desktop ── */
+    @media (max-width: 991px) {
+        #jobiNav {
+            background: #ffffff !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08) !important;
+        }
+    }
+
+    /* ── MOBILE HERO ── */
+    @media (max-width: 767px) {
+        #home {
+            padding-top: 70px;
+        }
+
+        #home .hero-inner {
+            min-height: calc(100vh - 70px);
+            padding: 150px 67px;
+        }
+
+        #home h1 {
+            font-size: 28px;
+        }
+
+        #home .hero-desc {
+            font-size: 15px;
+        }
+
+        #home .hero-btns {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #home .btn-hero-primary,
+        #home .btn-hero-outline {
+            width: 100%;
+            max-width: 320px;
+            justify-content: center;
+        }
+
+        #home .stat-pill {
+            font-size: 12px;
+            padding: 6px 14px;
+        }
+    }
+
+    @media (max-width: 420px) {
+        #home h1 { font-size: 24px; }
+    }

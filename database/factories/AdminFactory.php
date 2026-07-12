@@ -16,6 +16,11 @@ class AdminFactory extends Factory
             'contact_number' => fake()->phoneNumber(),
             'location' => fake()->city(),
             'description' => fake()->sentence(),
+            'expertise' => implode(', ', fake()->randomElements([
+                'PHP', 'Laravel', 'React', 'Node.js', 'AWS', 'DevOps',
+                'Finance', 'Accounting', 'FinTech', 'UI/UX Design',
+                'Branding', 'Digital Marketing', 'HR', 'Recruitment',
+            ], 3)),
             'role' => 'admin',
             'is_active' => true,
         ];

@@ -11,17 +11,14 @@ return new class extends Migration
         Schema::create('interviews', function (Blueprint $table) {
             $table->id();
 
-          
             $table->foreignId('job_application_id')
                 ->constrained('job_applications')
                 ->onDelete('cascade');
 
-           
             $table->foreignId('admin_id')
                 ->constrained('admins')
                 ->onDelete('cascade');
 
-           
             $table->date('interview_date');
             $table->time('interview_time');
 
@@ -31,15 +28,15 @@ return new class extends Migration
             // Online → meeting link, Offline → address
             $table->string('location')->nullable();
 
-            // Additional info admin 
+            // Additional info admin
             $table->text('notes')->nullable();
 
             // Status tracking
             $table->enum('status', [
-                'scheduled',     
-                'rescheduled',  
-                'cancelled',     
-                'completed',     
+                'scheduled',
+                'rescheduled',
+                'cancelled',
+                'completed',
             ])->default('scheduled');
 
             $table->timestamps();

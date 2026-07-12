@@ -4,54 +4,57 @@
 
 <div class="container-fluid py-4">
 
-    {{-- ================= HEADER ================= --}}
-    <div class="p-4 rounded shadow-sm mb-4 bg-light border-left border-primary" style="border-width:4px !important;">
-
-        <div class="d-flex justify-content-between flex-wrap align-items-center">
-
-            <div>
-                <h4 class="font-weight-bold text-dark mb-1">
-                    <i class="fa fa-file-alt text-primary mr-2"></i>
-                    Job Applications
-                </h4>
-                <small class="text-muted">
-                    View, manage and update all job applications.
-                </small>
-            </div>
-
-            <nav aria-label="breadcrumb" class="mt-3 mt-md-0">
-                <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item active font-weight-bold">
-                        Applications
-                    </li>
-                </ol>
-            </nav>
-
-        </div>
-
-        {{-- Search --}}
-        <div class="mt-3">
-            <form action="{{ route('job_application') }}" method="GET" class="form-inline d-none d-md-flex">
-                <input type="search" name="search" class="form-control mr-2" placeholder="Search by user or job..." value="{{ request('search') }}" style="max-width:280px;">
-                <button class="btn btn-outline-primary">
-                    <i class="fa fa-search"></i>
-                </button>
-            </form>
-        </div>
-
-    </div>
+    @include('partials.superadmin-page-header', [
+        'icon' => 'fa-file-alt',
+        'title' => 'Job Applications',
+        'subtitle' => 'View, manage and update all job applications.',
+    ])
 
     {{-- ================= DESKTOP TABLE ================= --}}
-    <div class="card shadow-sm d-none d-md-block">
+    <div class="card shadow-sm border-0 rounded d-none d-md-block">
+        <div class="card-header bg-white">
+            <div class="sa-toolbar mb-0">
+                <form action="{{ route('job_application') }}" method="GET" class="form-inline mb-0" style="flex: 1 1 320px; max-width: 420px;">
+                    <div class="input-group input-group-sm w-100">
+                        <input type="search" name="search" class="form-control" aria-label="Search by user or job" placeholder="Search by user or job..." value="{{ request('search') }}">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                {{-- ============ BULK ACTIONS (desktop) ============ --}}
+                {{-- Checkboxes below reference this form by id (HTML5 form="")
+                     so they can live inside the table without nesting forms. --}}
+                <form id="bulkStatusForm" method="POST" action="{{ route('admin.application.bulkUpdateStatus') }}"
+                    class="d-flex align-items-center bg-light rounded-pill px-3 py-2 mb-0">
+                    @csrf
+                    <span id="bulkSelectedCount" class="badge badge-light border text-muted font-weight-normal mr-2 px-3 py-2">0 selected</span>
+                    <select name="status" class="form-control form-control-sm u-maxw-180px mr-2" required
+                        style="height: 38px; line-height: 1.4; padding-top: 6px; padding-bottom: 6px;">
+                        <option value="">Set status to...</option>
+                        <option value="shortlisted">Shortlisted</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="hired">Hired</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                    <button type="submit" id="bulkApplyBtn" class="btn btn-sm btn-primary rounded-pill px-3" disabled
+                        style="height: 45px;"
+                        onclick="return confirm('Update all selected applications? Each applicant will get an email/notification.')">
+                        Apply to Selected
+                    </button>
+                </form>
+            </div>
+        </div>
         <div class="card-body">
-            <div class="table-responsive" style="overflow: visible;">
+            <div class="table-responsive u-ovf-visible">
                 <table class="table table-hover align-middle">
 
                     <thead class="thead-light">
                         <tr>
+                            <th style="width:36px"><input type="checkbox" id="selectAllApplications"></th>
                             <th>User</th>
                             <th>Job Title</th>
                             <th>Status</th>
@@ -65,8 +68,12 @@
                         @forelse ($applications as $app)
                         <tr>
                             <td>
-                                {{ $app->user->name ?? 'Deleted User' }} <br>
-                                <button class="btn btn-link p-0 text-primary small" data-toggle="modal" data-target="#userModal{{ $app->id }}">
+                                <input type="checkbox" name="application_ids[]" value="{{ $app->id }}"
+                                    form="bulkStatusForm" class="app-row-checkbox">
+                            </td>
+                            <td>
+                                <span class="d-block font-weight-semibold text-dark">{{ $app->user->name ?? 'Deleted User' }}</span>
+                                <button class="btn btn-link p-0 text-primary u-fs-0-8rem text-nowrap" data-toggle="modal" data-target="#userModal{{ $app->id }}">
                                     View Details
                                 </button>
                             </td>
@@ -91,28 +98,33 @@
                                 </form>
                             </td>
 
-                            <td>
-                                <a href="{{ Storage::url($app->resume) }}" target="_blank">View</a> |
-                                <a href="{{ route('admin.resume.download', $app->id) }}" class="text-success">
-                                    Download
+                            <td class="text-nowrap">
+                                <a href="{{ route('admin.application.resume', $app->id) }}" target="_blank"
+                                    class="btn btn-sm btn-outline-primary mr-1" title="View Resume">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ route('admin.resume.download', $app->id) }}"
+                                    class="btn btn-sm btn-outline-success" title="Download Resume">
+                                    <i class="fas fa-download"></i>
                                 </a>
                             </td>
                             <td>
 
-                                @if($app->status === 'shortlisted')
+                                <div class="d-flex flex-nowrap align-items-center" style="gap: 4px;">
 
-                                {{-- Schedule / Reschedule --}}
-                                <a href="{{ route('admin.interview.create', $app->id)}}" class="btn btn-info btn-sm mb-1">
-                                    {{ $app->interview ? 'Reschedule' : 'Schedule' }}
-                                </a>
+                                    @if($app->status === 'shortlisted')
 
-                                @endif
+                                    {{-- Schedule / Reschedule --}}
+                                    <a href="{{ route('admin.interview.create', $app->id)}}" class="btn btn-info btn-sm">
+                                        {{ $app->interview ? 'Reschedule' : 'Schedule' }}
+                                    </a>
 
-                                {{-- Cancel / Done --}}
-                                @if($app->interview &&
-                                in_array($app->interview->status, ['scheduled','rescheduled']))
+                                    @endif
 
-                                <div class="mt-1">
+                                    {{-- Cancel / Done --}}
+                                    @if($app->interview &&
+                                    in_array($app->interview->status, ['scheduled','rescheduled']))
+
                                     <form method="POST" action="{{ route('admin.interview.cancel', $app->interview->id) }}" class="d-inline">
                                         @csrf
                                         @method('PATCH')
@@ -124,9 +136,10 @@
                                         @method('PATCH')
                                         <button class="btn btn-success btn-sm">Done</button>
                                     </form>
-                                </div>
 
-                                @endif
+                                    @endif
+
+                                </div>
 
                             </td>
 
@@ -134,8 +147,10 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-4">
-                                No job applications found.
+                            <td colspan="7" class="text-center py-5">
+                                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                <h5 class="font-weight-bold text-muted">No applications yet</h5>
+                                <p class="text-muted mb-0">Applications will show up here once candidates start applying to your jobs.</p>
                             </td>
                         </tr>
                         @endforelse
@@ -181,10 +196,8 @@
                 {{-- Resume --}}
                 <p class="mb-3">
                     <strong>Resume:</strong><br>
-                    <a href="{{ Storage::url($app->resume) }}" target="_blank">
-                        View
-                    </a>
-                    |
+                    <a href="{{ route('admin.application.resume', $app->id) }}" target="_blank">View</a>
+                    <span class="text-muted mx-1">|</span>
                     <a href="{{ route('admin.resume.download', $app->id) }}" class="text-success">
                         Download
                     </a>
@@ -197,11 +210,25 @@
                     <input type="hidden" name="status" id="statusInputMobile{{ $app->id }}" value="{{ $app->status }}">
 
                     <div class="form-group mb-2">
-                        <label class="small font-weight-bold">
-                            Application Status
-                        </label>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="small font-weight-bold mb-0" for="statusSelect{{ $app->id }}">
+                                Application Status
+                            </label>
+                            @php
+                                $mobileStatusBadgeMap = [
+                                    'pending' => 'badge-secondary',
+                                    'shortlisted' => 'badge-info',
+                                    'hired' => 'badge-success',
+                                    'rejected' => 'badge-danger',
+                                ];
+                            @endphp
+                            <span class="badge badge-pill {{ $mobileStatusBadgeMap[$app->status] ?? 'badge-secondary' }}" id="statusBadgeMobile{{ $app->id }}">
+                                {{ ucfirst($app->status) }}
+                            </span>
+                        </div>
 
-                        <select class="form-control form-control-sm" onchange="document.getElementById('statusInputMobile{{ $app->id }}').value = this.value">
+                        <select class="form-control" id="statusSelect{{ $app->id }}" aria-label="Update application status"
+                            onchange="updateMobileStatus('{{ $app->id }}', this.value)">
 
                             <option value="pending" {{ $app->status == 'pending' ? 'selected' : '' }}>
                                 Pending
@@ -317,7 +344,7 @@
 
                     <div class="text-center mb-4">
 
-                        <img src="{{ $profileImage }}" class="rounded-circle shadow-sm border" width="110" height="110" style="object-fit:cover; border:3px solid #f8f9fa;" alt="User Profile">
+                        <img src="{{ $profileImage }}" class="rounded-circle shadow-sm border u-fit-cover-border-3px-solid-f8f9" width="110" height="110" alt="User Profile">
 
                         <h5 class="mt-3 mb-1 font-weight-bold">
                             {{ $app->user->name }}
@@ -349,7 +376,7 @@
                                     </span>
                                 </div>
 
-                                <div class="progress" style="height:8px; border-radius:6px;">
+                                <div class="progress u-h-8px-radius-6px">
                                     <div class="progress-bar 
                     {{ $app->match_percentage >= 70 ? 'bg-success' : ($app->match_percentage >= 40 ? 'bg-warning' : 'bg-danger') }}" style="width: {{ $app->match_percentage }}%">
                                     </div>
@@ -469,7 +496,7 @@
                                 @csrf
 
                                 <div class="form-group">
-                                    <textarea name="admin_note" rows="4" class="form-control form-control-sm" placeholder="Write internal notes about this candidate...">{{ $app->admin_note }}</textarea>
+                                    <textarea name="admin_note" rows="4" class="form-control form-control-sm" aria-label="Admin note about this candidate" placeholder="Write internal notes about this candidate...">{{ $app->admin_note }}</textarea>
                                 </div>
 
                                 <div class="text-right">
@@ -506,5 +533,50 @@
             value.charAt(0).toUpperCase() + value.slice(1);
     }
 
+    function updateMobileStatus(id, value) {
+        document.getElementById('statusInputMobile' + id).value = value;
+        const badge = document.getElementById('statusBadgeMobile' + id);
+        if (badge) {
+            const badgeClassMap = {
+                pending: 'badge-secondary',
+                shortlisted: 'badge-info',
+                hired: 'badge-success',
+                rejected: 'badge-danger'
+            };
+            badge.className = 'badge badge-pill ' + (badgeClassMap[value] || 'badge-secondary');
+            badge.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+        }
+    }
+
+    (function () {
+        const selectAll = document.getElementById('selectAllApplications');
+        const applyBtn = document.getElementById('bulkApplyBtn');
+        const countLabel = document.getElementById('bulkSelectedCount');
+
+        function rowCheckboxes() {
+            return document.querySelectorAll('.app-row-checkbox');
+        }
+
+        function refresh() {
+            const checked = document.querySelectorAll('.app-row-checkbox:checked').length;
+            countLabel.textContent = checked + ' selected';
+            applyBtn.disabled = checked === 0;
+        }
+
+        if (selectAll) {
+            selectAll.addEventListener('change', function () {
+                rowCheckboxes().forEach(cb => cb.checked = selectAll.checked);
+                refresh();
+            });
+        }
+
+        document.addEventListener('change', function (e) {
+            if (e.target.classList && e.target.classList.contains('app-row-checkbox')) {
+                refresh();
+            }
+        });
+
+        refresh();
+    })();
 </script>
 @endpush

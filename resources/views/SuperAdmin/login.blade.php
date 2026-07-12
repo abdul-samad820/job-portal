@@ -1,169 +1,120 @@
- <!DOCTYPE html>
- <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
- <head>
-     <meta charset="utf-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1">
-     <title>Admin | Login</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Super Admin | Login</title>
+    <meta name="description" content="Super Admin login for Job Hub platform administration.">
 
-     <!-- BOOTSTRAP 5 -->
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 4 comes bundled inside AdminLTE's own stylesheet in this project -->
+    <link rel="stylesheet" href="{{ asset('admins/plugins/fontawesome-free/css/all.min.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('admins/dist/css/adminlte.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style-admin-file.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/utilities.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/superadmin-pro.css') }}">
+    <style>
+        html, body { margin: 0; padding: 0; min-height: 100%; overflow-x: hidden; }
+        *, *::before, *::after { box-sizing: border-box; }
+    </style>
+</head>
 
-     <!-- ICONS -->
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<body>
 
-     <style>
-         * {
-             font-family: "Inter", sans-serif;
-             font-size: 13px;
-         }
+    <div class="sa-auth">
+        <div class="sa-auth-card">
 
-         body {
-             background: #ffffff;
-             min-height: 100vh;
-             display: flex;
-             align-items: center;
-             justify-content: center;
-         }
+            <!-- LEFT: LOGIN FORM -->
+            <div class="sa-auth-form-side">
 
+                <div class="sa-auth-icon-badge">
+                    <i class="fas fa-user-shield"></i>
+                </div>
 
-         .auth-container {
-             display: flex;
-             height: 100%;
-             min-height: 500px;
-             border-radius: 1rem;
-             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-             overflow: hidden;
-         }
+                <h2 class="font-weight-bold mb-1" style="font-family:'Montserrat',sans-serif;">Super Admin Login</h2>
+                <p class="text-muted mb-4">Welcome back! Please sign in to continue.</p>
 
-         .left-panel {
-             padding: 3rem;
-             background: #fff;
-             display: flex;
-             flex-direction: column;
-             justify-content: center;
-             /* vertically center form */
-         }
+                @if ($errors->any())
+                    <div class="alert alert-danger py-2 small">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
 
-         /* Right Image */
-         .auth-image {
-             background-size: cover;
-             background-position: center;
-             background-repeat: no-repeat;
-             height: 100%;
-             width: 100%;
-         }
+                <form action="{{ route('superadmin.login') }}" method="POST">
+                    @csrf
 
-         .form-control {
-             padding: 0.8rem;
-             border-radius: .6rem;
-         }
+                    <!-- EMAIL -->
+                    <div class="mb-3">
+                        <label for="email">Email Address</label>
+                        <div class="sa-input-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" name="email" value="{{ old('email') }}"
+                                class="form-control @error('email') is-invalid @enderror"
+                                placeholder="Enter email">
+                        </div>
+                    </div>
 
-         .btn-primary {
-             padding: 0.8rem;
-             font-weight: 600;
-             border-radius: .6rem;
-         }
+                    <!-- PASSWORD -->
+                    <div class="mb-4">
+                        <label for="password">Password</label>
+                        <div class="sa-input-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" class="form-control pr-5"
+                                placeholder="Enter password" required>
+                            <button type="button" class="sa-input-icon-toggle" id="togglePassword" aria-label="Show password" tabindex="-1">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
 
-         /* Responsive fix */
-         @media (max-width: 991px) {
-             .auth-container {
-                 flex-direction: column;
-                 min-height: auto;
-             }
+                    <!-- REMEMBER -->
+                    <div class="form-check mb-4">
+                        <input type="checkbox" class="form-check-input" name="remember" id="remember">
+                        <label for="remember" class="form-check-label small">Remember Me</label>
+                    </div>
 
-             .auth-image {
-                 height: 260px;
-             }
-         }
-     </style>
- </head>
+                    <!-- LOGIN BUTTON -->
+                    <button type="submit" class="btn btn-primary btn-block sa-auth-submit">
+                        Sign In <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
 
- <body>
+                </form>
+            </div>
 
-     <div class="container">
-         <div class="row justify-content-center">
-             <div class="col-lg-10">
+            <!-- RIGHT: VISUAL SIDE -->
+            <div class="sa-auth-visual-side">
+                <div class="sa-auth-brand">
+                    <img src="{{ asset('admins/dist/img/Job_Hub_Logo.png') }}" alt="Job Hub" style="width:28px;height:28px;">
+                    Job Hub
+                </div>
+                <div>
+                    <div class="sa-auth-visual-title">Full control of the platform, in one clean panel.</div>
+                    <p class="sa-auth-visual-copy">Manage companies, moderate jobs, review reports, and keep Job Hub running smoothly — all from a single dashboard built for the people who run it.</p>
+                </div>
+            </div>
 
-                 <!-- MAIN CARD (Flex + Equal Height) -->
-                 <div class="auth-container">
+        </div>
+    </div>
 
-                     <!-- LEFT: LOGIN FORM -->
-                     <div class="col-lg-6 left-panel">
+    <!-- Bootstrap 4 JS -->
+    <script src="{{ asset('admins/plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('admins/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('js/global-loading.js') }}"></script>
+    <script>
+        (function () {
+            var toggle = document.getElementById('togglePassword');
+            var input = document.getElementById('password');
+            if (!toggle || !input) return;
+            toggle.addEventListener('click', function () {
+                var showing = input.type === 'text';
+                input.type = showing ? 'password' : 'text';
+                this.querySelector('i').classList.toggle('fa-eye', showing);
+                this.querySelector('i').classList.toggle('fa-eye-slash', !showing);
+                this.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+            });
+        })();
+    </script>
+</body>
 
-                         <h2 class="fw-bold text-primary mb-2">
-                             <i class="fas fa-user-shield fa-2x me-2"></i> Super Admin Login
-                         </h2>
-                         <p class="text-muted mb-4">Welcome back! Please sign in to continue.</p>
-
-                         <form action="{{ route('superadmin.login') }}" method="POST">
-                             @csrf
-                             @if ($errors->any())
-                                 <div class="alert alert-danger py-2">
-                                     {{ $errors->first() }}
-                                 </div>
-                             @endif
-
-                             <!-- EMAIL -->
-                             <div class="mb-3">
-                                 <label class="form-label fw-semibold">Email Address</label>
-                                 <div class="input-group">
-                                     <span class="input-group-text bg-white"><i class="fas fa-envelope"></i></span>
-                                     <input type="email" name="email" value="{{ old('email') }}"
-                                         class="form-control @error('email') is-invalid @enderror"
-                                         placeholder="Enter email">
-                                 </div>
-                             </div>
-
-                             <!-- PASSWORD -->
-                             <div class="mb-3">
-                                 <label class="form-label fw-semibold">Password</label>
-                                 <div class="input-group">
-                                     <span class="input-group-text bg-white"><i class="fas fa-lock"></i></span>
-                                     <input type="password" name="password" class="form-control"
-                                         placeholder="Enter password" required>
-                                 </div>
-                             </div>
-
-                             <!-- REMEMBER -->
-                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                 <div class="form-check">
-                                     <input type="checkbox" class="form-check-input" name="remember" id="remember">
-                                     <label for="remember" class="form-check-label">Remember Me</label>
-                                 </div>
-                                 <a href="#" class="text-primary small text-decoration-none">Forgot Password?</a>
-                             </div>
-
-                             <!-- LOGIN BUTTON -->
-                             <button type="submit" class="btn btn-primary w-100">Sign In</button>
-
-                         </form>
-
-                         <!-- REGISTER -->
-                         {{-- <p class="text-center small mt-3">
-                        Don't have an account?
-                        <a href="{{ route('admin.register.view') }}" class="text-primary fw-semibold">
-                            Register now
-                        </a>
-                    </p> --}}
-                     </div>
-
-                     <!-- RIGHT: IMAGE (Equal Height) -->
-                     <div class="col-lg-6 p-0">
-                         <div class="auth-image"
-                             style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216');">
-                         </div>
-                     </div>
-
-                 </div>
-
-             </div>
-         </div>
-     </div>
-
-     <!-- Bootstrap JS -->
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
- </body>
-
- </html>
+</html>

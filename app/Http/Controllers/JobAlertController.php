@@ -23,7 +23,7 @@ class JobAlertController extends Controller
             'keywords.required' => 'Please enter at least one keyword..',
         ]);
 
-        // Keywords clean karo
+        // Clean keywords
         $keywords = implode(', ', array_map(
             'trim',
             explode(',', $request->keywords)

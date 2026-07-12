@@ -5,89 +5,28 @@
 
 <div class="container-fluid py-4">
 
-    {{-- HEADER SECTION --}}
-    <div class="p-4 rounded shadow-sm mb-4 bg-light border-left border-primary" style="border-width:4px !important;">
+    @include('partials.superadmin-page-header', [
+        'icon' => 'fa-layer-group',
+        'title' => 'Job Categories',
+        'subtitle' => 'Manage all categories used for job postings.',
+    ])
 
-        {{-- ROW 1 : Title + Breadcrumb --}}
-        <div class="d-md-flex justify-content-between align-items-center">
-
-            <div class="mb-3 mb-md-0">
-                <h4 class="font-weight-bold text-dark mb-1">
-                    <i class="fa fa-layer-group text-primary mr-2"></i>
-                    Job Categories
-                </h4>
-                <small class="text-muted">
-                    Manage all categories used for job postings.
-                </small>
-            </div>
-
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item active font-weight-bold">
-                        Categories
-                    </li>
-                </ol>
-            </nav>
-
-        </div>
-
-        {{-- ROW 2 : Search + Add --}}
-        <div class="mt-3">
-
-            {{-- Desktop Layout --}}
-            <div class="d-none d-md-flex justify-content-between align-items-center">
-
+    {{-- TABLE SECTION --}}
+    <div class="card shadow-sm border-0 rounded">
+        <div class="card-header bg-white">
+            <div class="sa-toolbar mb-0">
                 <form method="GET" action="{{ route('admin.job_category') }}" class="form-inline">
-
-                    <input type="search" name="search" class="form-control mr-2" placeholder="Search category..."
-                        value="{{ request('search') }}" style="max-width:280px;">
-
-                    <button class="btn btn-outline-primary">
+                    <input type="search" name="search" class="form-control form-control-sm mr-2" aria-label="Search category" placeholder="Search category..." value="{{ request('search') }}">
+                    <button class="btn btn-sm btn-outline-primary">
                         <i class="fa fa-search"></i>
                     </button>
-
                 </form>
 
-                <a href="{{ route('admin.job_category_add') }}" class="btn btn-primary rounded-pill px-4">
-                    <i class="fa fa-plus mr-2"></i>
-                    Add Category
+                <a href="{{ route('admin.job_category_add') }}" class="btn btn-sm btn-primary">
+                    <i class="fa fa-plus mr-1"></i> Add Category
                 </a>
-
             </div>
-
-            {{-- Mobile Layout --}}
-            <div class="d-block d-md-none">
-
-                <form method="GET" action="{{ route('admin.job_category') }}">
-
-                    <div class="input-group mb-3">
-                        <input type="search" name="search" class="form-control" placeholder="Search category..."
-                            value="{{ request('search') }}">
-
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-primary">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                </form>
-
-                <a href="{{ route('admin.job_category_add') }}" class="btn btn-primary rounded-pill btn-block">
-                    <i class="fa fa-plus mr-2"></i>
-                    Add Category
-                </a>
-
-            </div>
-
         </div>
-
-    </div>
-    {{-- TABLE SECTION --}}
-    <div class="card shadow-sm border-0  rounded">
         <div class="card-body">
 
             <div class="table-responsive">
@@ -110,7 +49,7 @@
 
                             <td>
                                 <img src="{{ $category->category_image ? Storage::url($category->category_image) : asset('admins/dist/img/default.png') }}"
-                                    class="img-thumbnail" width="60" height="60" style="object-fit:cover;">
+                                    class="img-thumbnail" width="60" height="60" style="object-fit:cover;" alt="{{ $category->name ?? 'Category' }}">
                             </td>
 
                             <td class="font-weight-bold">
@@ -122,19 +61,19 @@
                             </td>
 
                             <td class="text-center align-middle">
-                                <div class="d-flex justify-content-center">
+                                <div class="sa-row-actions justify-content-center">
 
                                     <a href="{{ route('admin.job_category_edit', $category->id) }}"
-                                        class="btn btn-sm btn-outline-primary mr-1">
+                                        class="btn btn-primary sa-icon-action" title="Edit">
                                         <i class="fa fa-edit"></i>
                                     </a>
 
                                     <form action="{{ route('admin.job_category_delete', $category->id) }}" method="POST"
-                                        class="d-inline">
+                                        class="d-inline-flex">
                                         @csrf
                                         @method('DELETE')
 
-                                        <button type="submit" class="btn btn-sm btn-outline-danger delete-btn">
+                                        <button type="submit" class="btn btn-danger sa-icon-action delete-btn" title="Delete">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </form>
@@ -146,8 +85,13 @@
 
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-4">
-                                No categories found.
+                            <td colspan="5" class="text-center py-5">
+                                <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                                <h5 class="font-weight-bold text-muted">No categories yet</h5>
+                                <p class="text-muted mb-3">Create a category to start organizing your job postings.</p>
+                                <a href="{{ route('admin.job_category_add') }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-plus mr-1"></i> Add Category
+                                </a>
                             </td>
                         </tr>
                         @endforelse
@@ -183,7 +127,6 @@
 
 
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {

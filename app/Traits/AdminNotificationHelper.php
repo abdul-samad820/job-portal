@@ -6,12 +6,17 @@ use Illuminate\Support\Facades\DB;
 
 trait AdminNotificationHelper
 {
-    public function hasNotification($adminId, $type)
+    public function hasNotification($adminId, $type, $jobId = null)
     {
-        return DB::table('notifications')
+        $query = DB::table('notifications')
             ->where('notifiable_id', $adminId)
             ->where('type', $type)
-            ->whereNull('read_at')
-            ->exists();
+            ->whereNull('read_at');
+
+        if ($jobId !== null) {
+            $query->where('data->job_id', $jobId);
+        }
+
+        return $query->exists();
     }
 }

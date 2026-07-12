@@ -73,11 +73,10 @@
                             <div class="ja-status-row-label">Alert Status</div>
                             <div class="ja-status-row-value {{ $alert->is_active ? 'is-active' : '' }}">
                                 @if($alert->is_active)
-                                <i class="fas fa-circle" style="font-size:8px; vertical-align:2px;"></i>
+                                <i class="fas fa-circle u-fs-0-533rem-va-2px"></i>
                                 Receiving alerts
                                 @else
-                                <i class="fas fa-pause-circle"
-                                    style="font-size:13px; color:#94a3b8; vertical-align:-1px;"></i>
+                                <i class="fas fa-pause-circle u-fs-var-fs-sm-color-94a3b8-va-1px"></i>
                                 Alerts paused
                                 @endif
                             </div>
@@ -109,7 +108,7 @@
                             </span>
                             @endif
                             @empty
-                            <span style="font-size:.8rem; color:#94a3b8;">
+                            <span class="u-fs-8rem-color-94a3b8">
                                 No keywords set yet
                             </span>
                             @endforelse
@@ -137,14 +136,13 @@
                             <span class="ja-input-icon">
                                 <i class="fas fa-search"></i>
                             </span>
-                            <input type="text" name="keywords" class="ja-input"
+                            <input type="text" name="keywords" aria-label="Keywords" class="ja-input"
                                 placeholder="e.g. Laravel, PHP, React, Remote"
                                 value="{{ old('keywords', $alert->keywords ?? '') }}" autocomplete="off">
                         </div>
 
                         @error('keywords')
-                        <div
-                            style="font-size:.8rem; color:var(--danger); margin: -8px 0 12px; display:flex; align-items:center; gap:5px;">
+                        <div class="u-fs-8rem-color-var-danger-d-flex-gap-5px">
                             <i class="fas fa-exclamation-circle"></i> {{ $message }}
                         </div>
                         @enderror
@@ -167,7 +165,7 @@
                         @method('DELETE')
                         <button type="submit" class="ja-delete-btn"
                             onclick="return confirm('Delete this alert permanently?')">
-                            <i class="fas fa-trash-alt" style="font-size:11px;"></i>
+                            <i class="fas fa-trash-alt u-fs-var-fs-xs"></i>
                             Delete alert permanently
                         </button>
                     </form>
@@ -188,7 +186,7 @@
 
                 <div class="ja-stat-item">
                     <div class="ja-stat-item-left">
-                        <div class="ja-stat-icon" style="background:#eff6ff; color:#2563eb;">
+                        <div class="ja-stat-icon ja-stat-icon--blue">
                             <i class="fas fa-key"></i>
                         </div>
                         <div>
@@ -203,7 +201,7 @@
 
                 <div class="ja-stat-item">
                     <div class="ja-stat-item-left">
-                        <div class="ja-stat-icon" style="background:#f0fdf4; color:#059669;">
+                        <div class="ja-stat-icon ja-stat-icon--green">
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <div>
@@ -219,7 +217,7 @@
 
                 <div class="ja-stat-item">
                     <div class="ja-stat-item-left">
-                        <div class="ja-stat-icon" style="background:#fff7ed; color:#d97706;">
+                        <div class="ja-stat-icon ja-stat-icon--orange">
                             <i class="fas fa-clock"></i>
                         </div>
                         <div>
@@ -227,19 +225,18 @@
                             <div class="ja-stat-sub">Most recent email</div>
                         </div>
                     </div>
-                    <div class="ja-stat-value"
-                        style="font-size:.78rem; text-align:right; max-width:90px; line-height:1.3;">
+                    <div class="ja-stat-value u-fs-78rem-ta-right-maxw-90px-lh-1-3">
                         @if($alert->last_sent_at)
                         {{ $alert->last_sent_at->diffForHumans() }}
                         @else
-                        <span style="color:#94a3b8;">Never</span>
+                        <span class="u-color-94a3b8">Never</span>
                         @endif
                     </div>
                 </div>
 
                 <div class="ja-stat-item">
                     <div class="ja-stat-item-left">
-                        <div class="ja-stat-icon" style="background:#fdf2f8; color:#9333ea;">
+                        <div class="ja-stat-icon ja-stat-icon--purple">
                             <i class="fas fa-calendar-alt"></i>
                         </div>
                         <div>
@@ -247,7 +244,7 @@
                             <div class="ja-stat-sub">Alert set on</div>
                         </div>
                     </div>
-                    <div class="ja-stat-value" style="font-size:.78rem;">
+                    <div class="ja-stat-value u-fs-78rem">
                         {{ $alert->created_at->format('d M Y') }}
                     </div>
                 </div>

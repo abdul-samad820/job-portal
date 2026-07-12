@@ -21,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('admins', function (Blueprint $table) {});
+        Schema::table('admins', function (Blueprint $table) {
+            $table->dropColumn('remember_token');
+        });
     }
 };

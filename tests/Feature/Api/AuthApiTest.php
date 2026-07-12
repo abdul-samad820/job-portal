@@ -55,7 +55,7 @@ class AuthApiTest extends TestCase
 
         $response->assertStatus(401)
             ->assertJson([
-                'message' => 'Unauthenticated.',
+                'message' => 'Unauthenticated. Please login first.',
             ]);
     }
 
@@ -72,7 +72,7 @@ class AuthApiTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonPath('status', 'success');
 
-        // Token delete hua?
+        // Confirm the token was deleted
         $this->assertDatabaseCount('personal_access_tokens', 0);
     }
 }

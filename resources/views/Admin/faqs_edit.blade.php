@@ -5,7 +5,7 @@
 <div class="container-fluid py-4">
 
     {{-- HEADER --}}
-    <div class="p-4 rounded shadow-sm mb-4 bg-light border-left border-primary" style="border-width:4px !important;">
+    <div class="p-4 rounded shadow-sm mb-4 bg-light border-left border-primary u-bw-4px">
 
         <div class="d-md-flex justify-content-between align-items-center">
 
@@ -44,11 +44,11 @@
 
                 {{-- Question --}}
                 <div class="form-group">
-                    <label class="font-weight-bold">
+                    <label class="font-weight-bold" for="question">
                         Question <span class="text-danger">*</span>
                     </label>
 
-                    <input type="text" name="question" class="form-control"
+                    <input id="question" type="text" name="question" class="form-control"
                         value="{{ old('question', $faq->question) }}" required>
 
                     @error('question')
@@ -58,11 +58,11 @@
 
                 {{-- Answer --}}
                 <div class="form-group">
-                    <label class="font-weight-bold">
+                    <label class="font-weight-bold" for="answer">
                         Answer <span class="text-danger">*</span>
                     </label>
 
-                    <textarea name="answer" rows="5" class="form-control"
+                    <textarea id="answer" name="answer" rows="5" class="form-control"
                         required>{{ old('answer', $faq->answer) }}</textarea>
 
                     @error('answer')
@@ -72,9 +72,9 @@
 
                 {{-- Status (optional but recommended) --}}
                 <div class="form-group">
-                    <label class="font-weight-bold">Status</label>
+                    <label class="font-weight-bold" for="status">Status</label>
 
-                    <select name="status" class="form-control">
+                    <select id="status" name="status" class="form-control">
                         <option value="1" {{ $faq->status == 1 ? 'selected' : '' }}>Active</option>
                         <option value="0" {{ $faq->status == 0 ? 'selected' : '' }}>Inactive</option>
                     </select>

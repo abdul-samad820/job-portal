@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class InterviewController extends Controller
 {
     // ─────────────────────────────────────────────
-    // Schedule Form 
+    // Schedule Form
     // ─────────────────────────────────────────────
     public function create($applicationId)
     {
@@ -61,10 +61,27 @@ class InterviewController extends Controller
         // Check if already exists (reschedule case)
         $isReschedule = $application->interview()->exists();
 
+        // Conflict detection (Phase9 UX-03): warn if this admin already
+        // has another interview at the exact same date/time. Not a hard
+        // block — interview lengths vary and the admin may genuinely
+        // intend to double-book (e.g. a panel), but they should see it.
+        $conflict = Interview::where('admin_id', $data['admin_id'])
+            ->where('interview_date', $data['interview_date'])
+            ->where('interview_time', $data['interview_time'])
+            ->where('job_application_id', '!=', $applicationId)
+            ->where('status', '!=', 'cancelled')
+            ->with('application.user')
+            ->first();
+
         $interview = $application->interview()->updateOrCreate(
             ['job_application_id' => $applicationId],
             $data
         );
+
+        if ($conflict) {
+            $conflictWith = $conflict->application->user->name ?? 'another candidate';
+            session()->flash('warning', "Heads up: you already have an interview scheduled with {$conflictWith} at this exact date and time.");
+        }
 
         // If rescheduled, update status
         if ($isReschedule) {
@@ -133,16 +150,25 @@ class InterviewController extends Controller
     public function userInterviews()
     {
         $userId = Auth::guard('user')->id();
+        $today = now()->toDateString();
 
-        $interviews = Interview::with(['application.job.admin'])
-            ->whereHas('application', fn ($q) => $q->where('user_id', $userId))
+        $baseQuery = fn () => Interview::with(['application.job.admin'])
+            ->whereHas('application', fn ($q) => $q->where('user_id', $userId));
+
+        // Matches Interview::getIsUpcomingAttribute() (interview_date >= today)
+        $upcoming = $baseQuery()
+            ->where('interview_date', '>=', $today)
             ->orderBy('interview_date', 'asc')
-            ->get()
-            ->groupBy(fn ($i) => $i->is_upcoming ? 'upcoming' : 'past');
+            ->get();
+
+        $past = $baseQuery()
+            ->where('interview_date', '<', $today)
+            ->orderBy('interview_date', 'desc')
+            ->get();
 
         return view('User.my_interviews', [
-            'upcoming' => $interviews['upcoming'] ?? collect(),
-            'past' => $interviews['past'] ?? collect(),
+            'upcoming' => $upcoming,
+            'past' => $past,
         ]);
     }
 }

@@ -1,0 +1,762 @@
+body.user-shell {
+    --sa-sidebar-w: 258px;
+    --sa-sidebar-w-collapsed: 4.6rem;
+    --sa-header-h: 64px;
+    --sa-radius-sm: 8px;
+    --sa-radius-md: 12px;
+    --sa-radius-lg: 16px;
+    --sa-border: #eef1f6;
+    --sa-sidebar-bg: #ffffff;
+    --sa-sidebar-active-bg: rgba(37, 99, 235, 0.09);
+    background: #f6f8fb;
+}
+
+body.user-shell * {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+body.user-shell *::-webkit-scrollbar { width: 6px; height: 6px; }
+body.user-shell *::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+body.user-shell *::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* Respect reduced-motion preference across the whole panel */
+@media (prefers-reduced-motion: reduce) {
+    body.user-shell * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+/* ============================================================================
+   1. SIDEBAR
+============================================================================ */
+body.user-shell .jobi-sidebar.main-sidebar {
+    width: var(--sa-sidebar-w);
+    background: var(--sa-sidebar-bg);
+    border-right: 1px solid var(--sa-border);
+    box-shadow: 1px 0 0 rgba(15, 23, 42, 0.02);
+}
+body.user-shell.sidebar-mini.sidebar-collapse .jobi-sidebar.main-sidebar {
+    width: var(--sa-sidebar-w-collapsed);
+}
+
+/* Sidebar scrollbar — always visible, soft grey (instead of AdminLTE's default hidden/auto-hide bar) */
+body.user-shell .jobi-sidebar .sidebar {
+    overflow-y: auto !important;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd2dc transparent;
+}
+body.user-shell .jobi-sidebar .sidebar::-webkit-scrollbar { width: 6px; }
+body.user-shell .jobi-sidebar .sidebar::-webkit-scrollbar-track { background: transparent; }
+body.user-shell .jobi-sidebar .sidebar::-webkit-scrollbar-thumb { background: #cbd2dc; border-radius: 10px; }
+body.user-shell .jobi-sidebar .sidebar::-webkit-scrollbar-thumb:hover { background: #a8b1bf; }
+/* If OverlayScrollbars (AdminLTE plugin) is the one actually rendering the bar, keep its handle visible too */
+body.user-shell .jobi-sidebar .os-scrollbar { opacity: 1 !important; }
+body.user-shell .jobi-sidebar .os-scrollbar-vertical { width: 6px !important; }
+body.user-shell .jobi-sidebar .os-scrollbar-handle { background: #cbd2dc !important; }
+body.user-shell .content-wrapper { margin-left: var(--sa-sidebar-w); padding-top: var(--sa-header-h); transition: margin-left 0.25s ease; }
+body.user-shell.sidebar-mini.sidebar-collapse .content-wrapper { margin-left: var(--sa-sidebar-w-collapsed); }
+body.user-shell .main-footer { margin-left: var(--sa-sidebar-w); transition: margin-left 0.25s ease; }
+body.user-shell.sidebar-mini.sidebar-collapse .main-footer { margin-left: var(--sa-sidebar-w-collapsed); }
+
+/* Brand */
+body.user-shell .jobi-brand {
+   padding: 13px 23px 14px;
+    display: flex;
+    align-items: center;
+    gap: 23px;
+    text-align: left;
+}
+body.user-shell .jobi-brand img { width: 38px; height: 38px; margin: 0; flex-shrink: 0; }
+body.user-shell .sa-brand-text { display: flex; flex-direction: column; gap: 3px; overflow: hidden; line-height: 1.1; min-width: 0; flex: 1 1 auto; }
+body.user-shell .sa-brand-title {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+body.user-shell .brand-subtext {
+    text-align: left;
+    margin-top: 0;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    color: var(--text-disabled);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+body.user-shell.sidebar-collapse .sa-brand-text { display: none !important; }
+
+/* Profile card */
+body.user-shell .jobi-profile {
+   display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+    padding: 8px 22px;
+    margin: -2px -1px 0px;
+    background: #f8fafc;
+    border: 2px solid var(--sa-border);
+    border-radius: var(--sa-radius-md);
+}
+body.user-shell .profile-img { width: 40px; height: 40px; margin: 0; flex-shrink: 0; }
+body.user-shell .sa-profile-meta { overflow: hidden; display: flex; flex-direction: column; gap: 5px; min-width: 0; flex: 1 1 auto; }
+body.user-shell .sa-profile-name {
+    font-size: 12.5px; font-weight: 700; color: var(--text-primary); line-height: 1.1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+body.user-shell .sa-profile-role-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    width: fit-content;
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--accent);
+    background: rgba(var(--accent-rgb), 0.1);
+    padding: 2px 8px; border-radius: 999px; line-height: 1.6;
+}
+body.user-shell.sidebar-collapse .jobi-profile { justify-content: center; padding: 10px; margin: 10px 8px; }
+body.user-shell.sidebar-collapse .sa-profile-meta { display: none !important; }
+
+/* Section headings inside the menu */
+body.user-shell .sa-nav-heading {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-disabled);
+    padding: 16px 18px 6px;
+    margin: 0;
+}
+body.user-shell.sidebar-collapse .sa-nav-heading { display: none; }
+
+/* Menu items */
+body.user-shell .jobi-menu { padding: 4px 12px 16px; }
+body.user-shell .jobi-menu .nav-item { margin-bottom: 1px; }
+body.user-shell .jobi-menu .nav-link {
+    position: relative;
+    padding: 9px 12px;
+    border-radius: var(--sa-radius-sm);
+    font-size: 13.2px;
+    color: var(--text-secondary);
+}
+body.user-shell .jobi-menu .nav-link i { width: 20px; font-size: 15px; }
+body.user-shell .jobi-menu .nav-link:hover {
+    background: #f1f5f9 !important;
+    color: var(--text-primary) !important;
+    transform: translateX(1px);
+}
+body.user-shell .jobi-menu .nav-link:hover i { color: var(--accent); }
+body.user-shell .jobi-menu .nav-link.active {
+    background: var(--sa-sidebar-active-bg) !important;
+    color: var(--accent) !important;
+    font-weight: 700 !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+}
+body.user-shell .jobi-menu .nav-link.active i { color: var(--accent) !important; }
+/* Rounded active indicator bar on the left edge */
+body.user-shell .jobi-menu .nav-link.active::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 20px;
+    border-radius: 0 4px 4px 0;
+    background: var(--accent);
+}
+body.user-shell.sidebar-collapse .jobi-menu .nav-link.active::before { display: none; }
+
+/* ============================================================================
+   2. HEADER / NAVBAR
+============================================================================ */
+body.user-shell .main-header.navbar {
+    height: var(--sa-header-h);
+    background: #ffffff !important;
+    border-bottom: 1px solid var(--sa-border) !important;
+    padding: 0 20px;
+    margin-left: var(--sa-sidebar-w);
+    left: 0 !important;
+    right: 0;
+    transition: margin-left 0.25s ease;
+}
+body.user-shell.sidebar-mini.sidebar-collapse .main-header.navbar { margin-left: var(--sa-sidebar-w-collapsed); }
+body.user-shell .main-header .navbar-nav { align-items: center; height: var(--sa-header-h); }
+
+body.user-shell .sa-header-toggle {
+    width: 36px; height: 36px; border-radius: var(--sa-radius-sm);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--text-secondary); transition: background 0.15s ease;
+}
+body.user-shell .sa-header-toggle:hover { background: #f1f5f9; color: var(--text-primary); }
+
+body.user-shell .sa-breadcrumb {
+    display: flex; flex-direction: column; margin-left: 14px; line-height: 1.15;
+}
+body.user-shell .sa-breadcrumb .sa-crumb-trail {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--text-muted);
+}
+body.user-shell .sa-breadcrumb .sa-crumb-title {
+    font-family: "Montserrat", sans-serif; font-weight: 700; font-size: 15px;
+    color: var(--text-primary);
+}
+
+/* Header search */
+body.user-shell .sa-header-search {
+    position: relative; max-width: 320px; width: 100%;
+}
+body.user-shell .sa-header-search input {
+    width: 100%; border: 1px solid var(--sa-border); background: #f8fafc;
+    border-radius: 999px; padding: 8px 14px 8px 38px; font-size: 13px;
+    transition: all 0.18s ease;
+}
+body.user-shell .sa-header-search input:focus {
+    outline: none; background: #fff; border-color: rgba(var(--accent-rgb), 0.4);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.1);
+}
+body.user-shell .sa-header-search i {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--text-disabled); font-size: 13px;
+}
+
+/* Notification bell */
+body.user-shell .sa-icon-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--text-secondary); position: relative; transition: background 0.15s ease;
+}
+body.user-shell .sa-icon-btn:hover { background: #f1f5f9; color: var(--accent); }
+body.user-shell .sa-icon-btn .navbar-badge {
+    top: 4px; right: 4px; font-size: 9px; padding: 2px 4px;
+    animation: sa-badge-pulse 2s ease-in-out infinite;
+}
+@keyframes sa-badge-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.35); }
+    50% { box-shadow: 0 0 0 4px rgba(220, 53, 69, 0); }
+}
+body.user-shell .dropdown-menu {
+    border: 1px solid var(--sa-border);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--sa-radius-md);
+    padding: 6px;
+    animation: sa-dropdown-in 0.14s ease;
+}
+@keyframes sa-dropdown-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+body.user-shell .dropdown-item { border-radius: 8px; font-size: 13px; padding: 8px 10px; }
+body.user-shell .dropdown-item:hover { background: #f1f5f9; }
+body.user-shell .dropdown-header { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
+
+/* Notification dropdown card */
+body.user-shell .sa-notif-menu {
+    width: 360px;
+    border-radius: var(--sa-radius-md);
+    overflow: hidden;
+}
+body.user-shell .sa-notif-header {
+    padding: 14px 16px;
+    background: #f8fafc;
+}
+body.user-shell .sa-notif-header h6 {
+    font-weight: 700; font-size: 14px; color: var(--text-primary, #1a1f36);
+}
+body.user-shell .sa-notif-list {
+    max-height: 320px;
+    overflow-y: auto;
+}
+body.user-shell .sa-notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 0;
+    white-space: normal;
+}
+body.user-shell .sa-notif-icon {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(37, 99, 235, 0.1); color: #2563eb; font-size: 13px;
+}
+body.user-shell .sa-notif-body { flex: 1; min-width: 0; }
+body.user-shell .sa-notif-title {
+    display: block; font-weight: 700; font-size: 13px; color: var(--text-primary, #1a1f36);
+}
+body.user-shell .sa-notif-message {
+    display: block; font-size: 12px; color: var(--text-muted, #6b7280);
+    margin-top: 2px; line-height: 1.4;
+}
+body.user-shell .sa-notif-time {
+    display: block; font-size: 11px; color: var(--text-disabled, #9ca3af); margin-top: 4px;
+}
+body.user-shell .sa-notif-empty {
+    text-align: center; padding: 40px 20px; color: var(--text-muted, #6b7280);
+}
+body.user-shell .sa-notif-empty i {
+    font-size: 26px; color: #16a34a; display: block; margin-bottom: 8px;
+}
+
+/* Contact message "From" avatar — initials circle, color varies per contact
+   using the same blue/green/amber/red palette already used in Reports. */
+body.user-shell .sa-contact-avatar {
+    position: relative;
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12.5px; font-weight: 700; color: #fff;
+}
+body.user-shell .sa-contact-avatar-blue  { background: #2563eb; }
+body.user-shell .sa-contact-avatar-green { background: #16a34a; }
+body.user-shell .sa-contact-avatar-red   { background: #e74a3b; }
+body.user-shell .sa-contact-avatar-amber { background: #f6c23e; color: #1a1f36; }
+body.user-shell .sa-contact-avatar-dot {
+    position: absolute; top: -2px; right: -2px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #e74a3b; border: 2px solid #fff;
+}
+
+/* Profile chip in header */
+body.user-shell .sa-header-profile {
+    display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px;
+    border-radius: 999px; transition: background 0.15s ease;
+}
+body.user-shell .sa-header-profile:hover { background: #f1f5f9; }
+body.user-shell .sa-header-profile .sa-avatar-circle {
+    width: 30px; height: 30px; border-radius: 50%; background: var(--accent);
+    color: #fff; display: inline-flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px;
+}
+body.user-shell .sa-nav-badge {
+    position: absolute; bottom: -3px; right: -3px;
+    width: 16px; height: 16px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 2px solid #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+body.user-shell .sa-nav-badge i { font-size: 8px; color: #fff; }
+body.user-shell .sa-header-profile .sa-header-name {
+    font-size: 12.5px; font-weight: 600; color: var(--text-primary); line-height: 1.1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px;
+}
+body.user-shell .sa-header-profile .sa-header-role {
+    font-size: 10px; color: var(--text-muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; display: block;
+}
+
+/* ============================================================================
+   3. TOOLBAR (filters + search + primary action — used across list pages)
+============================================================================ */
+body.user-shell .sa-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px; margin-bottom: 16px;
+}
+body.user-shell .sa-filter-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+body.user-shell .sa-filter-pills .btn {
+    border-radius: 999px !important; padding: 6px 16px; font-size: 12.5px !important;
+    font-weight: 600 !important; border: 1px solid var(--sa-border);
+}
+body.user-shell .sa-filter-pills .btn.btn-primary { border-color: var(--accent); }
+body.user-shell .sa-filter-pills .btn:not(.btn-primary) { background: #fff; color: var(--text-secondary); }
+body.user-shell .sa-filter-pills .btn:not(.btn-primary):hover { background: #f1f5f9; }
+
+/* ============================================================================
+   4. PAGE HEADER (partials.superadmin-page-header)
+============================================================================ */
+body.user-shell .sa-page-header {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px; margin-bottom: 24px;
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.07) 0%, #ffffff 60%);
+    padding: 22px 26px 22px 30px; margin-top: 20px;
+    border: 1px solid var(--sa-border); border-radius: var(--sa-radius-lg);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 4px 14px rgba(15, 23, 42, 0.03);
+}
+/* Accent bar down the left edge — small signature touch, ties header to the brand color */
+body.user-shell .sa-page-header::before {
+    content: ""; position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+}
+body.user-shell .sa-page-header .sa-page-icon {
+    width: 48px; height: 48px; border-radius: var(--sa-radius-md);
+    background: rgba(var(--accent-rgb), 0.1); color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center; font-size: 19px;
+    flex-shrink: 0;
+}
+body.user-shell .sa-page-header h1,
+body.user-shell .sa-page-header .sa-page-title {
+    font-size: 1.35rem; font-weight: 700; margin-bottom: 3px; letter-spacing: -0.01em;
+    color: #1e293b;
+}
+body.user-shell .sa-page-header small.text-muted {
+    font-size: 0.87rem;
+}
+/* Action button(s) passed via the 'actions' slot (e.g. "Add New Admin") */
+body.user-shell .sa-page-header .btn-primary {
+    box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.25);
+}
+@media (max-width: 575.98px) {
+    body.user-shell .sa-page-header > a.btn,
+    body.user-shell .sa-page-header > div.d-flex.align-items-center:last-child { width: 100%; }
+    body.user-shell .sa-page-header .btn { width: 100%; justify-content: center; }
+}
+
+/* ============================================================================
+   4b. MODALS (e.g. #createAdminModal)
+============================================================================ */
+body.user-shell .sa-modal .modal-content {
+    border: none; border-radius: var(--sa-radius-lg);
+    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.18);
+    overflow: hidden;
+}
+body.user-shell .sa-modal .modal-header {
+    align-items: flex-start; padding: 20px 24px;
+    border-bottom: 1px solid var(--sa-border);
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.06) 0%, #ffffff 70%);
+}
+body.user-shell .sa-modal .modal-title { font-size: 1.15rem; color: #1e293b; margin-bottom: 2px; }
+body.user-shell .sa-modal .modal-header .close { padding: 0; margin: 0; line-height: 1; opacity: 0.5; }
+body.user-shell .sa-modal .modal-header .close:hover { opacity: 0.9; }
+body.user-shell .sa-modal .modal-body { padding: 24px; }
+body.user-shell .sa-modal .form-control:focus {
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12); border-color: rgba(var(--accent-rgb), 0.5);
+}
+body.user-shell .sa-modal .btn-primary { box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.25); }
+@media (max-width: 575.98px) {
+    body.user-shell .sa-modal .modal-body { padding: 18px; }
+}
+/* Prevent a second (background page) scrollbar from showing while a modal is open */
+body.user-shell.modal-open {
+    overflow: hidden !important;
+    padding-right: 0 !important;
+}
+body.user-shell .sa-modal .modal-body {
+    max-height: 70vh;
+}
+
+/* ============================================================================
+   5. CARDS / STAT CARDS
+============================================================================ */
+body.user-shell .card, body.user-shell .sa-hoverable { transition: box-shadow 0.2s ease, transform 0.2s ease; }
+body.user-shell .card.sa-hoverable:hover, body.user-shell .sa-hoverable:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+/* ============================================================================
+   6. TABLES
+============================================================================ */
+body.user-shell .table thead.thead-light th {
+    background: #f8fafc; color: var(--text-muted); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;
+    border-bottom: 1px solid var(--sa-border); border-top: none;
+    padding: 12px 16px; white-space: nowrap;
+}
+body.user-shell .table td { padding: 13px 16px; font-size: 13.2px; vertical-align: middle; border-top: 1px solid #f4f6f9; }
+body.user-shell .table tbody tr { transition: background 0.12s ease; }
+body.user-shell .table-hover tbody tr:hover { background: #f8fafc; }
+
+/* Row + select-all checkboxes match the accent color instead of default browser blue */
+body.user-shell .table input[type="checkbox"],
+body.user-shell #selectAll { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
+
+/* -------- Applied Jobs table: action buttons -------- */
+/* Resume "View" — a clean fixed-size circular icon button (was an
+   icon+text pill that wrapped onto two lines and looked like a
+   squashed, messy circle). */
+body.user-shell .sa-applied-table .sa-circle-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1.5px solid var(--success); color: var(--success);
+    background: #fff; font-size: 14px; flex: 0 0 auto;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+body.user-shell .sa-applied-table .sa-circle-btn:hover {
+    background: var(--success); color: #fff; transform: translateY(-1px);
+}
+body.user-shell .sa-applied-table .sa-circle-btn--success { border-color: var(--success); color: var(--success); }
+
+/* Applied On — date stacked above a single-line "View Timeline" link
+   that no longer wraps ("View" / "Timeline" splitting across two lines). */
+body.user-shell .sa-applied-table .sa-applied-date {
+    font-weight: 600; color: var(--text-dark, #1f2937); margin-bottom: 2px;
+}
+body.user-shell .sa-applied-table .sa-timeline-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12.5px; font-weight: 600; color: var(--accent);
+    white-space: nowrap; text-decoration: none;
+}
+body.user-shell .sa-applied-table .sa-timeline-link:hover { color: var(--accent-dark); text-decoration: underline; }
+body.user-shell .sa-applied-table .sa-timeline-link i { font-size: 11px; }
+
+/* Write a Review — keep it a pill, but never wrap the label onto two
+   lines (that's what was turning it into a lumpy circle). */
+body.user-shell .sa-applied-table .sa-review-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    white-space: nowrap; padding: 6px 14px;
+}
+
+/* Status / review badges in this table shouldn't wrap either */
+body.user-shell .sa-applied-table td .badge { white-space: nowrap; }
+
+/* -------- Saved Jobs: action button group -------- */
+/* View / Apply Now / Remove used plain mr-2 spacing, so once they no
+   longer fit on one line the "Remove" button dropped to a second row
+   but stayed pinned to the far right, creating a staggered look.
+   A flex-wrap group with a consistent gap keeps every row tidy
+   whether the buttons sit on one line or two. */
+body.user-shell .sa-saved-actions {
+    gap: 8px;
+    row-gap: 10px;
+}
+body.user-shell .sa-saved-actions .btn,
+body.user-shell .sa-saved-actions form { margin: 0; }
+body.user-shell .sa-saved-actions .btn { white-space: nowrap; }
+
+/* Bulk-selection bar — shown once a row is checked */
+body.user-shell .sa-bulk-bar {
+    gap: 10px; margin: 0 16px 16px; padding: 12px 16px;
+    background: rgba(var(--accent-rgb), 0.06);
+    border: 1px solid rgba(var(--accent-rgb), 0.18);
+    border-radius: var(--sa-radius-md);
+}
+body.user-shell .sa-bulk-count {
+    font-weight: 700; color: #1e293b; margin-right: 4px; font-size: 0.85rem;
+}
+body.user-shell .sa-bulk-bar .btn { font-weight: 600; }
+
+/* Row action buttons — compact, evenly-sized icon buttons in a single row (no wrap) */
+body.user-shell .sa-row-actions {
+    display: inline-flex; align-items: center; gap: 6px; flex-wrap: nowrap;
+}
+body.user-shell .sa-icon-action {
+    width: 32px; height: 32px; padding: 0; display: inline-flex;
+    align-items: center; justify-content: center; border-radius: var(--sa-radius-sm);
+    font-size: 13px;
+}
+
+/* Empty state */
+body.user-shell .sa-empty-state { padding: 56px 20px; text-align: center; }
+body.user-shell .sa-empty-state i {
+    width: 64px; height: 64px; border-radius: 50%; background: #f1f5f9;
+    color: var(--text-disabled); display: inline-flex; align-items: center;
+    justify-content: center; font-size: 24px; margin-bottom: 14px;
+}
+body.user-shell .sa-empty-state p { color: var(--text-muted); font-size: 13.5px; margin: 0; }
+
+/* Skeleton loading rows (optional utility, add class="sa-skeleton" to a row/box) */
+body.user-shell .sa-skeleton {
+    background: linear-gradient(90deg, #f1f5f9 25%, #e9edf3 37%, #f1f5f9 63%);
+    background-size: 400% 100%;
+    animation: sa-shimmer 1.4s ease infinite;
+    border-radius: 6px;
+}
+@keyframes sa-shimmer {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0 50%; }
+}
+
+/* ============================================================================
+   7. FORMS
+============================================================================ */
+body.user-shell .form-control,
+body.user-shell select.form-control,
+body.user-shell textarea.form-control {
+    border-radius: var(--sa-radius-sm);
+    border: 1.5px solid #e2e8f0;
+    font-size: 13.3px;
+    padding: 9px 13px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+body.user-shell .form-control:focus {
+    border-color: rgba(var(--accent-rgb), 0.5);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12);
+}
+body.user-shell label { font-size: 12.8px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+body.user-shell .input-group-text { background: #f8fafc; border: 1.5px solid #e2e8f0; color: var(--text-muted); }
+
+/* ============================================================================
+   8. BUTTONS
+============================================================================ */
+body.user-shell .btn-primary {
+    background: var(--accent); border-color: var(--accent);
+}
+body.user-shell .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); transform: translateY(-1px); }
+body.user-shell .btn:active { transform: translateY(0); }
+
+/* ============================================================================
+   9. RESPONSIVE
+============================================================================ */
+@media (max-width: 991.98px) {
+    /* Force proper off-canvas behavior on mobile/tablet, no matter which
+       AdminLTE state classes are present. Without this, AdminLTE's own
+       sidebar-mini "icon-only collapsed" mode can win out over our
+       intended full-overlay behavior: the sidebar sits at ~4.6rem width
+       INLINE next to a squeezed content column, instead of either being
+       fully hidden or fully overlaying the screen when opened. Every
+       rule below is !important specifically to beat those AdminLTE
+       defaults regardless of sidebar-collapse / sidebar-mini state. */
+    body.user-shell .jobi-sidebar.main-sidebar,
+    body.user-shell.sidebar-mini.sidebar-collapse .jobi-sidebar.main-sidebar,
+    body.user-shell.sidebar-collapse .jobi-sidebar.main-sidebar {
+        width: 240px !important;
+        max-width: 80vw !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        z-index: 1040 !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.25s ease-in-out !important;
+    }
+    body.user-shell.sidebar-open .jobi-sidebar.main-sidebar,
+    body.user-shell.sidebar-open.sidebar-collapse .jobi-sidebar.main-sidebar {
+        transform: translateX(0) !important;
+    }
+
+    /* Content must always be full width on mobile, regardless of
+       collapsed/mini/open state — the sidebar is an overlay now, not a
+       column pushing content over. */
+    body.user-shell .content-wrapper,
+    body.user-shell .main-footer,
+    body.user-shell .main-header.navbar,
+    body.user-shell.sidebar-mini.sidebar-collapse .content-wrapper,
+    body.user-shell.sidebar-mini.sidebar-collapse .main-footer {
+        margin-left: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+    }
+    body.user-shell .sa-header-search { display: none; }
+}
+@media (max-width: 480px) {
+    /* Small phones: fixed px widths eat almost the whole viewport —
+       scale with the screen instead, capped so it never gets silly-wide
+       on slightly bigger phones. */
+    body.user-shell .jobi-sidebar.main-sidebar {
+        width: min(80vw, 260px) !important;
+    }
+}
+@media (max-width: 575.98px) {
+    body.user-shell .sa-toolbar { flex-direction: column; align-items: stretch; }
+    body.user-shell .sa-page-header { padding: 16px 18px; }
+}
+
+/* ============================================================================
+   10. AUTH SCREENS (login / 2FA / create-admin) — Bootstrap 4 only, no BS5 CDN
+============================================================================ */
+.sa-auth {
+    min-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f6f8fb;
+    padding: 24px 16px;
+}
+.sa-auth-card {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg, 0 12px 40px rgba(15, 23, 42, 0.1));
+    overflow: hidden;
+    min-height: 520px;
+}
+.sa-auth-form-side {
+    flex: 1 1 55%;
+    padding: 56px 52px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.sa-auth-visual-side {
+    flex: 1 1 45%;
+    background: linear-gradient(155deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+    color: #fff;
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+.sa-auth-visual-side::before {
+    content: "";
+    position: absolute;
+    inset: -40% -20% auto auto;
+    width: 320px; height: 320px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+}
+.sa-auth-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.05rem; position: relative; z-index: 1; }
+.sa-auth-visual-title { font-family: "Montserrat", sans-serif; font-weight: 800; font-size: 1.6rem; line-height: 1.3; margin-top: auto; position: relative; z-index: 1; }
+.sa-auth-visual-copy { font-size: 0.85rem; opacity: 0.85; margin-top: 10px; position: relative; z-index: 1; }
+.sa-auth-icon-badge {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: rgba(var(--accent-rgb), 0.08); color: var(--accent);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 18px;
+}
+.sa-auth .form-control {
+    border-radius: 10px; border: 1.5px solid #e2e8f0; padding: 11px 14px; font-size: 13.5px;
+}
+.sa-auth .form-control:focus {
+    border-color: rgba(var(--accent-rgb), 0.5);
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.12);
+}
+.sa-auth .input-group-text { background: #f8fafc; border: 1.5px solid #e2e8f0; border-right: none; color: var(--text-muted); }
+.sa-auth .input-group .form-control { border-left: none; }
+
+/* Icon-in-input pattern — simpler and more robust than Bootstrap's
+   input-group (no dependency on .input-group's flex behavior at all). */
+.sa-input-icon { position: relative; }
+.sa-input-icon > i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-disabled);
+    font-size: 14px;
+    pointer-events: none;
+}
+.sa-input-icon > .form-control { padding-left: 40px; }
+.sa-input-icon > .sa-input-icon-toggle {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: transparent;
+    color: var(--text-disabled);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+.sa-input-icon > .sa-input-icon-toggle:hover { color: var(--accent); background: #f1f5f9; }
+.sa-input-icon > .sa-input-icon-toggle:focus { outline: none; box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15); }
+
+.sa-auth-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.22);
+}
+.sa-auth-submit:hover { box-shadow: 0 8px 20px rgba(var(--accent-rgb), 0.3); }
+
+/* Safety net for pages still using Bootstrap's input-group (e.g. create_admin) */
+body.user-shell .input-group { display: flex; flex-wrap: nowrap; align-items: stretch; width: 100%; }
+body.user-shell .input-group-prepend { display: flex; }
+body.user-shell .input-group > .form-control { flex: 1 1 auto; width: 1%; min-width: 0; }
+.sa-auth .btn-primary {
+    background: var(--accent); border-color: var(--accent); border-radius: 10px;
+    padding: 13px; font-weight: 700; font-size: 14.5px; letter-spacing: 0.01em; transition: all .18s ease;
+}
+.sa-auth .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.25); }
+.sa-auth .code-input { letter-spacing: 0.75rem; font-size: 1.4rem; text-align: center; font-weight: 700; }
+
+@media (max-width: 860px) {
+    .sa-auth-card { flex-direction: column; min-height: auto; }
+    .sa-auth-form-side { padding: 40px 28px; }
+    .sa-auth-visual-side { padding: 32px 28px; order: -1; min-height: 160px; }
+    .sa-auth-visual-title { margin-top: 16px; font-size: 1.2rem; }
+}

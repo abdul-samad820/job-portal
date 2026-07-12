@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobCategory;
+use App\Traits\VerifiesUploadedFileMime;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class JobCategoryController extends Controller
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests, VerifiesUploadedFileMime;
 
     public function job_category(Request $request)
     {
@@ -37,9 +38,10 @@ class JobCategoryController extends Controller
 
         $data['admin_id'] = Auth::guard('admin')->id();
         if ($request->hasFile('category_image')) {
-            $file = $request->file('category_image');
-            $filename = time().'_'.$file->getClientOriginalName();
             $path = $request->file('category_image')->store('categories', 'public');
+            if (! $this->verifyStoredMime('public', $path, ['image/jpeg', 'image/png'])) {
+                return back()->withErrors(['category_image' => 'Invalid file type.']);
+            }
             $data['category_image'] = $path;
         }
 
@@ -72,6 +74,9 @@ class JobCategoryController extends Controller
                 Storage::disk('public')->delete($category->category_image);
             }
             $path = $request->file('category_image')->store('categories', 'public');
+            if (! $this->verifyStoredMime('public', $path, ['image/jpeg', 'image/png'])) {
+                return back()->withErrors(['category_image' => 'Invalid file type.']);
+            }
             $data['category_image'] = $path;
 
         }
@@ -85,6 +90,11 @@ class JobCategoryController extends Controller
     {
         $category = JobCategory::findOrFail($id);
         $this->authorize('delete', $category);
+
+        if ($category->jobs()->exists()) {
+            return back()->with('error', 'Cannot delete this category — it still has jobs linked to it. Move or delete those jobs first.');
+        }
+
         $category->delete();
 
         return redirect()->route('admin.job_category')->with('success', 'Category deleted successfully!');

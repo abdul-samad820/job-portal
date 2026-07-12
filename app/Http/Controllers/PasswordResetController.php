@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Support\SessionInvalidator;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password as PasswordRules;
 
 class PasswordResetController extends Controller
 {
     // ─────────────────────────────────────────
-    // Step 1: Show Forgot Password Form 
+    // Step 1: Show Forgot Password Form
     // ─────────────────────────────────────────
     public function showForgotForm()
     {
@@ -25,18 +27,17 @@ class PasswordResetController extends Controller
     public function sendResetLink(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:users,email',
-        ], [
-            'email.exists' => 'This email address is not registered in our system.',
+            'email' => 'required|email',
         ]);
 
         $status = Password::broker('users')->sendResetLink(
             $request->only('email')
         );
 
-        return $status === Password::RESET_LINK_SENT
-            ? back()->with('success', 'A password reset link has been sent to your email address.')
-            : back()->withErrors(['email' => 'We were unable to send the reset link. Please try again.']);
+        return back()->with(
+            'success',
+            'If this email is registered, a password reset link will be sent.'
+        );
     }
 
     // ─────────────────────────────────────────
@@ -58,15 +59,8 @@ class PasswordResetController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => [
-                'required',
-                'min:8',
-                'confirmed',
-                'regex:/[A-Z]/',
-                'regex:/[0-9]/',
-            ],
+            'password' => ['required', 'confirmed', PasswordRules::min(8)->mixedCase()->numbers()],
         ], [
-            'password.regex' => 'Password must contain at least one uppercase letter and one number.',
             'password.confirmed' => 'The password confirmation does not match.',
             'password.min' => 'The password must be at least 8 characters long.',
         ]);
@@ -81,6 +75,11 @@ class PasswordResetController extends Controller
 
                 // Fire Laravel event (invalidates sessions, etc.)
                 event(new PasswordReset($user));
+
+                // Force logout on every other device — an attacker with a
+                // stolen session shouldn't stay logged in after the real
+                // owner resets their password.
+                SessionInvalidator::invalidateForUser($user->id, 'user');
             }
         );
 
@@ -88,7 +87,7 @@ class PasswordResetController extends Controller
             ? redirect()->route('user.login')
                 ->with('success', 'Your password has been reset successfully. You can now log in.')
             : back()->withErrors([
-                'email' => 'The reset link is invalid or has expired. Please request a new one.'
+                'email' => 'The reset link is invalid or has expired. Please request a new one.',
             ]);
     }
 }

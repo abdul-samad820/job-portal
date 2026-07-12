@@ -13,18 +13,15 @@ class ExampleTest extends TestCase
     #[Test]
     public function the_application_returns_a_successful_response(): void
     {
-        
+
         $this->withoutMiddleware();
 
-        
         $response = $this->get('/');
 
-        
         $this->assertContains(
             $response->status(),
             [200, 302, 500],
         );
-
 
         $this->assertTrue(true);
     }

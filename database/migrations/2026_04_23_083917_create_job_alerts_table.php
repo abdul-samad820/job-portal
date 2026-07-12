@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')
                 ->constrained('users')
-                ->onDelete('cascade');  // User delete → alerts bhi delete
+                ->onDelete('cascade');  // If user is deleted, their alerts are deleted too
             $table->string('keywords');   // "Laravel, PHP, MySQL"
             $table->boolean('is_active')
                 ->default(true);        // Alert on/off toggle
             $table->timestamp('last_sent_at')
-                ->nullable();       
+                ->nullable();
             $table->timestamps();
             $table->unique('user_id');
         });

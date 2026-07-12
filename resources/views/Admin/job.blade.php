@@ -1,105 +1,113 @@
 @extends('layouts.Admin_layout')
 @section('title', 'Job Management')
+
+@push('styles')
+<style>
+    /* ---- Active job row: crisp, clearly "live" ---- */
+    .sa-job-row-active td:first-child {
+        border-left: 3px solid #28a745;
+    }
+    .sa-job-row-active:hover {
+        background-color: rgba(40, 167, 69, 0.04);
+    }
+
+    /* ---- Expired job row: frosted / whited-out, clearly de-emphasized ---- */
+    .sa-job-row-expired td:first-child {
+        border-left: 3px solid #dc3545;
+    }
+    .sa-job-row-expired {
+        background: rgba(248, 249, 250, 0.85);
+        position: relative;
+    }
+    .sa-job-row-expired > td {
+        color: #9aa1ac !important;
+        filter: grayscale(0.6) saturate(0.7);
+        opacity: 0.62;
+    }
+    .sa-job-row-expired img {
+        filter: grayscale(1) blur(0.4px);
+        opacity: 0.7;
+    }
+    .sa-job-row-expired .badge {
+        opacity: 0.65;
+    }
+    /* Keep action buttons fully usable even when the rest of the row is muted */
+    .sa-job-row-expired > td.sa-job-actions {
+        opacity: 1;
+        filter: none;
+        color: inherit !important;
+    }
+
+    .sa-expired-chip {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .3px;
+        color: #dc3545;
+        background: rgba(220, 53, 69, 0.1);
+        border: 1px solid rgba(220, 53, 69, 0.25);
+        padding: 1px 8px;
+        border-radius: 20px;
+        margin-left: 6px;
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+
+    /* ---- Performance column: views / applications / conversion, each on its own separated line ---- */
+    .sa-perf-cell {
+        min-width: 150px;
+    }
+    .sa-perf-row {
+        padding: 4px 0;
+        border-bottom: 1px dashed #e9ecef;
+    }
+    .sa-perf-row:last-child {
+        border-bottom: none;
+    }
+</style>
+@endpush
+
 @section('content')
 
 <div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="p-4 rounded shadow-sm mb-4 bg-light border-left border-primary" style="border-width:4px !important;">
 
-                {{-- ROW 1 : Title + Breadcrumb --}}
-                <div class="d-md-flex justify-content-between align-items-center">
+    @include('partials.superadmin-page-header', [
+        'icon' => 'fa-briefcase',
+        'title' => 'Job Management',
+        'subtitle' => 'View, manage and edit all job postings.',
+    ])
 
-                    <div class="mb-3 mb-md-0">
-                        <h4 class="font-weight-bold text-dark mb-1">
-                            <i class="fa fa-briefcase text-primary mr-2"></i>
-                            Job Management
-                        </h4>
-                        <small class="text-muted">
-                            View, manage and edit all job postings.
-                        </small>
-                    </div>
+    <!-- Jobs Table -->
+    <div class="card shadow-sm border-0 rounded">
+        <div class="card-header bg-white">
+            <div class="sa-toolbar mb-0">
+                <form method="GET" action="{{ route('admin.job') }}" class="form-inline">
+                    <input type="search" name="search" class="form-control form-control-sm mr-2" aria-label="Search jobs" placeholder="Search jobs..." value="{{ request('search') }}">
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </form>
 
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active font-weight-bold">
-                                Jobs
-                            </li>
-                        </ol>
-                    </nav>
-
-                </div>
-
-                {{-- ROW 2 : Search + Add --}}
-                <div class="mt-3">
-
-                    {{-- Desktop Layout --}}
-                    <div class="d-none d-md-flex justify-content-between align-items-center">
-
-                        <form method="GET" action="{{ route('admin.job') }}" class="form-inline">
-
-                            <input type="search" name="search" class="form-control mr-2" placeholder="Search jobs..." value="{{ request('search') }}" style="max-width:280px;">
-
-                            <button class="btn btn-outline-primary">
-                                <i class="fa fa-search"></i>
-                            </button>
-
-                        </form>
-
-                        <a href="{{ route('admin.job_add') }}" class="btn btn-primary rounded-pill px-4">
-                            <i class="fa fa-plus mr-2"></i>
-                            Add Job
-                        </a>
-
-                    </div>
-
-                    {{-- Mobile Layout --}}
-                    <div class="d-block d-md-none">
-
-                        <form method="GET" action="{{ route('admin.job') }}">
-
-                            <div class="input-group mb-3">
-                                <input type="search" name="search" class="form-control" placeholder="Search jobs..." value="{{ request('search') }}">
-
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-primary">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                        </form>
-
-                        <a href="{{ route('admin.job_add') }}" class="btn btn-primary btn-block rounded-pill">
-                            <i class="fa fa-plus mr-2"></i>
-                            Add Job
-                        </a>
-
-                    </div>
-
-                </div>
-
+                <a href="{{ route('admin.job_add') }}" class="btn btn-sm btn-primary">
+                    <i class="fa fa-plus mr-1"></i> Add Job
+                </a>
             </div>
+        </div>
+        <div class="card-body">
 
-            <!-- Jobs Table -->
-            <div class="card shadow-sm border-0 rounded">
-                <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
 
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Job Image</th>
-                                    <th>Title</th>
-                                    <th>Location</th>
-                                    <th>Salary</th>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Job Image</th>
+                            <th>Title</th>
+                            <th>Location</th>
+                            <th>Salary</th>
                                     <th>Type</th>
                                     <th>Last Date</th>
+                                    <th>Performance</th>
                                     <th class="text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -111,18 +119,22 @@
                                 $isExpired = $lastDate->isPast();
                                 @endphp
 
-                                <tr @if ($isExpired) style="opacity:0.6" @endif>
+                                <tr class="{{ $isExpired ? 'sa-job-row-expired' : 'sa-job-row-active' }}">
 
                                     <td>{{ $job->id }}</td>
 
                                     <!-- job Image -->
                                     <td>
-                                        <img src="{{ Storage::url($job->job_image) }}" style="width:70px;height:70px;object-fit:cover;border-radius:6px;">
+                                        <img src="{{ Storage::url($job->job_image) }}" style="width:70px;height:70px;object-fit:cover;border-radius:6px;" alt="Company logo">
                                     </td>
 
 
                                     <td class="font-weight-bold text-dark">
-                                        {{ $job->title }} <br>
+                                        {{ $job->title }}
+                                        @if ($isExpired)
+                                            <span class="sa-expired-chip">EXPIRED</span>
+                                        @endif
+                                        <br>
                                         <button class="btn btn-link p-0 mt-1 text-primary small" data-toggle="modal" data-target="#jobModal{{ $job->id }}">
                                             View Details
                                         </button>
@@ -166,19 +178,33 @@
                                         </span>
                                     </td>
 
-                                    <td class="text-center align-middle">
+                                    <td class="small sa-perf-cell">
+                                        <div class="sa-perf-row">
+                                            <i class="fa fa-eye text-muted mr-1"></i>{{ number_format($job->views_count) }} views
+                                        </div>
+                                        <div class="sa-perf-row">
+                                            <i class="fa fa-file-alt text-muted mr-1"></i>{{ $job->applications_count }} applications
+                                        </div>
+                                        @if ($job->views_count > 0)
+                                        <div class="sa-perf-row text-muted">
+                                            {{ round(($job->applications_count / $job->views_count) * 100, 1) }}% conversion
+                                        </div>
+                                        @endif
+                                    </td>
 
-                                        <div class="d-flex justify-content-center align-items-center">
+                                    <td class="text-center align-middle sa-job-actions">
 
-                                            <a href="{{ route('admin.job_edit', $job->id) }}" class="btn btn-sm btn-outline-primary mr-2">
+                                        <div class="sa-row-actions justify-content-center">
+
+                                            <a href="{{ route('admin.job_edit', $job->id) }}" class="btn btn-primary sa-icon-action" title="Edit">
                                                 <i class="fa fa-edit"></i>
                                             </a>
 
-                                            <form action="{{ route('admin.job_delete', $job->id) }}" method="POST" class="mb-0">
+                                            <form action="{{ route('admin.job_delete', $job->id) }}" method="POST" class="d-inline-flex">
                                                 @csrf
                                                 @method('DELETE')
 
-                                                <button type="submit" class="btn btn-sm btn-outline-danger delete-btn">
+                                                <button type="submit" class="btn btn-danger sa-icon-action delete-btn" title="Delete">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>
@@ -190,7 +216,14 @@
 
                                 @empty
                                 <tr>
-                                    <td colspan="8" class="text-center text-muted py-4">No jobs found.</td>
+                                    <td colspan="9" class="text-center py-5">
+                                        <i class="fas fa-briefcase fa-3x text-muted mb-3"></i>
+                                        <h5 class="font-weight-bold text-muted">No jobs yet</h5>
+                                        <p class="text-muted mb-3">Post your first job to start receiving applications.</p>
+                                        <a href="{{ route('admin.job_add') }}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-plus mr-1"></i> Post a Job
+                                        </a>
+                                    </td>
                                 </tr>
                                 @endforelse
                             </tbody>
@@ -211,19 +244,17 @@
                 </div>
             </div>
 
-        </div>
-    </div>
     @foreach ($jobs as $job)
     <div class="modal fade" id="jobModal{{ $job->id }}" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
             <div class="modal-content border-0 shadow">
 
                 <!-- ================= HEADER ================= -->
-                <div class="modal-header text-white" style="background: linear-gradient(135deg,#007bff,#0056b3);">
+                <div class="modal-header text-white u-bg-linear-gradien-2">
 
                     <div class="d-flex align-items-center">
 
-                        <img src="{{ Storage::url($job->job_image) }}" class="mr-3 shadow" style="width:60px;height:60px;object-fit:cover;border-radius:12px;">
+                        <img src="{{ Storage::url($job->job_image) }}" class="mr-3 shadow" style="width:60px;height:60px;object-fit:cover;border-radius:12px;" alt="Company logo">
 
                         <div>
                             <h5 class="mb-1 font-weight-bold">

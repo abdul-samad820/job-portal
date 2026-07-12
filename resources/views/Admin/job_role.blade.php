@@ -5,88 +5,28 @@
     <div class="row">
         <div class="col-12">
 
-            <!-- Header Section -->
-            <div class="p-4 rounded shadow-sm mb-4 bg-light border-left border-primary"
-                style="border-width:4px !important;">
+            @include('partials.superadmin-page-header', [
+                'icon' => 'fa-briefcase',
+                'title' => 'Job Roles',
+                'subtitle' => 'Manage all job roles used across the job postings.',
+            ])
 
-                <!-- Row 1 : Title + Breadcrumb -->
-                <div class="d-md-flex justify-content-between align-items-center">
-
-                    <div class="mb-3 mb-md-0">
-                        <h4 class="font-weight-bold text-dark mb-1">
-                            <i class="fa fa-briefcase text-primary mr-2"></i>
-                            Job Roles
-                        </h4>
-                        <small class="text-muted">
-                            Manage all job roles used across the job postings.
-                        </small>
-                    </div>
-
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active font-weight-bold">
-                                Roles
-                            </li>
-                        </ol>
-                    </nav>
-
-                </div>
-
-                <!-- Row 2 : Search + Add -->
-                <div class="mt-3">
-
-                    <!-- Desktop Layout -->
-                    <div class="d-none d-md-flex justify-content-between align-items-center">
-
-                        <form method="GET" action="{{ route('admin.job_role') }}" class="form-inline">
-
-                            <input type="search" name="search" class="form-control mr-2" placeholder="Search role..."
-                                value="{{ request('search') }}" style="max-width:280px;">
-
-                            <button class="btn btn-outline-primary">
-                                <i class="fa fa-search"></i>
-                            </button>
-
-                        </form>
-
-                        <a href="{{ route('admin.job_role_add') }}" class="btn btn-primary rounded-pill px-4">
-                            <i class="fa fa-plus mr-2"></i>
-                            Add Role
-                        </a>
-
-                    </div>
-
-                    <!-- Mobile Layout -->
-                    <div class="d-block d-md-none">
-
-                        <form method="GET" action="{{ route('admin.job_role') }}">
-
-                            <div class="input-group mb-3">
-                                <input type="search" name="search" class="form-control" placeholder="Search role..."
-                                    value="{{ request('search') }}">
-
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-primary">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                        </form>
-
-                        <a href="{{ route('admin.job_role_add') }}" class="btn btn-primary rounded-pill btn-block">
-                            <i class="fa fa-plus mr-2"></i>
-                            Add Role
-                        </a>
-
-                    </div>
-                </div>
-            </div>
             <!-- Main Table Card -->
             <div class="card shadow-sm border-0 rounded">
+                <div class="card-header bg-white">
+                    <div class="sa-toolbar mb-0">
+                        <form method="GET" action="{{ route('admin.job_role') }}" class="form-inline">
+                            <input type="search" name="search" class="form-control form-control-sm mr-2" aria-label="Search role" placeholder="Search role..." value="{{ request('search') }}">
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </form>
+
+                        <a href="{{ route('admin.job_role_add') }}" class="btn btn-sm btn-primary">
+                            <i class="fa fa-plus mr-1"></i> Add Role
+                        </a>
+                    </div>
+                </div>
                 <div class="card-body">
 
                     <div class="table-responsive">
@@ -94,10 +34,10 @@
 
                             <thead class="thead-light">
                                 <tr>
-                                    <th style="width:70px;">#</th>
+                                    <th class="u-w-70px">#</th>
                                     <th>Role Name</th>
                                     <th>Description</th>
-                                    <th class="text-center" style="width:180px;">Actions</th>
+                                    <th class="text-center u-w-180px">Actions</th>
                                 </tr>
                             </thead>
 
@@ -122,19 +62,18 @@
 
                                     <!-- Actions -->
                                     <td class="text-center">
-                                        <div class="d-flex justify-content-center flex-wrap">
+                                        <div class="sa-row-actions justify-content-center">
 
                                             <a href="{{ route('admin.job_role_edit', $role->id) }}"
-                                                class="btn btn-sm btn-outline-primary mr-1 mb-1">
+                                                class="btn btn-primary sa-icon-action" title="Edit">
                                                 <i class="fa fa-edit"></i>
                                             </a>
 
-                                            <form action="{{ route('admin.job_role_delete', $role->id) }}" method="POST"
-                                                class="mb-1">
+                                            <form action="{{ route('admin.job_role_delete', $role->id) }}" method="POST" class="d-inline-flex">
                                                 @csrf
                                                 @method('DELETE')
 
-                                                <button type="submit" class="btn btn-sm btn-outline-danger delete-btn">
+                                                <button type="submit" class="btn btn-danger sa-icon-action delete-btn" title="Delete">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>
@@ -145,8 +84,13 @@
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted py-4">
-                                        No job roles found.
+                                    <td colspan="4" class="text-center py-5">
+                                        <i class="fas fa-user-tie fa-3x text-muted mb-3"></i>
+                                        <h5 class="font-weight-bold text-muted">No job roles yet</h5>
+                                        <p class="text-muted mb-3">Add a role so you can attach it to job postings.</p>
+                                        <a href="{{ route('admin.job_role_add') }}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-plus mr-1"></i> Add Role
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforelse
@@ -176,7 +120,6 @@
 </div>
 @endsection
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.delete-btn').forEach(button => {

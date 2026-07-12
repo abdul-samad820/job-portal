@@ -34,7 +34,7 @@
     /* Colors */
     --text-primary: #1a1f36;
     --text-secondary: #4a5568;
-    --text-muted: #77838f;
+    --text-muted: #64748b;
     --text-disabled: #b0b8c4;
     --accent: #2563eb;
     --accent-dark: #1e40af;
@@ -68,7 +68,6 @@ body {
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
 }
-
 
 /* ── Headings ───────────────────────────────────────────────── */
 h1,
@@ -295,7 +294,7 @@ a:hover {
 
 /* ── Stat Pills (top 4 stat cards) ─────────────────────────── */
 .stat-pill {
-    background: #ffffff;
+    background: var(--white);
     border-radius: 16px !important;
     box-shadow: var(--shadow-sm);
     border: 0 !important;
@@ -456,7 +455,7 @@ h5.fw-bold.text-dark,
 
 /* ── Status cards (inside chart section) ───────────────────── */
 .status-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f9fafc 100%);
+    background: linear-gradient(135deg, var(--white) 0%, #f9fafc 100%);
     border: 1px solid #f1f3f5;
     border-radius: 10px;
     transition:
@@ -483,7 +482,7 @@ h5.fw-bold.text-dark,
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--white);
     font-size: 12px;
     flex-shrink: 0;
 }
@@ -594,7 +593,7 @@ small.font-weight-bold.text-primary {
 }
 .premium-btn-warning:hover {
     background: var(--warning);
-    color: #fff;
+    color: var(--white);
 }
 
 .premium-btn-danger {
@@ -609,7 +608,7 @@ small.font-weight-bold.text-primary {
 }
 .premium-btn-danger:hover {
     background: var(--danger);
-    color: #fff;
+    color: var(--white);
 }
 .success-icon {
     font-size: 38px;
@@ -734,7 +733,7 @@ label {
 .breadcrumb {
     font-size: var(--fs-xs) !important;
     font-weight: var(--w-medium);
-    background: #ffffff;
+    background: var(--white);
     border-radius: 8px !important;
     box-shadow: var(--shadow-sm);
     padding: 8px 16px;
@@ -760,19 +759,17 @@ label {
 .page-item.active .page-link {
     background: var(--accent);
     border-color: var(--accent);
-    color: #fff;
+    color: var(--white);
 }
 
 /* ================================================================
    [7] FIX: AdminLTE Sidebar/Navbar — was completely missing
 ================================================================ */
 .main-sidebar {
-    background: #ffffff !important;
+    background: var(--white) !important;
     border-right: 1px solid #edf0f5;
     box-shadow: 2px 0 12px rgba(15, 23, 42, 0.04);
-    
 }
-
 
 .brand-link {
     padding: 12px 14px !important;
@@ -858,7 +855,7 @@ label {
 footer.main-footer {
     font-size: var(--fs-xs);
     color: var(--text-muted);
-    background: #fff;
+    background: var(--white);
     border-top: 1px solid #edf0f5;
 }
 footer.main-footer a {
@@ -920,12 +917,81 @@ body {
 
 /* ── Sidebar: Jobi-specific layout ─────────────────────────── */
 
-/* Sidebar wrapper flex column */
+/* Sidebar itself: pinned full-height, fixed width — the content area
+   scrolls independently beside it (this is what layout-fixed gives us,
+   made explicit here so it doesn't depend on plugin init timing). */
+.jobi-sidebar.main-sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding-top: 0;
+}
+
+/* Logo + profile — fixed at the top, never scrolls */
+.jobi-sidebar-fixed {
+    flex-shrink: 0;
+    width: 100%;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* Nav menu wrapper — this is the ONLY part that scrolls when the menu
+   is taller than the viewport. overflow-y stays auto so a scrollbar
+   only appears when actually needed (short menus show no scrollbar). */
 .jobi-sidebar .sidebar {
-    height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 6px;
+    padding-bottom: 16px;
+}
+
+/* Thin, subtle scrollbar for the menu — matches the global scrollbar
+   style already used elsewhere, just narrower for a 250px column. */
+.jobi-sidebar .sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+.jobi-sidebar .sidebar::-webkit-scrollbar-thumb {
+    background: #d8dee6;
+    border-radius: 4px;
+}
+.jobi-sidebar .sidebar::-webkit-scrollbar-thumb:hover {
+    background: #b8c2cf;
+}
+
+/* Content area sits beside the fixed sidebar and scrolls on its own */
+.content-wrapper {
+    margin-left: 250px;
+}
+
+@media (max-width: 991.98px) {
+    .jobi-sidebar.main-sidebar {
+        width: 250px;
+        transform: translateX(-250px);
+        transition: transform 0.3s ease-in-out;
+    }
+    .sidebar-open .jobi-sidebar.main-sidebar {
+        transform: translateX(0);
+    }
+    .content-wrapper {
+        margin-left: 0;
+    }
+}
+
+/* Desktop icon-only collapse (pushmenu toggle) — narrower fixed width,
+   content shifts back over to fill the freed space. */
+.sidebar-mini.sidebar-collapse .jobi-sidebar.main-sidebar {
+    width: 4.6rem;
+}
+.sidebar-mini.sidebar-collapse .content-wrapper {
+    margin-left: 4.6rem;
 }
 
 /* ── Brand ──────────────────────────────────────────────────── */
@@ -946,7 +1012,7 @@ body {
     font-weight: 700;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #9aa4b2;
+    color: var(--text-muted);
     margin-top: 4px;
     text-align: center;
 }
@@ -1050,7 +1116,7 @@ body {
 /* Active state */
 .jobi-menu .nav-link.active {
     background: var(--accent) !important;
-    color: #fff !important;
+    color: var(--white) !important;
     font-weight: var(--w-semibold) !important;
     border-radius: 10px;
     padding-left: 16px !important;
@@ -1058,7 +1124,7 @@ body {
 }
 
 .jobi-menu .nav-link.active i {
-    color: #fff !important;
+    color: var(--white) !important;
 }
 
 /* Hover state */
@@ -1092,7 +1158,7 @@ body {
     padding: 6px 20px;
     border-radius: 999px;
     background: var(--accent);
-    color: #fff;
+    color: var(--white);
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -1209,7 +1275,7 @@ body {
 
 .btn-group-toggle .btn.active {
     background: var(--accent) !important;
-    color: #fff !important;
+    color: var(--white) !important;
     border-color: var(--accent) !important;
     font-weight: var(--w-semibold) !important;
 }
@@ -1227,5 +1293,33 @@ body {
     }
     .sidebar-collapse .main-sidebar {
         width: 70px !important;
+    }
+}
+@media (max-width: 991.98px) {
+    .card-body {
+        padding: 14px;
+    }
+    .stat-value {
+        font-size: 1.3rem;
+    }
+}
+@media (max-width: 767.98px) {
+    .stat-round-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 14px;
+    }
+    .card-header {
+        padding: 10px 14px;
+    }
+}
+@media (max-width: 575.98px) {
+    .card-body {
+        padding: 12px;
+    }
+    .stat-label {
+        font-size: 9px;
+        letter-spacing: 0.03em;
+        white-space: nowrap;
     }
 }

@@ -7,7 +7,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
-
 class SuperAdminTest extends TestCase
 {
     use RefreshDatabase;
@@ -19,7 +18,7 @@ class SuperAdminTest extends TestCase
         parent::setUp();
 
         $this->superAdmin = Admin::factory()->create([
-            'role'      => 'super_admin',
+            'role' => 'super_admin',
             'is_active' => true,
         ]);
     }
@@ -28,20 +27,19 @@ class SuperAdminTest extends TestCase
     public function superadmin_can_suspend_an_admin(): void
     {
         $admin = Admin::factory()->create([
-            'role'      => 'admin',
+            'role' => 'admin',
             'is_active' => true,
         ]);
 
         $response = $this->actingAs($this->superAdmin, 'superadmin')
-                         ->patch(route('superadmin.admin.suspend', $admin->id));
+            ->patch(route('superadmin.admin.suspend', $admin->id));
 
         $response->assertRedirect();
         $response->assertSessionHas('success');
 
-        
         $this->assertDatabaseHas('admins', [
-            'id'        => $admin->id,
-            'is_active' => 0,  
+            'id' => $admin->id,
+            'is_active' => 0,
         ]);
     }
 
@@ -53,11 +51,11 @@ class SuperAdminTest extends TestCase
         ]);
 
         $this->actingAs($this->superAdmin, 'superadmin')
-             ->patch(route('superadmin.admin.unsuspend', $admin->id));
+            ->patch(route('superadmin.admin.unsuspend', $admin->id));
 
         $this->assertDatabaseHas('admins', [
-            'id'        => $admin->id,
-            'is_active' => 1,  
+            'id' => $admin->id,
+            'is_active' => 1,
         ]);
     }
 
@@ -67,7 +65,7 @@ class SuperAdminTest extends TestCase
         $admin = Admin::factory()->create(['role' => 'admin']);
 
         $this->actingAs($this->superAdmin, 'superadmin')
-             ->delete(route('superadmin.admin.delete', $admin->id));
+            ->delete(route('superadmin.admin.delete', $admin->id));
 
         $this->assertDatabaseMissing('admins', ['id' => $admin->id]);
     }

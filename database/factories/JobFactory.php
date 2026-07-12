@@ -15,8 +15,8 @@ class JobFactory extends Factory
             'title' => fake()->jobTitle(),
             'description' => fake()->paragraphs(2, true),
             'location' => fake()->city(),
-            'min_salary' => fake()->numberBetween(20000, 50000),
-            'max_salary' => fake()->numberBetween(50000, 150000),
+            'min_salary' => fake()->numberBetween(300000, 800000),
+            'max_salary' => fake()->numberBetween(800000, 5000000),
             'type' => fake()->randomElement([
                 'Full-time', 'Part-time', 'Internship', 'Contract',
             ]),

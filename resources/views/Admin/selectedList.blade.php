@@ -3,25 +3,23 @@
 @section('content')
 <div class="container-fluid py-4">
 
-    <!-- PREMIUM HEADER -->
-    <div class="p-4 rounded shadow-sm mb-4" style="background:#f8faff; border-left:5px solid #007bff;">
-
-        <div class="d-flex justify-content-between align-items-center flex-wrap">
-
+    <div class="sa-page-header">
+        <div class="d-flex align-items-center">
+            <div class="sa-page-icon mr-3"><i class="fa fa-user-check"></i></div>
             <div>
-                <h4 class="font-weight-bold mb-1 d-flex align-items-center">
-                    <i class="fas fa-user-check text-success mr-2"></i>
-                    Selected Candidates
-                </h4>
-                <small class="text-muted">
-                    View all shortlisted and hired applicants.
-                </small>
+                <h1 class="sa-page-title font-weight-bold text-dark mb-0">Selected Candidates</h1>
+                <small class="text-muted">View all shortlisted and hired applicants.</small>
             </div>
-
-            <div class="badge badge-primary px-4 py-3">
+        </div>
+        <div class="d-flex align-items-center">
+            @if ($selectedApplicants->isNotEmpty())
+            <a href="{{ route('admin.selectedList.export') }}" class="btn btn-outline-success btn-sm mr-2">
+                <i class="fas fa-file-csv mr-1"></i> Export CSV
+            </a>
+            @endif
+            <span class="badge badge-primary badge-pill px-3 py-2">
                 {{ $selectedApplicants->count() }} Total
-            </div>
-
+            </span>
         </div>
     </div>
 
@@ -69,7 +67,7 @@
                             <td>
                                 <div class="d-flex align-items-center">
 
-                                    <img src="{{ $userImg }}" width="45" height="45" class="rounded-circle mr-3" style="object-fit:cover;">
+                                    <img src="{{ $userImg }}" width="45" height="45" class="rounded-circle mr-3 u-fit-cover" alt="Applicant photo">
 
                                     <div>
                                         <div class="font-weight-bold">

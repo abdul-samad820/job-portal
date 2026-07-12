@@ -23,6 +23,7 @@ class PendingReminderNotification extends Notification
         return [
             'title' => 'Pending Applications',
             'message' => "{$this->count} applications are pending review.",
+            'url' => route('job_application'),
         ];
     }
 }

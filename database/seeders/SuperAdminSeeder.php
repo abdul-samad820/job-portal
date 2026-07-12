@@ -13,10 +13,12 @@ class SuperAdminSeeder extends Seeder
         // Delete existing superadmin to avoid duplicates
         DB::table('admins')->where('role', 'super_admin')->delete();
 
+        $password = env('SEED_SUPERADMIN_PASSWORD', 'SuperAdmin@123');
+
         DB::table('admins')->insert([
             'company_name' => 'JobHub Platform',
             'email' => 'superadmin@jobhub.com',
-            'password' => Hash::make('SuperAdmin@123'),
+            'password' => Hash::make($password),
             'contact_number' => '9000000001',
             'location' => 'New Delhi, India',
             'description' => 'JobHub platform super administrator with full access.',
@@ -26,6 +28,12 @@ class SuperAdminSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        $this->command->info(' SuperAdmin seeded: superadmin@jobhub.com / SuperAdmin@123');
+        // Only echo credentials in local dev — never in CI/CD or production
+        // logs. Set SEED_SUPERADMIN_PASSWORD in .env to override the default.
+        if (app()->environment('local')) {
+            $this->command->info(" SuperAdmin seeded: superadmin@jobhub.com / {$password}");
+        } else {
+            $this->command->info(' SuperAdmin seeded (credentials not printed outside local env).');
+        }
     }
 }

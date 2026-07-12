@@ -4,7 +4,7 @@
 [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-35%20Passing-success?style=for-the-badge)](tests)
+[![Tests](https://img.shields.io/badge/Tests-38%20Passing-success?style=for-the-badge)](tests)
 
 </div>
 
@@ -13,9 +13,10 @@ This project is designed with professional architecture, role-based access contr
 
 ---
 
-## Project Overveiw
+## Project Overview
 
-**JobConnect** is a production-ready job portal application built with Laravel 12. 
+**JobConnect** is a portfolio job portal application built with Laravel 12, built to demonstrate
+real-world full-stack development practices rather than as a live commercial product.
 It supports three distinct user roles — **SuperAdmin**, **Admin (Company)**, 
 and **Job Seeker** — each with their own dashboard, features, and access controls.
 
@@ -179,65 +180,102 @@ storage/            → Logs & Temporary Files
 
 ##  Requirements
 
-- PHP >= 8.x
+- PHP >= 8.2
 - Composer
-- MySQL
-- Apache / XAMPP
-- Node.js (if frontend assets used)
-  
+- MySQL 8.0
+- Apache / XAMPP (or nginx)
+- Node.js (only needed if you plan to rebuild frontend assets — the app currently ships pre-built AdminLTE assets and does not use a Vite build step)
+- PHP extensions: pdo_mysql, gd, fileinfo, mbstring
+
    ---
 
 ## Installation Guide
 
 1️ Clone the Repository
+```bash
 git clone https://github.com/abdul-samad820/job-portal.git
 cd job-portal
+```
 
 2️ Install Dependencies
-- composer install
-- npm install && npm run build
+```bash
+composer install
+```
 
 3️ Create Environment File
+```bash
 cp .env.example .env
-- Generate Application Key
--php artisan key:generate
+php artisan key:generate
+```
+> ⚠️ **Do this before anything else.** Laravel will not boot with a blank `APP_KEY` — every encrypted session, cookie, and password-reset link depends on it.
+
+For **local development only**, also edit `.env` and set:
+```
+APP_ENV=local
+APP_DEBUG=true
+SESSION_SECURE_COOKIE=false
+```
+(`.env.example` defaults to production-safe values — see the note at the top of that file.)
 
 Step 4 — Configure `.env`
 
 Update database credentials inside .env:
 
+```
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_DATABASE=job_portal
 DB_USERNAME=root
 DB_PASSWORD=
+```
 
+```
 MAIL_MAILER=smtp
 MAIL_HOST=sandbox.smtp.mailtrap.io
-MAIL_PORT=2525
+MAIL_PORT=587
+MAIL_ENCRYPTION=tls
 MAIL_USERNAME=your_mailtrap_username
 MAIL_PASSWORD=your_mailtrap_password
 MAIL_FROM_ADDRESS="noreply@jobportal.com"
 MAIL_FROM_NAME="JobConnect"
+```
 
-5️ Run Database Migrations
-
-php artisan db:seed
+5️ Run Migrations, then Seed
+```bash
 php artisan migrate
+php artisan db:seed
+```
+> Order matters — seeding before migrating will fail because the tables don't exist yet.
 
 6️ Create Storage Link
+```bash
 php artisan storage:link
+```
+> Without this, every uploaded resume/profile/category image returns a 404 — Laravel serves `storage/app/public/*` through the `public/storage` symlink, which isn't (and can't be) committed to git.
 
-7️ Start the Development Server
+7️ (Production only) Cache config and routes
+```bash
+php artisan config:cache
+php artisan route:cache
+```
 
-# Terminal 1: Web server
+8️ Start the Application
+
+```bash
+# Web server (local dev)
 php artisan serve
 
-# Terminal 2: Queue worker (for emails/notifications)
+# Queue worker — required for status-change and job-alert emails to send.
+# In production, run this under Supervisor/systemd so it restarts if it
+# crashes — it should NOT be a one-off terminal command.
 php artisan queue:work
 
-# Terminal 3: Scheduler (for job alerts)
+# Scheduler — required for expired-job cleanup, job-alert emails, and
+# admin notifications. In production, add ONE crontab entry (not
+# `schedule:work`, which is a dev-only convenience command):
+#   * * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
 php artisan schedule:work
+```
 
 Visit: **http://localhost:8000**
 
@@ -247,17 +285,37 @@ Visit: **http://localhost:8000**
 
 | Role | Email | Password |
 |------|-------|----------|
-| SuperAdmin | superadmin@jobportal.com | SuperAdmin@123 |
-| Admin | admin@techcorp.com | Admin@123 |
-| User | user@example.com | User@123 |
+| SuperAdmin | superadmin@jobhub.com | SuperAdmin@123 |
+| Admin | hr@techcorp.com | Admin@123 |
+| Admin | careers@financehub.com | Admin@123 |
+| Admin | jobs@designstudio.com | Admin@123 |
+| User | samad@jobhub.com | User@123 |
+
+> Default passwords can be overridden via `SEED_SUPERADMIN_PASSWORD`, `SEED_ADMIN_PASSWORD`, and `SEED_USER_PASSWORD` in `.env` before running `db:seed`.
 
 ### Scheduled Commands
 
 # Manual run
-php artisan jobs:send-alerts    # Job alert emails
-php artisan jobs:delete-expired # Delete expired jobs
+php artisan jobs:send-alerts        # Job alert emails
+php artisan app:delete-expired-jobs # Delete expired jobs
+php artisan app:prune-old-notifications # Delete read notifications older than 30 days
 
-##  API Documentation
+## Deployment
+
+### CI
+Every push/PR to `main` runs the full test suite against a real MySQL service via GitHub Actions (`.github/workflows/ci.yml`) — a broken commit fails CI before it can reach production.
+
+### Manual production checklist
+- [ ] `.env` has `APP_ENV=production`, `APP_DEBUG=false`, real `APP_KEY`
+- [ ] `SESSION_SECURE_COOKIE=true` (requires HTTPS) and `SESSION_DOMAIN` set to your real domain
+- [ ] Real SMTP credentials (not the Mailtrap sandbox defaults)
+- [ ] `php artisan storage:link` run — without it every uploaded file 404s
+- [ ] `php artisan config:cache && php artisan route:cache` run after every deploy
+- [ ] A **queue worker** running persistently under Supervisor/systemd (`php artisan queue:work`) — without it, status/job-alert emails silently pile up unsent
+- [ ] The **scheduler** wired into crontab: `* * * * * php artisan schedule:run` — without it, expired jobs are never cleaned up and alert emails never send
+- [ ] HTTPS/SSL terminated in front of the app
+
+## API Documentation
 -- http://localhost:8000/api/v1
 
 ## Authentication
@@ -281,7 +339,7 @@ php artisan test --coverage
 ```
 
 -- Test Suites
- - Tests: 35 passed
+ - Tests: 38 passed (7 feature test files covering auth, jobs, applications, superadmin, API, and security regressions)
 ## Screenshots
 
 <img width="1901" height="6560" alt="127 0 0 1_8000_" src="https://github.com/user-attachments/assets/6138ff24-1719-446d-9edc-db4474a83189" />

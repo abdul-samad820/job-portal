@@ -12,7 +12,7 @@ class SendJobAlerts extends Command
 {
     protected $signature = 'jobs:send-alerts';
 
-    protected $description = 'Active job alerts wale users ko matching jobs ki email bhejo';
+    protected $description = 'Send matching job emails to users with active job alerts';
 
     public function handle(): void
     {
@@ -27,7 +27,7 @@ class SendJobAlerts extends Command
             ->get();
 
         if ($recentJobs->isEmpty()) {
-            $this->info('Last 24 hours mein koi naya job post nahi hua.');
+            $this->info('No new jobs posted in the last 24 hours.');
 
             return;
         }

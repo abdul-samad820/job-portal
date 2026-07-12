@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserProfile;
+use App\Services\ProfileCompletionService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,29 +21,7 @@ class ProfileApiController extends Controller
     {
         $user = $request->user();
         $profile = $user->profile;
-
-        // Profile completion calculate
-        $completion = 0;
-        if ($profile) {
-            if (! empty($profile->profile_image)) {
-                $completion += 15;
-            }
-            if (! empty($profile->professional_summary)) {
-                $completion += 20;
-            }
-            if (! empty($profile->core_skills)) {
-                $completion += 20;
-            }
-            if (! empty($profile->education)) {
-                $completion += 20;
-            }
-            if (! empty($profile->experience)) {
-                $completion += 15;
-            }
-            if (! empty($profile->projects)) {
-                $completion += 10;
-            }
-        }
+        $completion = ProfileCompletionService::calculate($user);
 
         return $this->success([
             'user' => [
@@ -53,9 +32,9 @@ class ProfileApiController extends Controller
             'profile' => $profile ? [
                 'professional_summary' => $profile->professional_summary,
                 'core_skills' => $profile->core_skills,
-                'education' => json_decode($profile->education ?? '[]'),
-                'experience' => json_decode($profile->experience ?? '[]'),
-                'projects' => json_decode($profile->projects ?? '[]'),
+                'education' => $profile->education ?? [],
+                'experience' => $profile->experience ?? [],
+                'projects' => $profile->projects ?? [],
                 'profile_image' => $profile->profile_image
                     ? asset('storage/'.$profile->profile_image)
                     : null,
@@ -82,14 +61,32 @@ class ProfileApiController extends Controller
         }
 
         $userId = $request->user()->id;
+        $existing = UserProfile::where('user_id', $userId)->first();
+
+        // Only overwrite a field if it was actually present in this
+        // request. Without this, a PATCH request that sends only one
+        // field (e.g. { "professional_summary": "..." }) would silently
+        // wipe every other field on the profile to null/empty, because
+        // updateOrCreate() previously always wrote all 5 keys regardless
+        // of whether the client sent them.
         $profile = UserProfile::updateOrCreate(
             ['user_id' => $userId],
             [
-                'professional_summary' => $request->professional_summary,
-                'core_skills' => $request->core_skills,
-                'education' => json_encode($request->education ?? []),
-                'experience' => json_encode($request->experience ?? []),
-                'projects' => json_encode($request->projects ?? []),
+                'professional_summary' => $request->has('professional_summary')
+                    ? $request->professional_summary
+                    : $existing?->professional_summary,
+                'core_skills' => $request->has('core_skills')
+                    ? $request->core_skills
+                    : $existing?->core_skills,
+                'education' => $request->has('education')
+                    ? $request->education
+                    : ($existing?->education ?? []),
+                'experience' => $request->has('experience')
+                    ? $request->experience
+                    : ($existing?->experience ?? []),
+                'projects' => $request->has('projects')
+                    ? $request->projects
+                    : ($existing?->projects ?? []),
             ]
         );
 

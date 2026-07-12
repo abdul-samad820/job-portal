@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\JobType;
+use App\Models\ActivityLog;
 use App\Models\Job;
 use App\Models\JobApplication;
 use App\Models\JobCategory;
 use App\Models\JobRole;
 use App\Models\SavedJob;
+use App\Traits\VerifiesUploadedFileMime;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class JobController extends Controller
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests, VerifiesUploadedFileMime;
 
     public function job(Request $request)
     {
@@ -26,7 +30,7 @@ class JobController extends Controller
         $role = $request->input('role');
         $minSalary = $request->input('min_salary');
         $maxSalary = $request->input('max_salary');
-        $query = Job::with(['category', 'role'])->where('admin_id', $adminId);
+        $query = Job::with(['category', 'role'])->withCount('applications')->where('admin_id', $adminId);
 
         if (! empty($search)) {
             $query->where(function ($q) use ($search) {
@@ -87,19 +91,21 @@ class JobController extends Controller
         $minSalary = $request->input('min_salary');
         $maxSalary = $request->input('max_salary');
 
-        $query = Job::with(['category', 'role', 'admin']);
+        $query = Job::with(['category', 'role', 'admin'])->visible();
 
         if ($search) {
             $searchTerms = explode(' ', $search);
             $query->where(function ($q) use ($searchTerms) {
                 foreach ($searchTerms as $term) {
-                    $q->where(function ($sub) use ($term) {
+                    // Pre-fetch matching admin IDs once instead of a
+                    // correlated EXISTS subquery per row (Phase6 PERF-16).
+                    $matchingAdminIds = \App\Models\Admin::where('company_name', 'like', "%{$term}%")->pluck('id');
+
+                    $q->where(function ($sub) use ($term, $matchingAdminIds) {
                         $sub->where('title', 'like', "%{$term}%")
                             ->orWhere('description', 'like', "%{$term}%")
                             ->orWhere('location', 'like', "%{$term}%")
-                            ->orWhereHas('admin', function ($q2) use ($term) {
-                                $q2->where('company_name', 'like', "%{$term}%");
-                            });
+                            ->orWhereIn('admin_id', $matchingAdminIds);
                     });
                 }
             });
@@ -165,13 +171,18 @@ class JobController extends Controller
         $savedJobIds = SavedJob::where('user_id', $userId)->pluck('job_id')->toArray();
         $appliedJobIds = JobApplication::where('user_id', $userId)->pluck('job_id')->toArray();
 
-        return view('User.user_job_show', [
-            'jobs' => $jobs,
-            'categories' => JobCategory::all(),
-            'roles' => JobRole::all(),
-            'savedJobIds' => $savedJobIds,
-            'appliedJobIds' => $appliedJobIds,
-        ]);
+        return response()
+            ->view('User.user_job_show', [
+                'jobs' => $jobs,
+                'categories' => JobCategory::allCached(),
+                'roles' => JobRole::allCached(),
+                'savedJobIds' => $savedJobIds,
+                'appliedJobIds' => $appliedJobIds,
+            ])
+            // 'private' (not 'public') because the response includes this
+            // specific user's saved/applied job status — a shared/CDN
+            // cache must not serve it to a different user.
+            ->header('Cache-Control', 'private, max-age=60');
     }
 
     public function job_add()
@@ -185,6 +196,8 @@ class JobController extends Controller
 
     public function job_create(Request $request)
     {
+        $adminId = Auth::guard('admin')->id();
+
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string|min:10',
@@ -195,10 +208,10 @@ class JobController extends Controller
             'experience' => 'nullable|in:Fresher,1 Year,2 Years,3 Years,3+ Years',
             'min_salary' => 'nullable|integer|min:0',
             'max_salary' => 'nullable|integer|min:0|gte:min_salary',
-            'type' => 'required|string|in:Full-time,Part-time,Internship,Contract',
+            'type' => ['required', 'string', Rule::in(JobType::values())],
             'last_date' => 'nullable|date|after_or_equal:today',
-            'category_id' => 'required|exists:job_categories,id',
-            'role_id' => 'required|exists:job_roles,id',
+            'category_id' => ['required', Rule::exists('job_categories', 'id')->where('admin_id', $adminId)],
+            'role_id' => ['required', Rule::exists('job_roles', 'id')->where('admin_id', $adminId)],
             'job_image' => 'sometimes|nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -212,9 +225,24 @@ class JobController extends Controller
         $data['admin_id'] = Auth::guard('admin')->id();
         if ($request->hasFile('job_image')) {
             $path = $request->file('job_image')->store('jobs', 'public');
+            if (! $this->verifyStoredMime('public', $path, ['image/jpeg', 'image/png'])) {
+                return back()->withErrors(['job_image' => 'Invalid file type.']);
+            }
             $data['job_image'] = $path;
         }
-        Job::create($data);
+        $job = Job::create($data);
+
+        \App\Models\ActivityLog::logAdmin('job_created', "Created job \"{$job->title}\"", $job);
+
+        // Notify everyone following this company about the new job.
+        $followerUserIds = \App\Models\CompanyFollow::where('admin_id', $adminId)->pluck('user_id');
+        if ($followerUserIds->isNotEmpty()) {
+            $followers = \App\Models\User::whereIn('id', $followerUserIds)->get();
+            \Illuminate\Support\Facades\Notification::send(
+                $followers,
+                new \App\Notifications\NewJobFromFollowedCompanyNotification($job)
+            );
+        }
 
         return redirect()->route('admin.job')->with('success', 'Job created successfully!');
     }
@@ -234,6 +262,7 @@ class JobController extends Controller
     {
         $job = Job::findOrFail($id);
         $this->authorize('update', $job);
+        $adminId = Auth::guard('admin')->id();
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string|min:10',
@@ -244,10 +273,10 @@ class JobController extends Controller
             'experience' => 'nullable|in:Fresher,1 Year,2 Years,3 Years,3+ Years',
             'min_salary' => 'nullable|integer|min:0',
             'max_salary' => 'nullable|integer|min:0|gte:min_salary',
-            'type' => 'required|string|in:Full-time,Part-time,Internship,Contract',
+            'type' => ['required', 'string', Rule::in(JobType::values())],
             'last_date' => 'nullable|date|after_or_equal:today',
-            'category_id' => 'required|exists:job_categories,id',
-            'role_id' => 'required|exists:job_roles,id',
+            'category_id' => ['required', Rule::exists('job_categories', 'id')->where('admin_id', $adminId)],
+            'role_id' => ['required', Rule::exists('job_roles', 'id')->where('admin_id', $adminId)],
             'job_image' => 'sometimes|nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
         if (! is_null($data['min_salary'])) {
@@ -262,10 +291,15 @@ class JobController extends Controller
                 Storage::disk('public')->delete($job->job_image);
             }
             $path = $request->file('job_image')->store('jobs', 'public');
+            if (! $this->verifyStoredMime('public', $path, ['image/jpeg', 'image/png'])) {
+                return back()->withErrors(['job_image' => 'Invalid file type.']);
+            }
             $data['job_image'] = $path;
         }
 
         $job->update($data);
+
+        \App\Models\ActivityLog::logAdmin('job_updated', "Updated job \"{$job->title}\"", $job);
 
         return redirect()->route('admin.job')->with('success', 'Job updated successfully!');
     }
@@ -274,7 +308,16 @@ class JobController extends Controller
     {
         $job = Job::findOrFail($id);
         $this->authorize('delete', $job);
+
+        $applicationCount = $job->applications()->count();
+        if ($applicationCount > 0 && ! request()->has('confirm_delete')) {
+            return back()->with('error', "This job has {$applicationCount} application(s). Add ?confirm_delete=1 to confirm permanent deletion, or hide the job instead.");
+        }
+
+        $title = $job->title;
         $job->delete();
+
+        ActivityLog::logAdmin('job_deleted', "Deleted job \"{$title}\"", $job);
 
         return redirect()->route('admin.job')->with('success', 'Job deleted successfully!');
     }

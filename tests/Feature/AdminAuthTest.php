@@ -4,8 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
 
 class AdminAuthTest extends TestCase
 {
@@ -32,7 +32,7 @@ class AdminAuthTest extends TestCase
     #[Test]
     public function suspended_admin_cannot_login(): void
     {
-        // Suspended admin factory state use karo
+        // Use the suspended admin factory state
         Admin::factory()->suspended()->create([
             'email' => 'suspended@company.com',
             'password' => bcrypt('Admin@123'),
@@ -43,10 +43,10 @@ class AdminAuthTest extends TestCase
             'password' => 'Admin@123',
         ]);
 
-        // Login nahi hua
+        // Login should not succeed
         $this->assertGuest('admin');
 
-        // Suspend error aaya
+        // A suspension error should be returned
         $response->assertSessionHasErrors('email');
     }
 

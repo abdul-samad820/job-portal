@@ -9,8 +9,8 @@
 
         {{-- Job Title --}}
         <div class="form-group">
-            <label class="font-weight-bold">Job Title <span class="text-danger">*</span></label>
-            <input class="form-control" type="text" name="title" value="{{ $job->title }}" placeholder="Enter job title"
+            <label class="font-weight-bold" for="title">Job Title <span class="text-danger">*</span></label>
+            <input id="title" class="form-control" type="text" name="title" value="{{ $job->title }}" placeholder="Enter job title"
                 required>
             @error('title')
             <small class="text-danger d-block">{{ $message }}</small>
@@ -19,8 +19,8 @@
 
         {{-- Job Description --}}
         <div class="form-group">
-            <label class="font-weight-bold">Job Description</label>
-            <textarea class="form-control" name="description" rows="3"
+            <label class="font-weight-bold" for="description">Job Description</label>
+            <textarea id="description" class="form-control" name="description" rows="3"
                 placeholder="Enter job description">{{ old('description', $job->description) }}</textarea>
             @error('description')
             <small class="text-danger d-block">{{ $message }}</small>
@@ -28,8 +28,8 @@
         </div>
         {{-- Job overview --}}
         <div class="form-group">
-            <label class="font-weight-bold">Job Overview</label>
-            <textarea class="form-control" name="overview" rows="3"
+            <label class="font-weight-bold" for="overview">Job Overview</label>
+            <textarea id="overview" class="form-control" name="overview" rows="3"
                 placeholder="Enter job overview">{{ old('overview', $job->overview) }}</textarea>
             @error('overview')
             <small class="text-danger d-block">{{ $message }}</small>
@@ -37,8 +37,8 @@
         </div>
         {{-- Job responsibilities --}}
         <div class="form-group">
-            <label class="font-weight-bold">Job Responsibilities</label>
-            <textarea class="form-control" name="responsibilities" rows="3"
+            <label class="font-weight-bold" for="responsibilities">Job Responsibilities</label>
+            <textarea id="responsibilities" class="form-control" name="responsibilities" rows="3"
                 placeholder="Enter job responsibilities">{{ old('responsibilities', $job->responsibilities) }}</textarea>
             @error('responsibilities')
             <small class="text-danger d-block">{{ $message }}</small>
@@ -46,8 +46,8 @@
         </div>
         {{-- Job required_skills --}}
         <div class="form-group">
-            <label class="font-weight-bold">Job Required_Skills</label>
-            <textarea class="form-control" name="required_skills" rows="3"
+            <label class="font-weight-bold" for="required_skills">Job Required_Skills</label>
+            <textarea id="required_skills" class="form-control" name="required_skills" rows="3"
                 placeholder="Enter job required_skills">{{ old('required_skills', $job->required_skills) }}</textarea>
             @error('required_skills')
             <small class="text-danger d-block">{{ $message }}</small>
@@ -56,8 +56,8 @@
 
         {{-- Job Location --}}
         <div class="form-group">
-            <label class="font-weight-bold">Job Location</label>
-            <input class="form-control" type="text" name="location" value="{{ old('location', $job->location) }}"
+            <label class="font-weight-bold" for="location">Job Location</label>
+            <input id="location" class="form-control" type="text" name="location" value="{{ old('location', $job->location) }}"
                 placeholder="Enter job location">
             @error('location')
             <small class="text-danger d-block">{{ $message }}</small>
@@ -69,8 +69,8 @@
 
     <div class="row">
         <div class="col-md-6">
-            <label>Min Salary (LPA)</label>
-            <input type="number" step="0.1" name="min_salary" class="form-control"
+            <label for="min_salary">Min Salary (LPA)</label>
+            <input id="min_salary" type="number" step="0.1" name="min_salary" class="form-control"
                    placeholder="e.g. 3 (3 LPA)"
                    value="{{ old('min_salary', $job->min_salary / 100000) }}" min="0">
             @error('min_salary')
@@ -79,8 +79,8 @@
         </div>
 
         <div class="col-md-6">
-            <label>Max Salary (LPA)</label>
-            <input type="number" step="0.1" name="max_salary" class="form-control"
+            <label for="max_salary">Max Salary (LPA)</label>
+            <input id="max_salary" type="number" step="0.1" name="max_salary" class="form-control"
                    placeholder="e.g. 6 (6 LPA)"
                    value="{{ old('max_salary', $job->max_salary / 100000) }}" min="0">
             @error('max_salary')
@@ -95,8 +95,8 @@
 </div>
         {{-- Job Type --}}
         <div class="form-group">
-            <label class="font-weight-bold">Job Type <span class="text-danger">*</span></label>
-            <select name="type" class="custom-select" required>
+            <label class="font-weight-bold" for="type">Job Type <span class="text-danger">*</span></label>
+            <select id="type" name="type" class="custom-select" required>
                 <option value="">-- Select Job Type --</option>
 
                 <option value="Full-time" {{ old('type', $job->type) == 'Full-time' ? 'selected' : '' }}>
@@ -124,8 +124,8 @@
 
         {{-- job experience --}}
         <div class="form-group">
-            <label class="font-weight-bold">Job Experience <span class="text-danger">*</span></label>
-            <select name="experience" class="custom-select" required>
+            <label class="font-weight-bold" for="experience">Job Experience <span class="text-danger">*</span></label>
+            <select id="experience" name="experience" class="custom-select" required>
                 <option value="">-- Select Experience --</option>
 
                 <option value="Fresher" {{ old('experience', $job->experience) == 'Fresher' ? 'selected' : '' }}>
@@ -156,8 +156,8 @@
 
         {{-- Category Select --}}
         <div class="form-group">
-            <label class="font-weight-bold">Select Category <span class="text-danger">*</span></label>
-            <select name="category_id" class="custom-select" required>
+            <label class="font-weight-bold" for="category_id">Select Category <span class="text-danger">*</span></label>
+            <select id="category_id" name="category_id" class="custom-select" required>
                 <option value="">-- Select Category --</option>
                 @foreach ($categories as $category)
                 <option value="{{ $category->id }}" {{ old('category_id', $job->category_id) == $category->id ?
@@ -173,8 +173,8 @@
 
         {{-- Role Select --}}
         <div class="form-group">
-            <label class="font-weight-bold">Select Role <span class="text-danger">*</span></label>
-            <select name="role_id" class="custom-select" required>
+            <label class="font-weight-bold" for="role_id">Select Role <span class="text-danger">*</span></label>
+            <select id="role_id" name="role_id" class="custom-select" required>
                 <option value="">-- Select Role --</option>
                 @foreach ($roles as $role)
                 <option value="{{ $role->id }}" {{ old('role_id', $job->role_id) == $role->id ? 'selected' : '' }}>
@@ -189,8 +189,8 @@
 
         {{-- Last Date --}}
         <div class="form-group">
-            <label class="font-weight-bold">Last Date to Apply</label>
-            <input class="form-control" type="date" name="last_date" value="{{ old('last_date', $job->last_date) }}">
+            <label class="font-weight-bold" for="last_date">Last Date to Apply</label>
+            <input id="last_date" class="form-control" type="date" name="last_date" value="{{ old('last_date', $job->last_date) }}">
             @error('last_date')
             <small class="text-danger d-block">{{ $message }}</small>
             @enderror
@@ -198,9 +198,9 @@
 
         {{-- job Image Upload --}}
         <div class="form-group">
-            <label class="font-weight-bold">Job Image</label>
+            <label class="font-weight-bold" for="job_image">Job Image</label>
 
-            <input type="file" name="job_image" class="form-control-file" accept="image/*">
+            <input id="job_image" type="file" name="job_image" class="form-control-file" accept="image/*">
 
             <small class="text-muted d-block mt-1">Upload JPG / PNG (Max 2MB)</small>
 
@@ -213,7 +213,7 @@
         @if ($job->job_image)
         <div class="mb-3">
             <label class="font-weight-bold d-block">Current Image:</label>
-            <img src="{{ Storage::url($job->job_image) }}" class="img-thumbnail" style="max-width:150px;">
+            <img src="{{ Storage::url($job->job_image) }}" class="img-thumbnail" style="max-width:150px;" alt="Company logo">
         </div>
         @endif
 

@@ -16,6 +16,7 @@ class ProfileIncompleteNotification extends Notification
         return [
             'title' => 'Profile Incomplete',
             'message' => 'Complete your company profile to increase visibility.',
+            'url' => route('admin.profile'),
         ];
     }
 }

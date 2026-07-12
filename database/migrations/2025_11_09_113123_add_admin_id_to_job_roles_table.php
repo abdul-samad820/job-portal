@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('job_roles', function (Blueprint $table) {
-            // rollback ke liye column delete karo
+            // for rollback: delete the column
             $table->dropForeign(['admin_id']);
             $table->dropColumn('admin_id');
         });

@@ -11,11 +11,9 @@
                 <div class="card-body p-4">
 
                     <!-- Heading -->
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="font-weight-bold mb-0">
-                            <i class="fas fa-bookmark text-primary mr-2"></i>
-                            Saved Jobs
-                        </h4>
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="sa-page-icon mr-3"><i class="fas fa-bookmark"></i></div>
+                        <h4 class="font-weight-bold mb-0">Saved Jobs</h4>
                     </div>
 
                     <!-- Flash Messages -->
@@ -97,27 +95,36 @@
                                 </div>
 
                                 <!-- Right Section -->
-                                <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                                <div class="col-md-4 mt-3 mt-md-0">
 
-                                    <a href="{{ route('user.job_single', $job->id) }}"
-                                        class="btn btn-primary btn-sm mr-2">
-                                        <i class="fas fa-eye mr-1"></i>
-                                        View
-                                    </a>
+                                    <div class="d-flex flex-wrap justify-content-md-end sa-saved-actions">
 
-                                    <!-- Remove -->
-                                    <form method="POST" action="{{ route('saved.destroy', $job->id) }}"
-                                        class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
+                                        <a href="{{ route('user.job_single', $job->id) }}"
+                                            class="btn btn-primary btn-sm">
+                                            <i class="fas fa-eye mr-1"></i>
+                                            View
+                                        </a>
 
-                                        <button type="submit"
-                                            onclick="return confirm('Are you sure you want to remove this job?')"
-                                            class="btn btn-outline-danger btn-sm">
-                                            <i class="fas fa-trash-alt mr-1"></i>
-                                            Remove
-                                        </button>
-                                    </form>
+                                        <a href="{{ route('apply.from.saved', $job->id) }}"
+                                            class="btn btn-success btn-sm">
+                                            <i class="fas fa-paper-plane mr-1"></i>
+                                            Apply Now
+                                        </a>
+
+                                        <!-- Remove -->
+                                        <form method="POST" action="{{ route('saved.destroy', $job->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit"
+                                                onclick="return confirm('Are you sure you want to remove this job?')"
+                                                class="btn btn-outline-danger btn-sm">
+                                                <i class="fas fa-trash-alt mr-1"></i>
+                                                Remove
+                                            </button>
+                                        </form>
+
+                                    </div>
 
                                 </div>
 
@@ -145,6 +152,10 @@
                     @endforelse
 
                 </div>
+
+                <div class="mt-3">
+                    {{ $savedJobs->links() }}
+                </div>
             </div>
 
         </div>
@@ -152,17 +163,3 @@
 </div>
 
 @endsection
-
-
-@push('styles')
-<style>
-    .hover-card {
-        transition: all 0.2s ease-in-out;
-    }
-
-    .hover-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
-    }
-</style>
-@endpush

@@ -10,8 +10,10 @@ return new class extends Migration
     {
         Schema::table('jobs', function (Blueprint $table) {
             $table->dropColumn('salary');
-            $table->unsignedInteger('min_salary')->nullable()->after('location');
-            $table->unsignedInteger('max_salary')->nullable()->after('min_salary');
+            $table->unsignedInteger('min_salary')->nullable()->after('location')
+                ->comment('Annual salary in INR (whole rupees, not paise)');
+            $table->unsignedInteger('max_salary')->nullable()->after('min_salary')
+                ->comment('Annual salary in INR (whole rupees, not paise)');
         });
     }
 

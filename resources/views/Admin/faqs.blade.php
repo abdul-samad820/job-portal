@@ -4,42 +4,17 @@
 
 <div class="container-fluid py-4">
 
-    {{-- HEADER SECTION --}}
-    <div class="p-4 rounded shadow-sm mb-4 bg-light border-left border-primary" style="border-width:4px !important;">
-
-        <div class="d-md-flex justify-content-between align-items-center">
-
-            <div class="mb-3 mb-md-0">
-                <h4 class="font-weight-bold text-dark mb-1">
-                    <i class="fa fa-question-circle text-primary mr-2"></i>
-                    FAQs
-                </h4>
-                <small class="text-muted">
-                    Manage frequently asked questions.
-                </small>
+    <div class="sa-page-header">
+        <div class="d-flex align-items-center">
+            <div class="sa-page-icon mr-3"><i class="fa fa-question-circle"></i></div>
+            <div>
+                <h1 class="sa-page-title font-weight-bold text-dark mb-0">FAQs</h1>
+                <small class="text-muted">Manage frequently asked questions.</small>
             </div>
-
-            <nav>
-                <ol class="breadcrumb mb-0 bg-white shadow-sm px-3 py-2 rounded">
-                    <li class="breadcrumb-item">
-                        <a href="#">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item active font-weight-bold">
-                        FAQs
-                    </li>
-                </ol>
-            </nav>
-
         </div>
-
-        {{-- Add Button --}}
-        <div class="mt-3 d-flex justify-content-end">
-            <button class="btn btn-primary rounded-pill px-4" data-toggle="collapse" data-target="#faqForm">
-                <i class="fa fa-plus mr-2"></i>
-                Add FAQ
-            </button>
-        </div>
-
+        <button class="btn btn-primary rounded-pill px-4" data-toggle="collapse" data-target="#faqForm">
+            <i class="fa fa-plus mr-2"></i> Add FAQ
+        </button>
     </div>
 
     {{-- FORM SECTION --}}
@@ -51,13 +26,13 @@
                     @csrf
 
                     <div class="form-group">
-                        <label class="font-weight-bold">Question</label>
-                        <input type="text" name="question" class="form-control" required>
+                        <label class="font-weight-bold" for="question">Question</label>
+                        <input id="question" type="text" name="question" class="form-control" required>
                     </div>
 
                     <div class="form-group">
-                        <label class="font-weight-bold">Answer</label>
-                        <textarea name="answer" rows="4" class="form-control" required></textarea>
+                        <label class="font-weight-bold" for="answer">Answer</label>
+                        <textarea id="answer" name="answer" rows="4" class="form-control" required></textarea>
                     </div>
 
                     <div class="text-right">
@@ -136,8 +111,13 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-4">
-                                No FAQs found.
+                            <td colspan="5" class="text-center py-5">
+                                <i class="fas fa-circle-question fa-3x text-muted mb-3"></i>
+                                <h5 class="font-weight-bold text-muted">No FAQs yet</h5>
+                                <p class="text-muted mb-3">Add common questions to help candidates before they apply.</p>
+                                <button class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#faqForm">
+                                    <i class="fas fa-plus mr-1"></i> Add FAQ
+                                </button>
                             </td>
                         </tr>
                         @endforelse
@@ -168,7 +148,6 @@
 
 @endsection
 @push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {

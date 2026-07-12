@@ -5,11 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'Admin Job Portal')</title>
+    <meta name="description" content="@yield('meta_description', 'Manage job postings, applications, and candidates from the Job Hub admin dashboard.')">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{ asset('admins/dist/img/Job_Hub_Logo_Design.png') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('css/style.css') }}"> --}}
-    <link rel="stylesheet" href="{{ asset('css/style-admin-file.css') }}">
-    @stack('styles')
-
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -17,77 +16,61 @@
     <link rel="stylesheet" href="{{ asset('admins/plugins/fontawesome-free/css/all.min.css') }}">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Tempusdominus Bootstrap 4 -->
-    <link rel="stylesheet" href="{{ asset('admins/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="{{ asset('admins/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
-    <!-- JQVMap -->
-    <link rel="stylesheet" href="{{ asset('admins/plugins/jqvmap/jqvmap.min.css') }}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('admins/dist/css/adminlte.min.css') }}">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{{ asset('admins/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="{{ asset('admins/plugins/daterangepicker/daterangepicker.css') }}">
-    <!-- summernote -->
-    <link rel="stylesheet" href="{{ asset('admins/plugins/summernote/summernote-bs4.min.css') }}">
 
+    <!-- Custom overrides load LAST so they win the cascade over AdminLTE defaults -->
+    <link rel="stylesheet" href="{{ asset('css/style-admin-file.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/utilities.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin-pro.css') }}">
+    @stack('styles')
 
     <!-- Custom Typography Override -->
-
-<body class="hold-transition sidebar-mini d-flex flex-column min-vh-100">
+</head>
+<body class="hold-transition sidebar-mini layout-fixed admin-shell">
     <div class="wrapper flex-grow-1">
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light border-0">
-            <!-- Left: pushmenu -->
-            <ul class="navbar-nav">
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light fixed-top border-0">
+            <ul class="navbar-nav align-items-center flex-grow-1">
+                <!-- Sidebar toggle -->
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="sa-header-toggle" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ route('admin.dashboard') }}" class="nav-link">Home</a>
+
+                <!-- Page title / breadcrumb -->
+                <li class="nav-item d-none d-md-block">
+                    <div class="sa-breadcrumb">
+                        <span class="sa-crumb-trail">Admin Panel</span>
+                        <span class="sa-crumb-title">@yield('title', 'Dashboard')</span>
+                    </div>
                 </li>
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a href="{{ route('admin.job') }}" class="nav-link">Jobs</a>
+
+                <!-- Search -->
+                <li class="nav-item ml-auto ml-md-4 d-none d-sm-block">
+                    <form class="sa-header-search" method="GET" action="{{ route('admin.search') }}">
+                        <i class="fas fa-search"></i>
+                        <input type="search" name="q" aria-label="Search jobs, applicants" placeholder="Search jobs, applicants..." value="{{ request('q') }}">
+                    </form>
                 </li>
             </ul>
 
-            <!-- Right: search + icons -->
-            <ul class="navbar-nav ml-auto align-items-center">
+            <!-- Right: icons -->
+            <ul class="navbar-nav ml-auto ml-sm-2 align-items-center">
 
-                <li class="nav-item mr-3">
-                    <form class="form-inline" method="GET" action="#">
+                {{-- $adminUser, $notifications, $unreadCount are injected by
+                     App\View\Composers\AdminLayoutComposer via AppServiceProvider --}}
 
-                        <div class="input-group input-group-sm">
-                            <input class="form-control border-0 shadow-sm" type="search" name="q" placeholder="Search jobs, applicants..." value="{{ request('q') }}" style="border-radius:20px 0 0 20px;">
-
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="submit" style="border-radius:0 20px 20px 0;">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </li>
-
-                @php
-                $admin = auth('admin')->user();
-                $notifications = $admin->unreadNotifications;
-                $unreadCount = $notifications->count();
-                @endphp
-
-                <li class="nav-item dropdown mr-3">
-                    <a class="nav-link position-relative" data-toggle="dropdown" href="#">
-                        <i class="far fa-bell fa-lg"></i>
-
+                <li class="nav-item dropdown">
+                    <a class="sa-icon-btn" data-toggle="dropdown" href="#" aria-label="Notifications">
+                        <i class="far fa-bell"></i>
                         @if ($unreadCount > 0)
-                        <span class="badge badge-danger badge-pill position-absolute" style="top:-5px; right:1px; font-size:10px;">
-                            {{ $unreadCount }}
-                        </span>
+                            <span class="badge badge-danger navbar-badge">{{ $unreadCount }}</span>
                         @endif
                     </a>
 
-                    <div class="dropdown-menu dropdown-menu-right shadow border-0 p-0" style="width:380px; border-radius:12px; overflow:hidden;">
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right shadow border-0 p-0 u-w-380px-radius-12px-ovf-hidden">
 
                         {{-- Header --}}
                         <div class="px-4 py-3 bg-light d-flex justify-content-between align-items-center">
@@ -103,16 +86,16 @@
                         <div class="dropdown-divider m-0"></div>
 
                         {{-- Notification List --}}
-                        <div style="max-height:350px; overflow-y:auto;">
+                        <div class="dropdown-scroll-350">
 
                             @forelse($notifications->take(5) as $notification)
-                            <a href="#" class="dropdown-item px-4 py-3 {{ is_null($notification->read_at) ? 'bg-light' : '' }}">
+                            <a href="{{ route('notifications.open', $notification->id) }}" class="dropdown-item px-4 py-3 {{ is_null($notification->read_at) ? 'bg-light' : '' }}">
 
                                 <div class="d-flex">
 
                                     {{-- Icon --}}
                                     <div class="mr-3">
-                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width:38px; height:38px;">
+                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center u-w-38px-h-38px">
                                             <i class="fas fa-bell"></i>
                                         </div>
                                     </div>
@@ -170,56 +153,45 @@
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link d-flex align-items-center p-0" data-toggle="dropdown" href="#" style="cursor:pointer;">
-
-                        <div class="position-relative">
-                            <img src="{{ $admin->profile_image
-                            ? Storage::url('admins/' . $admin->profile_image)
-                            : asset('admins/dist/img/default.png') }}" class="rounded-circle shadow-sm" width="38" height="38" style="object-fit:cover; border:2px solid #fff;">
-
-                            {{-- Online Dot --}}
-                            <span style="
-                position:absolute;
-                bottom:2px;
-                right:2px;
-                width:10px;
-                height:10px;
-                background:#28a745;
-                border-radius:50%;
-                border:2px solid #fff;">
-                            </span>
-                        </div>
+                    <a class="sa-header-profile" data-toggle="dropdown" href="#">
+                        <img src="{{ $adminUser->profile_image
+                            ? Storage::url('admins/' . $adminUser->profile_image)
+                            : asset('admins/dist/img/default.png') }}" class="sa-avatar-circle" style="object-fit: cover;" alt="Admin profile">
+                        <span class="d-none d-lg-flex flex-column">
+                            <span class="sa-header-name">{{ \Illuminate\Support\Str::limit($adminUser->company_name, 20) }}</span>
+                            <span class="sa-header-role">{{ $adminUser->email }}</span>
+                        </span>
                     </a>
 
                     {{-- DROPDOWN MENU --}}
-                    <div class="dropdown-menu dropdown-menu-right shadow-lg border-0 p-0" style="width:260px; border-radius:14px; overflow:hidden;">
+                    <div class="dropdown-menu dropdown-menu-right shadow-lg border-0 p-0 u-w-260px-radius-14px-ovf-hidden">
 
                         {{-- HEADER --}}
-                        <div class="text-center p-4" style="background: linear-gradient(135deg, #007bff, #0056b3);">
+                        <div class="text-center p-4 u-bg-linear-gradien">
 
-                            <img src="{{ $admin->profile_image
-                            ? Storage::url('admins/' . $admin->profile_image)
-                            : asset('admins/dist/img/default.png') }}" class="rounded-circle shadow mb-2" width="70" height="70" style="object-fit:cover; border:3px solid #fff;">
+                            <img src="{{ $adminUser->profile_image
+                            ? Storage::url('admins/' . $adminUser->profile_image)
+                            : asset('admins/dist/img/default.png') }}" class="rounded-circle shadow mb-2 u-fit-cover-border-3px-solid-white" width="70" height="70" alt="Admin profile">
 
                             <div class="text-white font-weight-bold">
-                                {{ $admin->company_name }}
+                                {{ $adminUser->company_name }}
                             </div>
 
                             <small class="text-white-50">
-                                {{ $admin->email }}
+                                {{ $adminUser->email }}
                             </small>
                         </div>
 
                         {{-- MENU ITEMS --}}
                         <div class="py-2">
 
-                            <a class="dropdown-item d-flex align-items-center py-2" href="{{ route('admin.profile') }}" style="transition:0.2s;">
+                            <a class="dropdown-item d-flex align-items-center py-2 u-trans-0-2s" href="{{ route('admin.profile') }}">
 
                                 <i class="fas fa-user-circle text-primary mr-2"></i>
                                 <span>My Profile</span>
                             </a>
 
-                            <a class="dropdown-item d-flex align-items-center py-2" href="{{ route('admin.dashboard') }}" style="transition:0.2s;">
+                            <a class="dropdown-item d-flex align-items-center py-2 u-trans-0-2s" href="{{ route('admin.dashboard') }}">
 
                                 <i class="fas fa-chart-line text-info mr-2"></i>
                                 <span>Dashboard</span>
@@ -229,7 +201,7 @@
 
                             <form method="POST" action="{{ route('admin.logout') }}">
                                 @csrf
-                                <button type="submit" class="dropdown-item d-flex align-items-center py-2 text-danger" style="transition:0.2s;">
+                                <button type="submit" class="dropdown-item d-flex align-items-center py-2 text-danger u-trans-0-2s">
 
                                     <i class="fas fa-sign-out-alt mr-2"></i>
                                     <span>Logout</span>
@@ -245,74 +217,134 @@
 
         <!-- Sidebar -->
         <aside class="main-sidebar sidebar-light-primary jobi-sidebar">
-            <div class="sidebar">
-
-                <!-- BRAND -->
-                <div class="jobi-brand text-center mb-3">
-                    <img src="{{ asset('admins/dist/img/Job_Hub_Logo.png') }}" class="brand-img mb-2">
-                    <small class="brand-subtext">JOB HUB</small>
+            <div class="jobi-sidebar-fixed">
+                <div class="jobi-brand mb-0">
+                    <img src="{{ asset('admins/dist/img/Job_Hub_Logo.png') }}" class="brand-img" alt="Job Hub logo">
+                    <div class="sa-brand-text">
+                        <span class="sa-brand-title">Job Hub</span>
+                        <small class="brand-subtext">Control Panel</small>
+                    </div>
                 </div>
 
-                <!-- PROFILE -->
+                <div class="jobi-profile mb-0">
+                    <img src="{{ $adminUser->profile_image
+                        ? Storage::url('admins/' . $adminUser->profile_image)
+                        : asset('admins/dist/img/default.png') }}" class="profile-img" style="object-fit: cover;" alt="Admin profile">
+                    <div class="sa-profile-meta">
+                        <div class="sa-profile-name">{{ \Illuminate\Support\Str::limit($adminUser->company_name, 18) }}</div>
+                        <span class="sa-profile-role-badge"><i class="fas fa-building"></i>Company Admin</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar">
 
                 <!-- MENU -->
-                <nav class="mt-4 w-100">
+                <nav class="mt-1 w-100">
                     <ul class="nav flex-column jobi-menu">
 
-                        <li class="nav-item mb-2">
-                            <a href="{{ route('admin.dashboard') }}" class="nav-link jobi-link active">
-                                <i class="fas fa-home"></i>
-                                <p>Dashboard</p>
-                            </a>
-                        </li>
+                        <p class="sa-nav-heading">Overview</p>
 
-                        <li class="nav-item mb-2">
-                            <a href="{{ route('admin.job_category') }}" class="nav-link jobi-link">
-                                <i class="fas fa-th-large"></i>
-                                <p>Job Category</p>
-                            </a>
-                        </li>
+                        @include('partials.sidebar-nav-item', [
+                            'route' => 'admin.dashboard',
+                            'icon' => 'fas fa-home',
+                            'label' => 'Dashboard',
+                            'linkClass' => 'jobi-link',
+                        ])
 
-                        <li class="nav-item mb-2">
-                            <a href="{{ route('admin.job_role') }}" class="nav-link jobi-link">
-                                <i class="fas fa-users-cog"></i>
-                                <p>Job Role</p>
-                            </a>
-                        </li>
+                        <p class="sa-nav-heading">Hiring</p>
 
-                        <li class="nav-item mb-2">
-                            <a href="{{ route('admin.job') }}" class="nav-link jobi-link">
-                                <i class="fas fa-briefcase"></i>
-                                <p>Job</p>
-                            </a>
-                        </li>
+                        @include('partials.sidebar-nav-item', [
+                            'route' => 'admin.job_category',
+                            'activeCheck' => 'admin.job_category*',
+                            'icon' => 'fas fa-th-large',
+                            'label' => 'Job Category',
+                            'linkClass' => 'jobi-link',
+                        ])
 
-                        <li class="nav-item mb-2">
-                            <a href="{{ route('job_application') }}" class="nav-link jobi-link">
-                                <i class="fas fa-clipboard-list"></i>
-                                <p>Application</p>
-                            </a>
-                        </li>
+                        @include('partials.sidebar-nav-item', [
+                            'route' => 'admin.job_role',
+                            'activeCheck' => 'admin.job_role*',
+                            'icon' => 'fas fa-users-cog',
+                            'label' => 'Job Role',
+                            'linkClass' => 'jobi-link',
+                        ])
 
-                        <li class="nav-item mb-2">
-                            <a href="{{ route('admin.selectedList') }}" class="nav-link jobi-link">
-                                <i class="fas fa-user-tie"></i>
-                                <p>Selected Candidate</p>
-                            </a>
-                        </li>
+                        @include('partials.sidebar-nav-item', [
+                            'route' => 'admin.job',
+                            'icon' => 'fas fa-briefcase',
+                            'label' => 'Job',
+                            'linkClass' => 'jobi-link',
+                        ])
 
-                        <li class="nav-item mb-2">
-                            <a href="{{ route('faq') }}" class="nav-link jobi-link">
-                                <i class="fas fa-comments"></i>
-                                <p>Question answer</p>
-                            </a>
-                        </li>
-                        <li class="nav-item mb-2">
-                            <a href="{{ route('admin.profile') }}" class="nav-link jobi-link">
-                                <i class="fas fa-user-circle"></i>
-                                <p>Company Profile</p>
-                            </a>
-                        </li>
+                        @include('partials.sidebar-nav-item', [
+                            'route' => 'job_application',
+                            'activeCheck' => 'job_application*',
+                            'icon' => 'fas fa-clipboard-list',
+                            'label' => 'Application',
+                            'linkClass' => 'jobi-link',
+                        ])
+
+                        @include('partials.sidebar-nav-item', [
+                            'route' => 'admin.candidates.index',
+                            'activeCheck' => 'admin.candidates*',
+                            'icon' => 'fas fa-users',
+                            'label' => 'Candidates',
+                            'linkClass' => 'jobi-link',
+                        ])
+
+                        <p class="sa-nav-heading">Content</p>
+
+                        @include('partials.sidebar-nav-item', [
+                            'route' => 'admin.selectedList',
+                            'activeCheck' => 'admin.selectedList*',
+                            'icon' => 'fas fa-user-tie',
+                            'label' => 'Selected Candidate',
+                            'linkClass' => 'jobi-link',
+                        ])
+
+                        @include('partials.sidebar-nav-item', [
+                            'route' => 'faq',
+                            'activeCheck' => 'faq*',
+                            'icon' => 'fas fa-comments',
+                            'label' => 'Question answer',
+                            'linkClass' => 'jobi-link',
+                        ])
+
+                        @include('partials.sidebar-nav-item', [
+                            'route' => 'admin.testimonials',
+                            'activeCheck' => '*testimonial*',
+                            'icon' => 'fas fa-quote-left',
+                            'label' => 'Testimonials',
+                            'badge' => $pendingTestimonialsCount ?? 0,
+                            'linkClass' => 'jobi-link',
+                        ])
+
+                        <p class="sa-nav-heading">Account</p>
+
+                        @include('partials.sidebar-nav-item', [
+                            'route' => 'admin.activity_log',
+                            'activeCheck' => 'admin.activity_log*',
+                            'icon' => 'fas fa-history',
+                            'label' => 'Activity Log',
+                            'linkClass' => 'jobi-link',
+                        ])
+
+                        @include('partials.sidebar-nav-item', [
+                            'route' => 'admin.sessions',
+                            'activeCheck' => 'admin.sessions*',
+                            'icon' => 'fas fa-laptop',
+                            'label' => 'My Devices',
+                            'linkClass' => 'jobi-link',
+                        ])
+
+                        @include('partials.sidebar-nav-item', [
+                            'route' => 'admin.profile',
+                            'activeCheck' => 'admin.profile*',
+                            'icon' => 'fas fa-user-circle',
+                            'label' => 'Company Profile',
+                            'linkClass' => 'jobi-link',
+                        ])
                     </ul>
                 </nav>
             </div>
@@ -320,27 +352,8 @@
         <!-- /.sidebar -->
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2 align-items-center justify-content-end">
-
-                        <!-- Right Side: Page Title + Subtitle -->
-                        <div class="col-sm-6 text-right">
-                            <h3 class="m-0">
-                                <span class="badge badge-primary badge-pill px-4 py-2 d-inline-flex align-items-center font-weight-bold">
-                                    @yield('title')
-                                </span>
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- /.content-header -->
-
             <!-- Main content -->
-            <section class="content ">
+            <section class="content" style="padding-top: 1.25rem;">
                 <div class="container-fluid">
                     @yield('content')
                 </div><!-- /.container-fluid -->
@@ -349,10 +362,10 @@
         </div>
         <!-- /.content-wrapper -->
         <footer class="main-footer">
-            <strong> &copy;{{ date('Y') }} <a href="">JOB HUB</a>.</strong>
+            <strong>&copy; {{ date('Y') }} <a href="{{ route('admin.dashboard') }}">JOB HUB</a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 1.2
+                <b>Version</b> 1.3
             </div>
         </footer>
 
@@ -379,21 +392,26 @@
     <!-- AdminLTE -->
     <script src="{{ asset('admins/dist/js/adminlte.js') }}"></script>
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
-
-    <!-- Other plugins -->
-    <script src="{{ asset('admins/plugins/sparklines/sparkline.js') }}"></script>
-    <script src="{{ asset('admins/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
-    <script src="{{ asset('admins/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
-    <script src="{{ asset('admins/plugins/jquery-knob/jquery.knob.min.js') }}"></script>
-    <script src="{{ asset('admins/plugins/moment/moment.min.js') }}"></script>
-    <script src="{{ asset('admins/plugins/daterangepicker/daterangepicker.js') }}"></script>
-    <script src="{{ asset('admins/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-    <script src="{{ asset('admins/plugins/summernote/summernote-bs4.min.js') }}"></script>
     <script src="{{ asset('admins/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
 
     @stack('scripts')
+    <script src="{{ asset('js/global-loading.js') }}"></script>
+
+    @if (session('success') || session('error') || session('warning'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                icon: @json(session('success') ? 'success' : (session('warning') ? 'warning' : 'error')),
+                title: @json(session('success') ?? session('warning') ?? session('error')),
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+            });
+        });
+    </script>
+    @endif
 </body>
 
 </html>

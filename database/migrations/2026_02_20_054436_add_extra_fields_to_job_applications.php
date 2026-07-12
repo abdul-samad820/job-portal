@@ -28,7 +28,14 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('job_applications', function (Blueprint $table) {
-            //
+            $table->dropForeign(['updated_by_admin_id']);
+            $table->dropColumn([
+                'expected_salary',
+                'notice_period',
+                'admin_note',
+                'status_updated_at',
+                'updated_by_admin_id',
+            ]);
         });
     }
 };

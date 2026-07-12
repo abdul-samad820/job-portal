@@ -47,14 +47,14 @@ class Interview extends Model
                Carbon::createFromTimeString($this->interview_time)->format('h:i A');
     }
 
-    // Interview aane wala hai? (aaj ya future)
+    // Is the interview coming up? (today or future)
     public function getIsUpcomingAttribute(): bool
     {
         return $this->interview_date->isFuture() ||
                $this->interview_date->isToday();
     }
 
-    // Status badge color ke liye
+    // Color used for the status badge
     public function getStatusColorAttribute(): string
     {
         return match ($this->status) {

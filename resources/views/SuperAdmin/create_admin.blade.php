@@ -1,121 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.superadmin')
 
-<title>Admin Register</title>
+@section('title', 'Create Admin')
 
-<!--  Bootstrap 4 -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/superadmin-create-admin.css') }}">
+@endpush
 
-<!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-<style>
-
-* { font-family: "Inter", sans-serif; }
-
-body {
-    background: #f5f7fb;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 15px;
-}
-
-/* MAIN CARD */
-.auth-box {
-    max-width: 760px;
-    width: 100%;
-    background: #fff;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.07);
-    display: flex;
-}
-
-/* LEFT */
-.left-panel {
-    background: linear-gradient(135deg, #0b4ccf, #1eb8ff);
-    color: #fff;
-    padding: 40px 25px;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.left-panel img {
-    width: 100%;
-    max-width: 260px;
-}
-
-/* RIGHT */
-.right-panel {
-    flex: 1.2;
-    padding: 35px 25px;
-}
-
-.right-panel h3 {
-    font-weight: 700;
-}
-
-.input-group {
-    background: #eef2f7;
-    border-radius: 8px;
-}
-
-.input-group-text {
-    background: #eef2f7;
-    border: none;
-}
-
-.form-control {
-    border: none;
-    background: #eef2f7;
-    font-size: 14px;
-}
-
-.form-control:focus {
-    box-shadow: none;
-    background: #eef2f7;
-}
-
-/* BUTTON */
-.btn-primary {
-    background: #0b5ed7;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    padding: 10px;
-}
-
-.btn-primary:hover {
-    background: #094db3;
-}
-
-/* MOBILE */
-@media(max-width: 768px) {
-    .auth-box {
-        flex-direction: column;
-    }
-
-    .left-panel {
-        padding: 25px;
-    }
-}
-
-</style>
-
-</head>
-
-<body>
-
+@section('content')
+<div class="container-fluid">
 <div class="auth-box">
+
+    {{-- Show Validation Errors --}}
+    @if ($errors->any())
+    <div class="alert alert-danger m-3">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 
     <!-- LEFT -->
     <div class="left-panel">
@@ -133,74 +37,74 @@ body {
 
             <div class="form-row">
                 <div class="col-md-6 mb-3">
-                    <label>Company Name</label>
+                    <label for="company_name">Company Name</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-building"></i></span>
                         </div>
-                        <input type="text" name="company_name" class="form-control" placeholder="Company Name">
+                        <input type="text" id="company_name" name="company_name" class="form-control" placeholder="Company Name" value="{{ old('company_name') }}">
                     </div>
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label>Contact Number</label>
+                    <label for="contact_number">Contact Number</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-phone"></i></span>
                         </div>
-                        <input type="text" name="contact_number" class="form-control" placeholder="Contact Number">
+                        <input type="text" id="contact_number" name="contact_number" class="form-control" placeholder="Contact Number" value="{{ old('contact_number') }}">
                     </div>
                 </div>
             </div>
 
             <div class="mb-3">
-                <label>Location</label>
+                <label for="location">Location</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
                     </div>
-                    <input type="text" name="location" class="form-control" placeholder="Location">
+                    <input type="text" id="location" name="location" class="form-control" placeholder="Location" value="{{ old('location') }}">
                 </div>
             </div>
 
             <div class="mb-3">
-                <label>Description</label>
+                <label for="description">Description</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-align-left"></i></span>
                     </div>
-                    <textarea name="description" rows="2" class="form-control" placeholder="Short description"></textarea>
+                    <textarea id="description" name="description" rows="2" class="form-control" placeholder="Short description">{{ old('description') }}</textarea>
                 </div>
             </div>
 
             <div class="mb-3">
-                <label>Email</label>
+                <label for="email">Email</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                     </div>
-                    <input type="email" name="email" class="form-control" placeholder="Email">
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="col-md-6 mb-3">
-                    <label>Password</label>
+                    <label for="password">Password</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-lock"></i></span>
                         </div>
-                        <input type="password" name="password" class="form-control" placeholder="Password">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password">
                     </div>
                 </div>
 
                 <div class="col-md-6 mb-3">
-                    <label>Confirm Password</label>
+                    <label for="password_confirmation">Confirm Password</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-lock"></i></span>
                         </div>
-                        <input type="password" name="password_confirmation" class="form-control" placeholder="Retype Password">
+                        <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Retype Password">
                     </div>
                 </div>
             </div>
@@ -212,6 +116,5 @@ body {
     </div>
 
 </div>
-
-</body>
-</html>
+</div>
+@endsection

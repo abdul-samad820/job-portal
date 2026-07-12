@@ -34,6 +34,16 @@ class Admin_mid
                 ->with('error', 'Your account has been suspended. Please contact SuperAdmin.');
         }
 
+        // First-login password change — SuperAdmin set this account's
+        // initial password, so they know it until the admin changes it.
+        // Don't let them use the account until they've set their own.
+        if ($admin->must_change_password
+            && ! $request->routeIs('admin.force_password.*')
+            && ! $request->routeIs('admin.logout')) {
+            return redirect()->route('admin.force_password.change')
+                ->with('warning', 'For security, please set your own password before continuing.');
+        }
+
         return $next($request);
     }
 }

@@ -1,0 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@500;600;700;800&display=swap');
+
+/* ================================================================
+   Error Pages — shares the same design tokens as landing_page.css
+   (accent blue, Inter/Montserrat type scale, card shadow language)
+   so a 404 or 500 page never feels like it belongs to a different
+   product.
+================================================================ */
+:root {
+    --accent:      #2563eb;
+    --accent-dark: #1e40af;
+    --accent-rgb:  37, 99, 235;
+    --accent-soft: #eff6ff;
+
+    --danger:      #dc2626;
+    --danger-soft: #fef2f2;
+    --warning:     #d97706;
+    --warning-soft:#fffbeb;
+    --info:        #2563eb;
+    --info-soft:   #eff6ff;
+    --secondary:   #475569;
+    --secondary-soft: #f1f5f9;
+
+    --text-primary:   #0f172a;
+    --text-secondary: #4a5568;
+    --text-muted:     #64748b;
+
+    --border:    #e2e8f0;
+    --bg-white:  #ffffff;
+
+    --shadow-lg: 0 16px 48px rgba(15, 23, 42, .13);
+    --shadow-accent: 0 10px 28px rgba(var(--accent-rgb), .22);
+}
+
+* , *::before, *::after { box-sizing: border-box; }
+
+html { font-size: 15px; }
+
+/* AdminLTE ships its own built-in .error-page component styles
+   (float-based two-column layout for its default 404 template).
+   Since this page reuses AdminLTE's CSS bundle for buttons/icons,
+   those built-in rules leak in and fight our flexbox centering,
+   pushing the card to the left. Force-reset them here. */
+body.error-page {
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    float: none !important;
+}
+
+.error-wrapper {
+    display: flex !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    float: none !important;
+}
+
+.error-card,
+.error-card * {
+    float: none !important;
+}
+
+body.error-page {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text-primary);
+    min-height: 100vh;
+    margin: 0;
+    background:
+        radial-gradient(circle at 15% 15%, rgba(var(--accent-rgb), .08), transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(var(--accent-rgb), .06), transparent 45%),
+        #f8fafc;
+}
+
+.error-wrapper {
+    min-height: 100vh;
+    padding: 24px;
+}
+
+.error-brand {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    display: inline-flex;
+    align-items: center;
+}
+
+.error-brand i { font-size: 1.1rem; }
+
+.error-brand:hover { color: var(--accent-dark); }
+
+.error-card {
+    background: var(--bg-white);
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    padding: 48px 40px;
+    max-width: 460px;
+    width: 100%;
+}
+
+/* Big status code, e.g. "404" */
+.error-card .display-1 {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 800;
+    font-size: clamp(3.2rem, 12vw, 5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+}
+
+/* Icon badge — soft circular background behind the Font Awesome icon */
+.error-card h4 i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 1rem;
+    vertical-align: middle;
+}
+
+.error-card h4 {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.error-card p.text-muted {
+    color: var(--text-muted) !important;
+    font-size: 0.95rem;
+    line-height: 1.65;
+}
+
+/* Status colour variants — driven by @section('color') /
+   the class on the icon itself, e.g. "fas fa-ban text-danger" */
+.error-card .text-danger  { color: var(--danger)  !important; }
+.error-card .text-warning { color: var(--warning) !important; }
+.error-card .text-info    { color: var(--info)    !important; }
+.error-card .text-secondary { color: var(--secondary) !important; }
+
+.error-card h4 i.text-danger    { background: var(--danger-soft); }
+.error-card h4 i.text-warning   { background: var(--warning-soft); }
+.error-card h4 i.text-info      { background: var(--info-soft); }
+.error-card h4 i.text-secondary { background: var(--secondary-soft); }
+
+/* Primary CTA — pill button matching .btn-primary across the site */
+.error-card .btn-primary {
+    background: var(--accent);
+    border: none;
+    border-radius: 50px;
+    padding: 12px 25px;
+    font-weight: 600;
+    box-shadow: var(--shadow-accent);
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.error-card .btn-primary:hover,
+.error-card .btn-primary:focus {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 32px rgba(var(--accent-rgb), .3);
+}
+
+.error-card .btn-warning {
+    border-radius: 50px;
+    padding: 12px 25px;
+    font-weight: 600;
+    border: none;
+}
+
+.error-card .btn-outline-secondary,
+.error-card .btn-secondary {
+    border-radius: 50px;
+    padding: 10px 22px;
+    font-weight: 600;
+}
+
+/* "extra" slot content — alerts, secondary links, etc. */
+.error-card .alert {
+    border-radius: 12px;
+    border: none;
+    text-align: left;
+}
+
+.error-card .alert-warning {
+    background: var(--warning-soft);
+    color: #92400e;
+}
+
+.error-card .alert-secondary {
+    background: var(--secondary-soft);
+    color: var(--text-secondary);
+}
+
+@media (max-width: 420px) {
+    .error-card { padding: 36px 24px; }
+}

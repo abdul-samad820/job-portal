@@ -26,7 +26,7 @@ We found **{{ count($jobs) }} new job {{ count($jobs) > 1 ? 'opportunities' : 'o
 @endif
 </x-mail::panel>
 
-<x-mail::button :url="route('apply_form_job_application', $job->id)" color="primary">
+<x-mail::button :url="url()->to(route('apply_form_job_application', $job->id))" color="primary">
 Apply Now
 </x-mail::button>
 
